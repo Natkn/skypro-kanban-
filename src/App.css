@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -35,6 +37,7 @@ ul li {
     opacity: 1;
   }
 }
+
 html,
 body {
   width: 100%;
@@ -267,6 +270,8 @@ body {
   left: 12px;
 }
 .pop-user-set button {
+  font-size: 14px;
+  padding: 6px 14px;
   width: 72px;
   height: 30px;
   background: transparent;
@@ -748,7 +753,6 @@ body {
   justify-content: center;
 }
 .header__btn-main-new {
-  width: 178px;
   height: 30px;
   border-radius: 4px;
   background-color: #565eef;

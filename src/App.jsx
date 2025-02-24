@@ -1,48 +1,28 @@
-import { useState } from "react";
 import "./App.css";
 
-function MyApp() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
+function App() {
   return (
     <>
       <div className="wrapper">
-        {isModalOpen && (
-          <div className="pop-exit" id="popExit">
-            <div className="pop-exit__container">
-              <div className="pop-exit__block">
-                <div className="pop-exit__ttl">
-                  <h2>Выйти из аккаунта?</h2>
-                </div>
-                <form className="pop-exit__form" id="formExit" action="#">
-                  <div className="pop-exit__form-group">
-                    <button
-                      className="pop-exit__exit-yes _hover01"
-                      onClick={closeModal /* Здесь обработчик выхода */}
-                    >
-                      Да, выйти
-                    </button>
-                    <button
-                      className="pop-exit__exit-no _hover03"
-                      onClick={closeModal}
-                    >
-                      Нет, остаться
-                    </button>
-                  </div>
-                </form>
+        <div className="pop-exit" id="popExit">
+          <div className="pop-exit__container">
+            <div className="pop-exit__block">
+              <div className="pop-exit__ttl">
+                <h2>Выйти из аккаунта?</h2>
               </div>
+              <form className="pop-exit__form" id="formExit" action="#">
+                <div className="pop-exit__form-group">
+                  <button className="pop-exit__exit-yes _hover01" id="exitYes">
+                    <a href="modal/signin.html">Да, выйти</a>{" "}
+                  </button>
+                  <button className="pop-exit__exit-no _hover03" id="exitNo">
+                    <a href="main.html">Нет, остаться</a>{" "}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-        )}
-        <button onClick={openModal}>Открыть модальное окно</button>
+        </div>
 
         <div className="pop-new-card" id="popNewCard">
           <div className="pop-new-card__container">
@@ -280,7 +260,7 @@ function MyApp() {
                               height="11"
                               viewBox="0 0 6 11"
                             >
-                              <path d="className1.95273C6.09018 1.62041 6.09018 1.0833 5.72945 0.750969C5.36622 0.416344 4.7754 0.416344 4.41218 0.750969L0.528487 4.32883C-0.176162 4.97799 -0.176162 6.02201 0.528487 6.67117L4.41217 10.249C4.7754 10.5837 5.36622 10.5837 5.72945 10.249C6.09018 9.9167 6.09018 9.37959 5.72945 9.04727L1.87897 5.5L5.72945 1.95273Z" />
+                              <path d="M5.72945 1.95273C6.09018 1.62041 6.09018 1.0833 5.72945 0.750969C5.36622 0.416344 4.7754 0.416344 4.41218 0.750969L0.528487 4.32883C-0.176162 4.97799 -0.176162 6.02201 0.528487 6.67117L4.41217 10.249C4.7754 10.5837 5.36622 10.5837 5.72945 10.249C6.09018 9.9167 6.09018 9.37959 5.72945 9.04727L1.87897 5.5L5.72945 1.95273Z" />
                             </svg>
                           </div>
                           <div className="nav__action" data-action="next">
@@ -1091,10 +1071,8 @@ function MyApp() {
           </div>
         </main>
       </div>
-
-      <script src="js/script.js"></script>
     </>
   );
 }
 
-export default MyApp;
+export default App;
