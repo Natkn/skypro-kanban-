@@ -1,0 +1,222 @@
+body.dark-theme body {
+  width: 100%;
+  height: 100%;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  color: #ffffff;
+}
+
+body.dark-theme html {
+  width: 100%;
+  height: 100%;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  color: #ffffff;
+}
+body.dark-theme .wrapper {
+  background-color: #151419;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+body.dark-theme ._hover03:hover {
+  background-color: #565eef;
+  color: #ffffff;
+  border-color: #565eef;
+}
+
+body.dark-theme ._active-category:active {
+  opacity: 1;
+}
+
+body.dark-theme ._orange {
+  background-color: #ff6d00;
+  color: #ffe4c2;
+}
+
+body.dark-theme ._green {
+  background-color: #06b16e;
+  color: #b4fdd1;
+}
+
+body.dark-theme ._purple {
+  background-color: #9a48f1;
+  color: #e9d4ff;
+}
+
+body.dark-theme ._gray {
+  background: #94a6be;
+  color: #ffffff;
+}
+
+body.dark-theme .pop-exit__container {
+  background: rgba(0, 0, 0, 0.8);
+}
+body.dark-theme .form-new__input,
+body.dark-theme .form-new__area {
+  color: #ffffff;
+}
+body.dark-theme .pop-new-card__ttl {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  margin-bottom: 20px;
+}
+body.dark-theme .pop-exit__ttl h2 {
+  color: white;
+}
+body.dark-theme .pop-browse__top-block {
+  color: #ffffff;
+}
+body.dark-theme .pop-browse__ttl {
+  color: #ffffff;
+}
+body.dark-theme .pop-exit__block {
+  background-color: #20202c;
+  border: 0.7px solid #4e5566;
+  box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
+}
+
+body.dark-theme .pop-exit__exit-no a {
+  color: #ffffff;
+}
+.pop-exit__form-group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+body.dark-theme .pop-user-set__name {
+  color: #ffffff;
+}
+
+body.dark-theme .pop-user-set__theme p {
+  color: #ffffff;
+}
+
+body.dark-theme .pop-user-set__theme input[type="checkbox"]::before {
+  background-color: #565eef;
+}
+
+body.dark-theme .pop-user-set button {
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+body.dark-theme .pop-user-set button a {
+  color: #ffffff;
+}
+
+body.dark-theme .pop-new-card__container {
+  background: rgba(0, 0, 0, 0.8);
+}
+body.dark-theme .pop-new-card__block {
+  background-color: #20202c;
+  border: 0.7px solid #4e5566;
+  box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
+}
+
+body.dark-theme .form-new__area {
+  height: 188px;
+}
+
+body.dark-theme .subttl {
+  color: #fff;
+}
+
+body.dark-theme .calendar__p span {
+  color: #ffffff;
+}
+body.dark-theme .calendar .date-create {
+  margin-bottom: 7px;
+}
+body.dark-theme .calendar .date-end {
+  margin-bottom: 14px;
+}
+
+body.dark-theme ._cell-day:hover {
+  background-color: #151419;
+}
+
+body.dark-theme ._active-day {
+  background-color: #94a6be;
+  color: #151419;
+}
+
+body.dark-theme .pop-browse__container {
+  background: rgba(0, 0, 0, 0.8);
+}
+body.dark-theme .pop-browse__block {
+  background-color: #20202c;
+  border: 0.7px solid #4e5566;
+}
+
+body.dark-theme .pop-browse__calendar {
+  width: 182px;
+  margin-bottom: 20px;
+}
+
+body.dark-theme .form-browse__area {
+  background: #151419;
+  border: 0.7px solid rgba(148, 166, 190, 0.4);
+}
+
+body.dark-theme .form-browse__area {
+  margin-top: 14px;
+  height: 188px;
+}
+
+body.dark-theme ._btn-bor {
+  border: 0.7px solid var(--palette-navy-60, #ffffff);
+  color: #ffffff;
+}
+body.dark-theme ._btn-bor a {
+  color: #ffffff;
+}
+
+body.dark-theme ._dark {
+  display: block;
+}
+body.dark-theme ._light {
+  display: none;
+}
+
+body.dark-theme .header {
+  background-color: #20202c;
+}
+
+body.dark-theme .header__user {
+  color: #ffffff;
+}
+body.dark-theme .header__user::after {
+  border-left: 1.9px solid #ffffff;
+  border-bottom: 1.9px solid #ffffff;
+}
+body.dark-theme .header__pop-user-set {
+  border: 0.7px solid #4e5566;
+  background: #202229;
+  box-shadow: 0px 10px 39px 0px rgba(148, 166, 190, 0.4);
+}
+
+body.dark-theme .main {
+  background-color: #151419;
+}
+
+body.dark-theme .cards {
+  width: 100%;
+  display: block;
+}
+
+body.dark-theme .cards__card {
+  background-color: #20202c;
+}
+
+body.dark-theme .card__title {
+  color: #ffffff;
+}
+
+@media screen and (max-width: 660px) {
+  body.dark-theme .pop-browse__calendar {
+    width: 100%;
+  }
+}

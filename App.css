@@ -187,7 +187,7 @@ body {
   justify-content: center;
 }
 .pop-exit__exit-no {
-  width: 153px;
+  width: 163px;
   height: 30px;
   background-color: transparent;
   border-radius: 4px;
@@ -321,7 +321,7 @@ body {
   text-align: left;
 }
 .pop-new-card__ttl {
-  color: #000;
+  color: #000000;
   font-size: 20px;
   font-weight: 600;
   line-height: 24px;
@@ -355,6 +355,7 @@ body {
 }
 .form-new__input,
 .form-new__area {
+  color: #000;
   width: 100%;
   outline: none;
   padding: 14px;
@@ -366,7 +367,7 @@ body {
   letter-spacing: -0.14px;
 }
 .form-new__input::-moz-placeholder,
-.form-new__area::-moz-placeholder {
+::-moz-placeholder {
   font-weight: 400;
   font-size: 14px;
   line-height: 1px;
@@ -375,6 +376,7 @@ body {
 }
 .form-new__input::placeholder,
 .form-new__area::placeholder {
+  padding: 6px;
   font-weight: 400;
   font-size: 14px;
   line-height: 1px;
@@ -390,7 +392,6 @@ body {
   height: 200px;
 }
 .form-new__create {
-  width: 132px;
   height: 30px;
   background-color: #565eef;
   border-radius: 4px;
@@ -534,6 +535,7 @@ body {
   margin-bottom: 14px;
 }
 .categories__theme {
+  cursor: pointer;
   display: inline-block;
   width: auto;
   height: 30px;
@@ -603,7 +605,6 @@ body {
   margin-bottom: 18px;
 }
 .pop-browse__ttl {
-  color: #000;
   font-size: 20px;
   font-weight: 600;
   line-height: 24px;

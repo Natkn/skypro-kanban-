@@ -1,8 +1,9 @@
 import "../../App";
 import logo from "../../public/images/logo.png";
 import logoDark from "../../public/images/logo_dark.png";
-
+import { useTheme } from "../../src/components/themeContent";
 function Header() {
+  const { theme, toggleTheme } = useTheme();
   return (
     <header className="header">
       <div className="container">
@@ -33,7 +34,13 @@ function Header() {
               <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
               <div className="pop-user-set__theme">
                 <p>Темная тема</p>
-                <input type="checkbox" className="checkbox" name="checkbox" />
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  name="checkbox"
+                  checked={theme === "dark"}
+                  onChange={toggleTheme}
+                />
               </div>
               <button type="button" className="_hover03">
                 <a href="#popExit">Выйти</a>
