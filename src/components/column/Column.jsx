@@ -1,4 +1,4 @@
-/*import { Card, CardSecond, CardThird } from "./Card";
+import { Card, CardSecond, CardThird } from "../card/Card";
 import PropTypes from "prop-types";
 
 function Column({ tasks, loading }) {
@@ -55,4 +55,3 @@ Column.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 export default Column;
-*/

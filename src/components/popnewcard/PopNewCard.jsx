@@ -1,6 +1,5 @@
-import "../../App";
 import { useState } from "react";
-import Calendar from "./Calendar";
+import Calendar from "../calendar/Calendar";
 import PropTypes from "prop-types";
 
 function PopNewCard({ onCreateTask }) {

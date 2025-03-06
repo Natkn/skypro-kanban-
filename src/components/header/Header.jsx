@@ -1,7 +1,6 @@
-/*import "../../App";
-import logo from "../../public/images/logo.png";
-import logoDark from "../../public/images/logo_dark.png";
-import { useTheme } from "../../src/components/themeContent";
+import logo from "../../images/logo.png";
+import logoDark from "../../images/logo_dark.png";
+import { useTheme } from "../themecontent/themeContext";
 
 function Header() {
   const { theme, toggleTheme } = useTheme();
@@ -55,4 +54,3 @@ function Header() {
 }
 
 export default Header;
-*/

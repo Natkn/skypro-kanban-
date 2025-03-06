@@ -1,9 +1,6 @@
-/*import { createContext, useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-
-export const ThemeContext = createContext();
-
-export const useTheme = () => useContext(ThemeContext);
+import { ThemeContext } from "../themecontent/themeContext"; // Correct import
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState("light");
@@ -33,15 +30,3 @@ export const ThemeProvider = ({ children }) => {
 ThemeProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
-
-//  Определение ThemeContent
-function ThemeContent({ children }) {
-  return <>{children}</>;
-}
-
-ThemeContent.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
-export default ThemeContent;
-*/

@@ -1,4 +1,4 @@
-/*import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 function Calendar({ onDateSelect }) {
@@ -237,4 +237,3 @@ Calendar.propTypes = {
   onDateSelect: PropTypes.func.isRequired, // Пропс onCreateTask должен быть функцией и быть обязательным
 };
 export default Calendar;
-*/

@@ -1,4 +1,4 @@
-/*import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 
 export function Card({ loading }) {
   return (
@@ -521,4 +521,3 @@ export function CardThird({ loading }) {
 CardThird.propTypes = {
   loading: PropTypes.bool,
 };
-*/

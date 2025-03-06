@@ -1105,3 +1105,67 @@ body {
     display: block;
   }
 }
+.card__theme.loading {
+  background: linear-gradient(90deg, #c1cddc 0%, #e9eef7 45.83%, #c1cddc 97.4%);
+  background-size: 200% 100%;
+  animation: loading-animation 1.5s infinite linear;
+  color: transparent;
+  width: 100px;
+  height: 20px;
+  border-radius: 18px;
+}
+
+.card__title.loading {
+  background: linear-gradient(90deg, #c1cddc 0%, #e9eef7 45.83%, #c1cddc 97.4%);
+  background-size: 200% 100%;
+  animation: loading-animation 1.5s infinite linear;
+  color: transparent;
+  width: 150px;
+  height: 24px;
+  border-radius: 5px;
+}
+
+.card__date.loading {
+  background: linear-gradient(90deg, #c1cddc 0%, #e9eef7 45.83%, #c1cddc 97.4%);
+  background-size: 200% 100%;
+  animation: loading-animation 1.5s infinite linear;
+  color: transparent;
+  width: 80px;
+  height: 16px;
+  border-radius: 5px;
+}
+
+.card__date svg.loading {
+  visibility: hidden;
+}
+
+@keyframes loading-animation {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.card__btn.loading {
+  background: linear-gradient(90deg, #c1cddc 0%, #e9eef7 45.83%, #c1cddc 97.4%);
+  background-size: 200% 100%;
+  animation: loading-animation 1.5s infinite linear;
+  color: transparent;
+  width: 18px;
+  height: 4px;
+}
+
+@keyframes loading-animation {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.card__btn.loading div {
+  visibility: hidden;
+}

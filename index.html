@@ -9,6 +9,11 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="./main.jsx"></script>
+    <script type="module" src="./main.jsx">
+      document.addEventListener('DOMContentLoaded', function() {
+            const loaderWrapper = document.querySelector('.loader-wrapper');
+            loaderWrapper.style.display = 'none';
+        });
+    </script>
   </body>
 </html>

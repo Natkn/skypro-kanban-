@@ -1,5 +1,5 @@
-/*import "../../App";
-import Calendar from "./Calendar";
+import "../../../App";
+import Calendar from "../calendar/Calendar";
 function PopBrowse() {
   return (
     <div className="pop-browse" id="popBrowse">
@@ -100,4 +100,3 @@ function PopBrowse() {
 }
 
 export default PopBrowse;
-*/
