@@ -83,13 +83,6 @@ body {
   color: #ffffff;
 }
 
-.pop-user-set:target,
-.pop-exit:target,
-.pop-new-card:target,
-.pop-browse:target {
-  display: block;
-}
-
 ._orange {
   background-color: #ffe4c2;
   color: #ff6d00;
@@ -272,8 +265,6 @@ body {
 .pop-user-set button {
   font-size: 14px;
   padding: 6px 14px;
-  width: 72px;
-  height: 30px;
   background: transparent;
   color: #565eef;
   border-radius: 4px;
@@ -282,7 +273,11 @@ body {
 .pop-user-set button a {
   color: #565eef;
 }
-
+button {
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
 .pop-new-card {
   display: none;
   width: 100%;
@@ -747,7 +742,6 @@ body {
   width: 85px;
 }
 .header__nav {
-  max-width: 290px;
   padding: 0;
   display: flex;
   align-items: center;
@@ -768,7 +762,8 @@ body {
   color: #ffffff;
 }
 .header__user {
-  height: 20px;
+  height: 10px;
+  width: 118px;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
@@ -790,7 +785,6 @@ body {
   padding: 0;
 }
 .header__pop-user-set {
-  display: none;
   position: absolute;
   top: 61px;
   right: 0;

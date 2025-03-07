@@ -1,13 +1,12 @@
-import "./App.css";
+import "../src/assets/App.css";
 import { useState, useEffect } from "react";
-import "./darkTheme.css";
-import Header from "./src/components/header/Header.jsx";
-import PopNewCard from "./src/components/popnewcard/PopNewCard.jsx";
-import Popbrowse from "./src/components/popbrowse/PopBrowse.jsx";
-import Column from "./src/components/column/Column.jsx";
-import PopExit from "./src/components/popexit/PopExit.jsx";
-import { ThemeProvider } from "./src/components/themecontent/themeProvider.jsx";
-import { cardList } from "./data.js";
+import "./assets/darkTheme.css";
+import Header from "./components/header/Header.jsx";
+import PopNewCard from "./components/popnewcard/PopNewCard.jsx";
+import Popbrowse from "./components/popbrowse/PopBrowse.jsx";
+import Column from "./components/column/Column.jsx";
+import PopExit from "./components/popexit/PopExit.jsx";
+import { cardList } from "./mock/data.js";
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -30,7 +29,6 @@ function App() {
     <>
       <div className="wrapper">
         <PopExit />
-        <ThemeProvider />
         <PopNewCard onCreateTask={handleCreateTask} />
         <Popbrowse />
         <Header />

@@ -1,4 +1,4 @@
-import "../../../App";
+import "../../assets/App.css";
 import Calendar from "../calendar/Calendar";
 function PopBrowse() {
   return (

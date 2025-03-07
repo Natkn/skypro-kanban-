@@ -188,6 +188,13 @@ body.dark-theme .header {
 body.dark-theme .header__user {
   color: #ffffff;
 }
+
+body.dark-theme button.header__user._hover02 {
+  background-color: #20202c;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
 body.dark-theme .header__user::after {
   border-left: 1.9px solid #ffffff;
   border-bottom: 1.9px solid #ffffff;
