@@ -5,7 +5,7 @@ import Header from "./components/header/Header.jsx";
 import PopNewCard from "./components/popnewcard/PopNewCard.jsx";
 import Popbrowse from "./components/popbrowse/PopBrowse.jsx";
 import {
-  default as ColumnStatus,
+  ColumnStatus,
   ColumnToDo,
   ColumnInProcess,
   ColumnTest,
@@ -19,14 +19,12 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("App.jsx - useEffect - Начало загрузки");
-
-    // Имитируем загрузку данных
     const timer = setTimeout(() => {
-      console.log("App.jsx - useEffect - Загрузка завершена");
-      setTasks(cardList); // Устанавливаем tasks из cardList
-      setLoading(false); // Отключаем загрузку
-    }, 2000);
+      setTasks(cardList);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);

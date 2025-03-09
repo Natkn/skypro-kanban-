@@ -1,11 +1,8 @@
 import Card from "../card/Card";
 import PropTypes from "prop-types";
-import React from "react";
 
-function ColumnStatus({ tasks, loading }) {
+export function ColumnStatus({ tasks, loading }) {
   const filteredTasks = tasks.filter((task) => task.status === "Без статуса");
-
-  console.log("ColumnStatus.jsx - loading:", loading);
 
   return (
     <div className="main__column column">
@@ -13,7 +10,7 @@ function ColumnStatus({ tasks, loading }) {
         <p>Без статуса</p>
       </div>
       {loading
-        ? // Рендерим Card с loading={true} для каждой задачи
+        ? // Рендерим Card с loading={true} и значениями по умолчанию
           Array.from({ length: filteredTasks.length }).map((_, index) => (
             <Card key={index} loading={true} theme="" title="" date="" />
           ))
@@ -43,17 +40,7 @@ ColumnStatus.propTypes = {
   loading: PropTypes.bool.isRequired,
 };
 
-const areEqual = (prevProps, nextProps) => {
-  // Сравниваем только loading, так как tasks могут быть разными экземплярами массива
-  return prevProps.loading === nextProps.loading;
-};
-
-const MemoizedColumnStatus = React.memo(ColumnStatus, areEqual);
-
-export default MemoizedColumnStatus;
-
 export function ColumnToDo({ tasks, loading }) {
-  console.log("ColumnStatus.jsx - loading prop:", loading);
   const filteredTasks = tasks.filter((task) => task.status === "Нужно сделать");
 
   return (

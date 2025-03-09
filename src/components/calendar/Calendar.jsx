@@ -90,7 +90,6 @@ function Calendar({ onDateSelect }) {
       const clickedDate = new Date(currentYear, currentMonth, day);
       setSelectedDate(clickedDate);
     } else {
-      // Обрабатываем клики по дням предыдущего или следующего месяца (например, не даем выбирать)
       console.log("Клик по дню другого месяца");
     }
   };

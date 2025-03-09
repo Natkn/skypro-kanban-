@@ -1101,39 +1101,58 @@ button {
     display: block;
   }
 }
-.card__theme.loading {
+
+.card__skeleton.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.card__skeleton-group {
+  width: 194px;
+  height: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card__skeleton-content {
+  height: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.card__skeleton.loading .card__skeleton-theme {
   background: linear-gradient(90deg, #c1cddc 0%, #e9eef7 45.83%, #c1cddc 97.4%);
   background-size: 200% 100%;
   animation: loading-animation 1.5s infinite linear;
   color: transparent;
-  width: 100px;
+  width: 82px;
   height: 20px;
   border-radius: 18px;
-  opacity: 0.5;
 }
 
-.card__title.loading {
+.card__skeleton.loading .card__skeleton-title {
   background: linear-gradient(90deg, #c1cddc 0%, #e9eef7 45.83%, #c1cddc 97.4%);
   background-size: 200% 100%;
   animation: loading-animation 1.5s infinite linear;
   color: transparent;
-  width: 150px;
-  height: 24px;
-  border-radius: 5px;
+  width: 113px;
+  height: 13px;
+  top: 50px;
+  left: 13px;
 }
 
-.card__date.loading {
+.card__skeleton.loading .card__skeleton-date {
   background: linear-gradient(90deg, #c1cddc 0%, #e9eef7 45.83%, #c1cddc 97.4%);
   background-size: 200% 100%;
   animation: loading-animation 1.5s infinite linear;
   color: transparent;
-  width: 80px;
-  height: 16px;
-  border-radius: 5px;
-}
-
-.card__date svg.loading {
-  visibility: hidden;
+  width: 58px;
+  height: 13px;
+  top: 238px;
+  left: 13px;
 }
 
 @keyframes loading-animation {
@@ -1145,24 +1164,11 @@ button {
   }
 }
 
-.card__btn.loading {
+.card__skeleton.loading .card__skeleton-btn {
   background: linear-gradient(90deg, #c1cddc 0%, #e9eef7 45.83%, #c1cddc 97.4%);
   background-size: 200% 100%;
   animation: loading-animation 1.5s infinite linear;
   color: transparent;
   width: 18px;
   height: 4px;
-}
-
-@keyframes loading-animation {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-.card__btn.loading div {
-  visibility: hidden;
 }
