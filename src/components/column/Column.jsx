@@ -1,9 +1,12 @@
 import Card from "../card/Card";
 import PropTypes from "prop-types";
+import React from "react";
 
-export function ColumnStatus({ tasks, loading }) {
+function ColumnStatus({ tasks, loading }) {
   const filteredTasks = tasks.filter((task) => task.status === "Без статуса");
-  console.log("ColumnStatus.jsx - loading prop:", loading); // Добавляем лог
+
+  console.log("ColumnStatus.jsx - loading:", loading);
+
   return (
     <div className="main__column column">
       <div className="column__title">
@@ -39,6 +42,15 @@ ColumnStatus.propTypes = {
   ).isRequired,
   loading: PropTypes.bool.isRequired,
 };
+
+const areEqual = (prevProps, nextProps) => {
+  // Сравниваем только loading, так как tasks могут быть разными экземплярами массива
+  return prevProps.loading === nextProps.loading;
+};
+
+const MemoizedColumnStatus = React.memo(ColumnStatus, areEqual);
+
+export default MemoizedColumnStatus;
 
 export function ColumnToDo({ tasks, loading }) {
   console.log("ColumnStatus.jsx - loading prop:", loading);
