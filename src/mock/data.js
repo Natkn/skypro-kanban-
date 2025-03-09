@@ -46,7 +46,7 @@ export const cardList = [
     theme: "Research",
     title: "Название задачи",
     date: "30.10.23",
-    status: "В работе ",
+    status: "В работе",
   },
   {
     id: 8,
@@ -77,3 +77,11 @@ export const cardList = [
     status: "Готово",
   },
 ];
+
+const themeColors = {
+  "Web Design": "_orange",
+  Research: "_green",
+  Copywriting: "_purple",
+};
+
+export default themeColors;
