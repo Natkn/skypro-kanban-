@@ -1,85 +1,106 @@
 import PropTypes from "prop-types";
-import themeColors from "../../mock/data";
-import React from "react";
-function Card({ loading, theme, title, date }) {
-  const themeClass = themeColors[theme] || "_default";
+import {
+  CardWrapper,
+  CardGroup,
+  CardTheme,
+  CardThemeText,
+  CardButton,
+  CardButtonDot,
+  CardTitle,
+  CardContent,
+  CardDate,
+  CardDateIcon,
+  CardDateText,
+  CardItem,
+  CardSkeleton,
+  CardSkeletonGroup,
+  CardSkeletonContent,
+  CardSkeletonTheme,
+  CardSkeletonTitle,
+  CardSkeletonDate,
+  CardSkeletonButton,
+} from "./Card.styled";
+
+function Card({ theme, title, date, loading }) {
+  if (loading) {
+    return (
+      <CardItem>
+        <CardWrapper>
+          <CardSkeleton className="loading">
+            <CardSkeletonGroup>
+              <CardSkeletonTheme />
+              <CardSkeletonButton />
+            </CardSkeletonGroup>
+            <CardSkeletonTitle />
+            <CardSkeletonContent>
+              <CardSkeletonDate />
+            </CardSkeletonContent>
+          </CardSkeleton>
+        </CardWrapper>
+      </CardItem>
+    );
+  }
 
   return (
-    <div className="cards__item">
-      <div className="cards__card card">
-        {loading ? (
-          <div className="card__skeleton loading">
-            <div className="card__skeleton-group">
-              <div className="card__skeleton-theme"></div>
-              <div className="card__skeleton-btn"></div>
-            </div>
-            <div className="card__skeleton-content">
-              <div className="card__skeleton-title"></div>
-              <div className="card__skeleton-date"></div>
-            </div>
-          </div>
-        ) : (
-          <>
-            <div className="card__group">
-              <div className={`card__theme ${themeClass}`}>
-                <p className={themeClass}>{theme}</p>
-              </div>
-              <a href="#popBrowse" target="_self">
-                <div className="card__btn">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </div>
-              </a>
-            </div>
-            <div className="card__content">
-              <a href="" target="_blank">
-                <h3 className="card__title">{title}</h3>
-              </a>
-              <div className="card__date">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="13"
-                  height="13"
-                  viewBox="0 0 13 13"
-                  fill="none"
-                >
-                  <g clipPath="url(#clip0_1_415)">
-                    <path
-                      d="M10.5625 2.03125H2.4375C1.7644 2.03125 1.21875 2.5769 1.21875 3.25V10.5625C1.21875 11.2356 1.7644 11.7812 2.4375 11.7812H10.5625C11.2356 11.7812 11.7812 11.2356 11.7812 10.5625V3.25C11.7812 2.5769 11.2356 2.03125 10.5625 2.03125Z"
-                      stroke="#94A6BE"
-                      strokeWidth="0.8"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M11.7812 4.0625H1.21875M3.25 1.21875V2.03125V1.21875ZM9.75 1.21875V2.03125V1.21875Z"
-                      stroke="#94A6BE"
-                      strokeWidth="0.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_1_415">
-                      <rect width="13" height="13" fill="white" />
-                    </clipPath>
-                  </defs>
-                </svg>
-                <p>{date}</p>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+    <CardItem>
+      <CardWrapper>
+        <CardGroup>
+          <CardTheme theme={theme}>
+            <CardThemeText theme={theme}>{theme}</CardThemeText>
+          </CardTheme>
+          <CardButton>
+            <CardButtonDot />
+            <CardButtonDot />
+            <CardButtonDot />
+          </CardButton>
+        </CardGroup>
+        <CardTitle>{title}</CardTitle>
+        <CardContent>
+          <CardDate>
+            <CardDateIcon>
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 13 13"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g clipPath="url(#clip0_1_205)">
+                  <path
+                    d="M10.5625 2.03125H2.4375C1.7644 2.03125 1.21875 2.5769 1.21875 3.25V10.5625C1.21875 11.2356 1.7644 11.7812 2.4375 11.7812H10.5625C11.2356 11.7812 11.7812 11.2356 11.7812 10.5625V3.25C11.7812 2.5769 11.2356 2.03125 10.5625 2.03125Z"
+                    stroke="#94A6BE"
+                    strokeWidth="0.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M11.7812 4.0625H1.21875M3.25 1.21875V2.03125V1.21875ZM9.75 1.21875V2.03125V1.21875Z"
+                    stroke="#94A6BE"
+                    strokeWidth="0.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_1_205">
+                    <rect width="13" height="13" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+            </CardDateIcon>
+            <CardDateText>{date}</CardDateText>
+          </CardDate>
+        </CardContent>
+      </CardWrapper>
+    </CardItem>
   );
 }
 
 Card.propTypes = {
-  theme: PropTypes.string.isRequired,
+  theme: PropTypes.oneOf(["Research", "Web Design", "Copywriting"]).isRequired,
   title: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
-  loading: PropTypes.bool,
+  loading: PropTypes.bool.isRequired,
 };
 
-export default React.memo(Card);
+export default Card;
