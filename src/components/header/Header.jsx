@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import logo from "../../images/logo.png";
 import logoDark from "../../images/logo_dark.png";
 import { useTheme } from "../themecontent/themeContext";
@@ -20,7 +21,7 @@ import {
   LogoImage,
 } from "./Header.styled";
 
-function Header() {
+function Header({ openPopNewCard }) {
   const { theme, toggleTheme } = useTheme();
   const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
   const [isPopExitOpen, setIsPopExitOpen] = useState(false);
@@ -37,6 +38,10 @@ function Header() {
     setIsPopExitOpen(false);
   };
 
+  const handleClick = (event) => {
+    event.preventDefault();
+    openPopNewCard();
+  };
   return (
     <div className="container">
       <HeaderBlock>
@@ -55,8 +60,9 @@ function Header() {
           </a>
         </HeaderLogoDark>
         <HeaderNav>
-          <HeaderBtnMainNew id="btnMainNew">
-            <a href="#popNewCard">Создать новую задачу</a>
+          <HeaderBtnMainNew id="btnMainNew" onClick={handleClick}>
+            {/* Вызываем функцию открытия при клике */}
+            Создать новую задачу
           </HeaderBtnMainNew>
           <HeaderUser onClick={toggleUserSettings}>Ivan Ivanov</HeaderUser>
           {isUserSettingsOpen && (
@@ -82,5 +88,7 @@ function Header() {
     </div>
   );
 }
-
+Header.propTypes = {
+  openPopNewCard: PropTypes.func.isRequired, // Добавляем propTypes для openPopNewCard
+};
 export default Header;

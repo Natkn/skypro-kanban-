@@ -9,9 +9,12 @@ import {
   PopExitExitNo,
   PopExitFormGroup,
 } from "./PopExitStyled";
+import { useNavigate, Link } from "react-router-dom";
 
 function PopExit({ onClose, isOpen }) {
+  const navigate = useNavigate();
   const handleYesClick = () => {
+    navigate("/signup");
     onClose();
   };
 
@@ -29,10 +32,10 @@ function PopExit({ onClose, isOpen }) {
             </PopExitTtl>
             <PopExitFormGroup>
               <PopExitExitYes onClick={handleYesClick}>
-                <a href="modal/signin.html">Да, выйти</a>
+                <Link to="/signup">Да, выйти</Link>{" "}
               </PopExitExitYes>
               <PopExitExitNo onClick={handleNoClick}>
-                <a href="main.html">Нет, остаться</a>
+                <Link to="/">Нет, остаться</Link>
               </PopExitExitNo>
             </PopExitFormGroup>
           </PopExitBlock>
@@ -44,7 +47,7 @@ function PopExit({ onClose, isOpen }) {
 
 PopExit.propTypes = {
   onClose: PropTypes.func.isRequired,
-  isOpen: PropTypes.bool.isRequired, // Добавляем проверку типа для isOpen
+  isOpen: PropTypes.bool.isRequired,
 };
 
 export default PopExit;
