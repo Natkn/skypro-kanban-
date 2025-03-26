@@ -68,6 +68,11 @@ body {
 .calendar__ttl {
   margin-bottom: 14px;
   padding: 0 7px;
+  font-family: Roboto;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0px;
 }
 .calendar__p {
   color: #94a6be;
@@ -106,7 +111,6 @@ body {
 }
 .calendar__cells {
   width: 182px;
-  height: 126px;
   display: flex;
   flex-wrap: wrap;
 }
@@ -596,7 +600,7 @@ body {
   align-items: center;
   min-height: 94vh;
   justify-content: center;
-  background-color: #8f9396;
+  background-color: #bdc0c3;
 }
 
 .not-page {

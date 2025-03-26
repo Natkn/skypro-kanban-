@@ -61,7 +61,6 @@ function Header({ openPopNewCard }) {
         </HeaderLogoDark>
         <HeaderNav>
           <HeaderBtnMainNew id="btnMainNew" onClick={handleClick}>
-            {/* Вызываем функцию открытия при клике */}
             Создать новую задачу
           </HeaderBtnMainNew>
           <HeaderUser onClick={toggleUserSettings}>Ivan Ivanov</HeaderUser>
@@ -92,3 +91,4 @@ Header.propTypes = {
   openPopNewCard: PropTypes.func.isRequired, // Добавляем propTypes для openPopNewCard
 };
 export default Header;
+export { HeaderLogo, HeaderLogoDark, LogoImage };

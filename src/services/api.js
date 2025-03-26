@@ -1,15 +1,42 @@
-import axios from "axios";
+/*import axios from "axios";
 
-const API_URL = "https://wedev-api.sky.pro/api/words/";
-export async function fetchWords({ token }) {
+const API_URL_WORDS = "https://wedev-api.sky.pro/api/words/";
+const API_URL_AUTH = "https://wedev-api.sky.pro/api/user";
+
+const createAuthorizationHeader = (token) => ({
+  Authorization: `Bearer ${token}`,
+});
+
+export const editWord = async ({ token, id, word }) => {
   try {
-    const data = await axios.get(API_URL, {
+    const response = await axios.patch(`${API_URL_WORDS}${id}`, word, {
       headers: {
-        Authorization: "Bearer " + token,
+        ...createAuthorizationHeader(token),
+        "Content-Type": "text/html",
       },
     });
-    return data.data;
+    return response.data.words; // Changed from tasks to words
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(`Failed to edit word: ${error.message}`);
   }
-}
+};
+
+// Функции для аутентификации (signIn и signUp)
+export const signIn = async (userData) => {
+  try {
+    const response = await axios.post(`${API_URL_AUTH}/login`, userData);
+    return response.data.user;
+  } catch (error) {
+    throw new Error(`Failed to sign in: ${error.response.data.error}`);
+  }
+};
+
+export const signUp = async (userData) => {
+  try {
+    const response = await axios.post(API_URL_AUTH, userData);
+    return response.data.user;
+  } catch (error) {
+    throw new Error(`Failed to sign up: ${error.response.data.error}`);
+  }
+};
+*/
