@@ -233,6 +233,6 @@ function Calendar({ onDateSelect }) {
 }
 
 Calendar.propTypes = {
-  onDateSelect: PropTypes.func.isRequired, // Пропс onCreateTask должен быть функцией и быть обязательным
+  onDateSelect: PropTypes.func.isRequired,
 };
 export default Calendar;

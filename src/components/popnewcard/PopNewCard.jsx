@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Calendar from "../calendar/Calendar";
 import PropTypes from "prop-types";
 import {
@@ -27,14 +27,15 @@ function PopNewCard({ onCreateTask, onClose }) {
   const [category, setCategory] = useState("Web Design");
   const [selectedDate, setSelectedDate] = useState(null);
 
-  const handleDateSelect =
-    ((date) => {
+  const handleDateSelect = useCallback(
+    (date) => {
       setSelectedDate(date);
     },
-    [setSelectedDate]);
+    [setSelectedDate]
+  );
 
-  const handleSubmit = () => {
-    // Валидация (необязательно)
+  const handleSubmit = (event) => {
+    event.preventDefault();
     if (!title || !description) {
       return;
     }
@@ -56,8 +57,19 @@ function PopNewCard({ onCreateTask, onClose }) {
     setTitle("");
     setDescription("");
     setCategory("Web Design");
-    setSelectedDate("");
+    setSelectedDate(null);
   };
+
+  const formatDate = (date) => {
+    if (!date) return "";
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+  };
+
+  const formattedSelectedDate = formatDate(selectedDate);
+
   return (
     <PopNewCardWrapper onClick={(e) => e.stopPropagation()}>
       <PopNewCardContainer>
@@ -68,7 +80,7 @@ function PopNewCard({ onCreateTask, onClose }) {
               &#10006;
             </PopNewCardClose>
             <PopNewCardWrap>
-              <PopNewCardForm id="formNewCard" action="#">
+              <PopNewCardForm id="formNewCard" onSubmit={handleSubmit}>
                 <FormNewBlock>
                   <Subttl htmlFor="formTitle">Название задачи</Subttl>
                   <FormNewInput
@@ -90,9 +102,14 @@ function PopNewCard({ onCreateTask, onClose }) {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
-                </FormNewBlock>
+                </FormNewBlock>{" "}
               </PopNewCardForm>
               <Calendar onDateSelect={handleDateSelect} />
+              <input
+                type="hidden"
+                id="datepick_value"
+                value={formattedSelectedDate}
+              />
             </PopNewCardWrap>
             <CategoriesP>Категория</CategoriesP>
             <CategoriesThemes>
@@ -121,7 +138,7 @@ function PopNewCard({ onCreateTask, onClose }) {
                 Copywriting
               </CategoriesTheme>
             </CategoriesThemes>
-            <FormNewCreate id="btnCreate" onClick={handleSubmit}>
+            <FormNewCreate id="btnCreate" type="submit">
               Создать задачу
             </FormNewCreate>
           </PopNewCardContent>
