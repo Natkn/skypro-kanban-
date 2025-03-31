@@ -20,8 +20,11 @@ import {
   CardSkeletonDate,
   CardSkeletonButton,
 } from "./Card.styled";
+import { useTasks } from "../context/UseTask";
 
-function Card({ theme, title, date, loading }) {
+function Card({ theme, title, date, loading, id }) {
+  const { deleteTask } = useTasks();
+
   if (loading) {
     return (
       <CardItem>
@@ -40,7 +43,9 @@ function Card({ theme, title, date, loading }) {
       </CardItem>
     );
   }
-
+  const handleDelete = () => {
+    deleteTask(id);
+  };
   return (
     <CardItem>
       <CardWrapper>
@@ -48,7 +53,7 @@ function Card({ theme, title, date, loading }) {
           <CardTheme theme={theme}>
             <CardThemeText theme={theme}>{theme}</CardThemeText>
           </CardTheme>
-          <CardButton>
+          <CardButton onClick={handleDelete}>
             <CardButtonDot />
             <CardButtonDot />
             <CardButtonDot />
@@ -101,6 +106,8 @@ Card.propTypes = {
   title: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
+  id: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default Card;
