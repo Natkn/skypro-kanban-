@@ -88,7 +88,7 @@ function Header({ openPopNewCard }) {
   );
 }
 Header.propTypes = {
-  openPopNewCard: PropTypes.func.isRequired, // Добавляем propTypes для openPopNewCard
+  openPopNewCard: PropTypes.func.isRequired,
 };
 export default Header;
 export { HeaderLogo, HeaderLogoDark, LogoImage };

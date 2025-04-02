@@ -1,6 +1,11 @@
 import "../../assets/App.css";
 import Calendar from "../calendar/Calendar";
-function PopBrowse() {
+import PropTypes from "prop-types";
+
+function PopBrowse({ task, onClose }) {
+  if (!task) {
+    return null;
+  }
   return (
     <div className="pop-browse" id="popBrowse">
       <div className="pop-browse__container">
@@ -9,7 +14,7 @@ function PopBrowse() {
             <div className="pop-browse__top-block">
               <h3 className="pop-browse__ttl">Название задачи</h3>
               <div className="categories__theme theme-top _orange _active-category">
-                <p className="_orange">Web Design</p>
+                <p className="_orange">{task.theme}</p>
               </div>
             </div>
             <div className="pop-browse__status status">
@@ -48,6 +53,7 @@ function PopBrowse() {
                     id="textArea01"
                     readOnly
                     placeholder="Введите описание задачи..."
+                    value={task.description}
                   ></textarea>
                 </div>
               </form>
@@ -57,7 +63,7 @@ function PopBrowse() {
             <div className="theme-down__categories theme-down">
               <p className="categories__p subttl">Категория</p>
               <div className="categories__theme _orange _active-category">
-                <p className="_orange">Web Design</p>
+                <p className="_orange">{task.theme}</p>
               </div>
             </div>
             <div className="pop-browse__btn-browse ">
@@ -88,7 +94,10 @@ function PopBrowse() {
                   <a href="#">Удалить задачу</a>
                 </button>
               </div>
-              <button className="btn-edit__close _btn-bg _hover01">
+              <button
+                className="btn-browse__close _btn-bg _hover01"
+                onClick={onClose}
+              >
                 <a href="#">Закрыть</a>
               </button>
             </div>
@@ -98,5 +107,17 @@ function PopBrowse() {
     </div>
   );
 }
+
+PopBrowse.propTypes = {
+  task: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    theme: PropTypes.oneOf(["Research", "Web Design", "Copywriting"])
+      .isRequired,
+    description: PropTypes.string,
+    date: PropTypes.string,
+  }),
+  onClose: PropTypes.func.isRequired,
+};
 
 export default PopBrowse;

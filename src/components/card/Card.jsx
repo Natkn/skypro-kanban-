@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+
 import {
   CardWrapper,
   CardGroup,
@@ -21,7 +22,7 @@ import {
   CardSkeletonButton,
 } from "./Card.styled";
 
-function Card({ theme, title, date, loading }) {
+function Card({ theme, title, date, loading, id }) {
   if (loading) {
     return (
       <CardItem>
@@ -48,7 +49,12 @@ function Card({ theme, title, date, loading }) {
           <CardTheme theme={theme}>
             <CardThemeText theme={theme}>{theme}</CardThemeText>
           </CardTheme>
-          <CardButton>
+          <CardButton
+            onClick={() => {
+              console.log("Click from CardButton!", { id });
+              id; // Вызываем функцию из контекста с id
+            }}
+          >
             <CardButtonDot />
             <CardButtonDot />
             <CardButtonDot />
@@ -101,6 +107,8 @@ Card.propTypes = {
   title: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
+  id: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default Card;
