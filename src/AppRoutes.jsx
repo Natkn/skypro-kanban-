@@ -1,29 +1,51 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./assets/darkTheme.css";
-import { useContext } from "react";
-import AuthForm from "./components/signup/SignUp.jsx";
 import NotFoundPage from "../src/pages/NotFoundPage.jsx";
 import MainPage from "../src/pages/Main.jsx";
-import { AuthContext } from "../src/components/context/AuthContext.js";
+import LoginPage from "./pages/LoginPage";
+import SignUpPage from "./pages/SingUpPage.jsx";
+import CardDetailPage from "./pages/CardDetailPage";
+import AddTaskPage from "./pages/AddTaskPage";
+import LogoutPage from "./pages/LogoutPage";
+import PrivateRoute from "./pages/PrivateRoute.jsx";
 
 function AppRoutes() {
-  const { user } = useContext(AuthContext); // Получаем user из AuthContext
-  const isAuth = !!user; // Определяем isAuth на основе наличия user
-
   return (
     <div className="wrapper">
       <Routes>
-        <Route
-          path="/signup"
-          element={<AuthForm isSignUp={true} />} // Убираем setIsAuth
-        />
-        <Route
-          path="/signin"
-          element={<AuthForm isSignUp={false} />} // Убираем setIsAuth
-        />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
         <Route
           path="/"
-          element={isAuth ? <MainPage /> : <Navigate to="/signin" replace />}
+          element={
+            <PrivateRoute>
+              <MainPage />
+            </PrivateRoute>
+          }
+        />{" "}
+        <Route
+          path="/card/:id"
+          element={
+            <PrivateRoute>
+              <CardDetailPage />
+            </PrivateRoute>
+          }
+        />{" "}
+        <Route
+          path="/add"
+          element={
+            <PrivateRoute>
+              <AddTaskPage />
+            </PrivateRoute>
+          }
+        />{" "}
+        <Route
+          path="/logout"
+          element={
+            <PrivateRoute>
+              <LogoutPage />
+            </PrivateRoute>
+          }
         />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

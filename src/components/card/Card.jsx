@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+
 import {
   CardWrapper,
   CardGroup,
@@ -20,11 +21,8 @@ import {
   CardSkeletonDate,
   CardSkeletonButton,
 } from "./Card.styled";
-import { useTasks } from "../context/UseTask";
 
 function Card({ theme, title, date, loading, id }) {
-  const { deleteTask } = useTasks();
-
   if (loading) {
     return (
       <CardItem>
@@ -43,9 +41,7 @@ function Card({ theme, title, date, loading, id }) {
       </CardItem>
     );
   }
-  const handleDelete = () => {
-    deleteTask(id);
-  };
+
   return (
     <CardItem>
       <CardWrapper>
@@ -53,7 +49,12 @@ function Card({ theme, title, date, loading, id }) {
           <CardTheme theme={theme}>
             <CardThemeText theme={theme}>{theme}</CardThemeText>
           </CardTheme>
-          <CardButton onClick={handleDelete}>
+          <CardButton
+            onClick={() => {
+              console.log("Click from CardButton!", { id });
+              id; // Вызываем функцию из контекста с id
+            }}
+          >
             <CardButtonDot />
             <CardButtonDot />
             <CardButtonDot />
