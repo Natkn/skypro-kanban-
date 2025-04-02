@@ -223,7 +223,7 @@ function Calendar({ onDateSelect }) {
         <input type="hidden" id="datepick_value" value="08.09.2023" />
         <div className="calendar__period">
           <p className="calendar__p date-end">
-            Выберите срок исполнения{" "}
+            Выберите срок исполнения:{" "}
             <span className="date-control">{formattedSelectedDate}</span>.
           </p>
         </div>
@@ -233,6 +233,6 @@ function Calendar({ onDateSelect }) {
 }
 
 Calendar.propTypes = {
-  onDateSelect: PropTypes.func.isRequired, // Пропс onCreateTask должен быть функцией и быть обязательным
+  onDateSelect: PropTypes.func.isRequired,
 };
 export default Calendar;

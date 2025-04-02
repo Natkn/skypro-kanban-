@@ -91,3 +91,18 @@ export const cardStatuses = {
   test: "Тестирование",
   ready: "Готово",
 };
+
+export const themePop = {
+  WebDesign: {
+    background: "#FFE4C2",
+    text: "#FF6D00",
+  },
+  Research: {
+    background: "#B4FDD1",
+    text: "#06B16E",
+  },
+  Copywriting: {
+    background: "#E9D4FF",
+    text: "#9A48F1",
+  },
+};
