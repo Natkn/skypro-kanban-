@@ -20,8 +20,11 @@ import {
   HeaderBtnExit,
   LogoImage,
 } from "./Header.styled";
+import { useContext } from "react";
+import { AuthContext } from "../../components/context/AuthContext";
 
 function Header({ openPopNewCard }) {
+  const { user } = useContext(AuthContext);
   const { theme, toggleTheme } = useTheme();
   const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
   const [isPopExitOpen, setIsPopExitOpen] = useState(false);
@@ -42,6 +45,10 @@ function Header({ openPopNewCard }) {
     event.preventDefault();
     openPopNewCard();
   };
+
+  const name = user ? user.name : "Имя не найдено";
+  const email = user ? user.login : "Почта не найдена";
+
   return (
     <div className="container">
       <HeaderBlock>
@@ -63,11 +70,11 @@ function Header({ openPopNewCard }) {
           <HeaderBtnMainNew id="btnMainNew" onClick={handleClick}>
             Создать новую задачу
           </HeaderBtnMainNew>
-          <HeaderUser onClick={toggleUserSettings}>Ivan Ivanov</HeaderUser>
+          <HeaderUser onClick={toggleUserSettings}>{name}</HeaderUser>
           {isUserSettingsOpen && (
             <HeaderPopUserSet>
-              <PopUserSetName>Ivan Ivanov</PopUserSetName>
-              <PopUserSetMail>ivan.ivanov@gmail.com</PopUserSetMail>
+              <PopUserSetName>{name}</PopUserSetName>
+              <PopUserSetMail>{email}</PopUserSetMail>
               <PopUserSetTheme>
                 <ThemeToggleLabel>Темная тема</ThemeToggleLabel>
                 <ThemeToggleButton

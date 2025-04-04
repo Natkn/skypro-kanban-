@@ -5,8 +5,11 @@ const CardDetailPage = () => {
   const { id } = useParams();
   return (
     <div>
-      <p>ID карточки: {id}</p>
-      <PopBrowse />
+      <p>
+        {" "}
+        {id}
+        <PopBrowse />
+      </p>
     </div>
   );
 };

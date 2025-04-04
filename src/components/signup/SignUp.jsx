@@ -125,6 +125,7 @@ function AuthForm({ isSignUp }) {
                 placeholder="Эл. почта"
                 value={formData.login}
                 onChange={handleChange}
+                autoComplete="email"
               />
               <ModalInput
                 error={errors.password ? "true" : undefined}

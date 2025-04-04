@@ -2,9 +2,8 @@ import Card from "../card/Card";
 import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
 import { MainColumn, ColumnTitle, ColumnTitleText } from "./Column.styled";
-import { Link } from "react-router-dom";
 
-export function Column({ title, tasks, loading, status }) {
+export function Column({ title, tasks, loading, status, handleCardClick }) {
   const filteredTasks = tasks.filter((task) => task.status === status);
 
   return (
@@ -17,21 +16,14 @@ export function Column({ title, tasks, loading, status }) {
             <Card key={uuidv4()} loading={true} theme="" title="" date="" />
           ))
         : filteredTasks.map((task) => (
-            <Link
-              to={`/card/${task.id}`}
+            <Card
               key={task.id}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              {" "}
-              <Card
-                loading={loading}
-                key={task.id}
-                theme={task.theme}
-                title={task.title}
-                date={task.date}
-                id={task.id}
-              />
-            </Link>
+              theme={task.theme}
+              title={task.title}
+              date={task.date}
+              id={task.id}
+              onClick={() => handleCardClick(task.id)}
+            />
           ))}
     </MainColumn>
   );
@@ -50,6 +42,7 @@ Column.propTypes = {
   ).isRequired,
   loading: PropTypes.bool.isRequired,
   status: PropTypes.string.isRequired,
+  handleCardClick: PropTypes.func.isRequired,
 };
 
 export default Column;
