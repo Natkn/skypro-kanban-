@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import PropTypes from "prop-types";
 import {
   Wrapper,
@@ -13,6 +13,7 @@ import {
 } from "./SignUpStyled";
 import { useNavigate, Link } from "react-router-dom";
 import { signIn, signUp } from "../../services/auth";
+import { AuthContext } from "../context/AuthContext";
 
 const validateForm = (formData, isSignUp, setError, setErrors) => {
   const newErrors = { name: "", login: "", password: "" };
@@ -40,9 +41,9 @@ const validateForm = (formData, isSignUp, setError, setErrors) => {
   return isValid;
 };
 
-function AuthForm({ isSignUp, setIsAuth }) {
+function AuthForm({ isSignUp }) {
+  const { updateUserInfo } = useContext(AuthContext);
   const navigate = useNavigate();
-
   // Состояние полей формы
   const [formData, setFormData] = useState({
     name: "",
@@ -74,7 +75,6 @@ function AuthForm({ isSignUp, setIsAuth }) {
       e.preventDefault();
 
       if (!validateForm(formData, isSignUp, setError, setErrors)) {
-        // Если форма не прошла валидацию, то дальше не продолжаем
         return;
       }
 
@@ -85,17 +85,16 @@ function AuthForm({ isSignUp, setIsAuth }) {
         } else {
           data = await signIn(formData);
         }
-
+        console.log("Data from server:", data);
         if (data) {
-          setIsAuth(true);
-          localStorage.setItem("userInfo", JSON.stringify(data));
+          updateUserInfo(data);
           navigate("/");
         }
       } catch (err) {
         setError(err.message);
       }
     },
-    [isSignUp, formData, navigate, setIsAuth]
+    [isSignUp, formData, navigate, updateUserInfo]
   );
 
   return (
@@ -126,6 +125,7 @@ function AuthForm({ isSignUp, setIsAuth }) {
                 placeholder="Эл. почта"
                 value={formData.login}
                 onChange={handleChange}
+                autoComplete="email"
               />
               <ModalInput
                 error={errors.password ? "true" : undefined}
@@ -164,7 +164,6 @@ function AuthForm({ isSignUp, setIsAuth }) {
 
 AuthForm.propTypes = {
   isSignUp: PropTypes.bool.isRequired,
-  setIsAuth: PropTypes.func.isRequired,
 };
 
 export default AuthForm;

@@ -1,102 +1,107 @@
 import "../../assets/App.css";
 import Calendar from "../calendar/Calendar";
-function PopBrowse() {
+import PropTypes from "prop-types";
+import * as S from "../popbrowse/PopBrowseStyled";
+
+function PopBrowse({ task, onClose }) {
+  console.log("PopBrowse received task:", task);
+
+  if (!task) {
+    return null;
+  }
+  const { status } = task;
   return (
-    <div className="pop-browse" id="popBrowse">
-      <div className="pop-browse__container">
-        <div className="pop-browse__block">
-          <div className="pop-browse__content">
-            <div className="pop-browse__top-block">
-              <h3 className="pop-browse__ttl">Название задачи</h3>
+    <S.PopBrowseContainer>
+      <S.PopBrowseWrapper>
+        <S.PopBrowseBlock>
+          <S.PopBrowseContent>
+            <S.PopBrowseTopBlock>
+              <S.PopBrowseTitle>Название задачи</S.PopBrowseTitle>
               <div className="categories__theme theme-top _orange _active-category">
-                <p className="_orange">Web Design</p>
+                <p className="_orange">{task.theme}</p>
               </div>
-            </div>
-            <div className="pop-browse__status status">
-              <p className="status__p subttl">Статус</p>
-              <div className="status__themes">
-                <div className="status__theme _hide">
+            </S.PopBrowseTopBlock>
+
+            <S.Status>
+              <S.StatusP>Статус</S.StatusP>
+              <S.StatusThemes>
+                <S.StatusTheme ishide={status !== "noStatus"}>
                   <p>Без статуса</p>
-                </div>
-                <div className="status__theme _gray">
-                  <p className="_gray">Нужно сделать</p>
-                </div>
-                <div className="status__theme _hide">
+                </S.StatusTheme>
+                <S.StatusTheme ishide={status !== "needToDo"}>
+                  <p>Нужно сделать</p>
+                </S.StatusTheme>
+                <S.StatusTheme ishide={status !== "inProcess"}>
                   <p>В работе</p>
-                </div>
-                <div className="status__theme _hide">
+                </S.StatusTheme>
+                <S.StatusTheme ishide={status !== "test"}>
                   <p>Тестирование</p>
-                </div>
-                <div className="status__theme _hide">
+                </S.StatusTheme>
+                <S.StatusTheme ishide={status !== "ready"}>
                   <p>Готово</p>
-                </div>
-              </div>
-            </div>
-            <div className="pop-browse__wrap">
-              <form
-                className="pop-browse__form form-browse"
-                id="formBrowseCard"
-                action="#"
-              >
-                <div className="form-browse__block">
-                  <label htmlFor="textArea01" className="subttl">
-                    Описание задачи
-                  </label>
-                  <textarea
-                    className="form-browse__area"
+                </S.StatusTheme>
+              </S.StatusThemes>
+            </S.Status>
+
+            <S.PopBrowseWrap>
+              <S.PopBrowseForm>
+                <S.FormBrowseBlock>
+                  <label htmlFor="textArea01">Описание задачи</label>
+                  <S.FormBrowseArea
                     name="text"
                     id="textArea01"
                     readOnly
                     placeholder="Введите описание задачи..."
-                  ></textarea>
-                </div>
-              </form>
+                    value={task.description}
+                  />
+                </S.FormBrowseBlock>
+              </S.PopBrowseForm>
 
               <Calendar />
-            </div>
-            <div className="theme-down__categories theme-down">
-              <p className="categories__p subttl">Категория</p>
-              <div className="categories__theme _orange _active-category">
-                <p className="_orange">Web Design</p>
-              </div>
-            </div>
-            <div className="pop-browse__btn-browse ">
-              <div className="btn-group">
-                <button className="btn-browse__edit _btn-bor _hover03">
+            </S.PopBrowseWrap>
+
+            <S.PopBrowseBtnBrowse>
+              <div>
+                <S.BtnBor>
                   <a href="#">Редактировать задачу</a>
-                </button>
-                <button className="btn-browse__delete _btn-bor _hover03">
+                </S.BtnBor>
+                <S.BtnBor>
                   <a href="#">Удалить задачу</a>
-                </button>
+                </S.BtnBor>
               </div>
-              <button className="btn-browse__close _btn-bg _hover01">
+              <S.BtnBg
+                onClick={(event) => {
+                  event.preventDefault();
+                  onClose();
+                }}
+              >
                 <a href="#">Закрыть</a>
-              </button>
-            </div>
-            <div className="pop-browse__btn-edit _hide">
-              <div className="btn-group">
-                <button className="btn-edit__edit _btn-bg _hover01">
-                  <a href="#">Сохранить</a>
-                </button>
-                <button className="btn-edit__edit _btn-bor _hover03">
-                  <a href="#">Отменить</a>
-                </button>
-                <button
-                  className="btn-edit__delete _btn-bor _hover03"
-                  id="btnDelete"
-                >
-                  <a href="#">Удалить задачу</a>
-                </button>
-              </div>
-              <button className="btn-edit__close _btn-bg _hover01">
-                <a href="#">Закрыть</a>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              </S.BtnBg>
+            </S.PopBrowseBtnBrowse>
+          </S.PopBrowseContent>
+        </S.PopBrowseBlock>
+      </S.PopBrowseWrapper>
+    </S.PopBrowseContainer>
   );
 }
+
+PopBrowse.propTypes = {
+  task: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    theme: PropTypes.oneOf(["Research", "Web Design", "Copywriting"])
+      .isRequired,
+    description: PropTypes.string,
+    date: PropTypes.string,
+    status: PropTypes.oneOf([
+      "noStatus",
+      "needToDo",
+      "inProcess",
+      "test",
+      "ready",
+    ]),
+  }),
+  onClose: PropTypes.func.isRequired,
+};
 
 export default PopBrowse;

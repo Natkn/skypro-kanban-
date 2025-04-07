@@ -1,63 +1,57 @@
 import PropTypes from "prop-types";
-import {
-  CardWrapper,
-  CardGroup,
-  CardTheme,
-  CardThemeText,
-  CardButton,
-  CardButtonDot,
-  CardTitle,
-  CardContent,
-  CardDate,
-  CardDateIcon,
-  CardDateText,
-  CardItem,
-  CardSkeleton,
-  CardSkeletonGroup,
-  CardSkeletonContent,
-  CardSkeletonTheme,
-  CardSkeletonTitle,
-  CardSkeletonDate,
-  CardSkeletonButton,
-} from "./Card.styled";
+import { useContext } from "react";
+import * as S from "./Card.styled";
+import { CardContext } from "../context/CardContext";
 
-function Card({ theme, title, date, loading }) {
+function Card({ theme, title, date, loading, id }) {
+  const { handleCardButtonClick } = useContext(CardContext);
+
+  if (!handleCardButtonClick) {
+    console.error("handleCardButtonClick is null or undefined in Card.jsx");
+    return null;
+  }
   if (loading) {
     return (
-      <CardItem>
-        <CardWrapper>
-          <CardSkeleton className="loading">
-            <CardSkeletonGroup>
-              <CardSkeletonTheme />
-              <CardSkeletonButton />
-            </CardSkeletonGroup>
-            <CardSkeletonTitle />
-            <CardSkeletonContent>
-              <CardSkeletonDate />
-            </CardSkeletonContent>
-          </CardSkeleton>
-        </CardWrapper>
-      </CardItem>
+      <S.CardItem>
+        <S.CardWrapper>
+          <S.CardSkeleton className="loading">
+            <S.CardSkeletonGroup>
+              <S.CardSkeletonTheme />
+              <S.CardSkeletonButton />
+            </S.CardSkeletonGroup>
+            <S.CardSkeletonTitle />
+            <S.CardSkeletonContent>
+              <S.CardSkeletonDate />
+            </S.CardSkeletonContent>
+          </S.CardSkeleton>
+        </S.CardWrapper>
+      </S.CardItem>
     );
   }
 
   return (
-    <CardItem>
-      <CardWrapper>
-        <CardGroup>
-          <CardTheme theme={theme}>
-            <CardThemeText theme={theme}>{theme}</CardThemeText>
-          </CardTheme>
-          <CardButton>
-            <CardButtonDot />
-            <CardButtonDot />
-            <CardButtonDot />
-          </CardButton>
-        </CardGroup>
-        <CardTitle>{title}</CardTitle>
-        <CardContent>
-          <CardDate>
-            <CardDateIcon>
+    <S.CardItem>
+      <S.CardWrapper>
+        <S.CardGroup>
+          <S.CardTheme theme={theme}>
+            <S.CardThemeText theme={theme}>{theme}</S.CardThemeText>
+          </S.CardTheme>
+          <S.CardButton
+            onClick={(event) => {
+              event.preventDefault(); // Предотвращаем переход по ссылке
+              console.log("Click from CardButton!", { id });
+              handleCardButtonClick(id);
+            }}
+          >
+            <S.CardButtonDot />
+            <S.CardButtonDot />
+            <S.CardButtonDot />
+          </S.CardButton>
+        </S.CardGroup>
+        <S.CardTitle>{title}</S.CardTitle>
+        <S.CardContent>
+          <S.CardDate>
+            <S.CardDateIcon>
               <svg
                 width="13"
                 height="13"
@@ -87,12 +81,12 @@ function Card({ theme, title, date, loading }) {
                   </clipPath>
                 </defs>
               </svg>
-            </CardDateIcon>
-            <CardDateText>{date}</CardDateText>
-          </CardDate>
-        </CardContent>
-      </CardWrapper>
-    </CardItem>
+            </S.CardDateIcon>
+            <S.CardDateText>{date}</S.CardDateText>
+          </S.CardDate>
+        </S.CardContent>
+      </S.CardWrapper>
+    </S.CardItem>
   );
 }
 
@@ -101,6 +95,8 @@ Card.propTypes = {
   title: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
+  id: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default Card;
