@@ -42,10 +42,9 @@ const MainPage = () => {
   }, [setIsPopNewCardOpen]);
 
   const handleCardButtonClick = (taskId) => {
-    console.log("Button clicked!");
     const task = tasks.find((task) => task.id === taskId);
     setSelectedTask(task);
-    console.log({ selectedTask });
+
     setIsPopBrowseOpen(true);
   };
 
@@ -106,7 +105,6 @@ const MainPage = () => {
           )}
           {isPopBrowseOpen && (
             <>
-              {console.log("Rendering PopBrowse with task:", selectedTask)}
               <PopBrowse task={selectedTask} onClose={handleClosePopBrowse} />
             </>
           )}

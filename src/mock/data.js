@@ -93,7 +93,7 @@ export const cardStatuses = {
 };
 
 export const themePop = {
-  WebDesign: {
+  "Web Design": {
     background: "#FFE4C2",
     text: "#FF6D00",
   },

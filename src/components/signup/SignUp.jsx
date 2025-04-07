@@ -85,7 +85,7 @@ function AuthForm({ isSignUp }) {
         } else {
           data = await signIn(formData);
         }
-        console.log("Data from server:", data);
+
         if (data) {
           updateUserInfo(data);
           navigate("/");

@@ -20,7 +20,6 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const updateUserInfo = (userData) => {
-    console.log("updateUserInfo called with:", userData);
     setUser(userData);
     if (userData) {
       localStorage.setItem("userInfo", JSON.stringify(userData));

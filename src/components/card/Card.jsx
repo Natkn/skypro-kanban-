@@ -7,7 +7,6 @@ function Card({ theme, title, date, loading, id }) {
   const { handleCardButtonClick } = useContext(CardContext);
 
   if (!handleCardButtonClick) {
-    console.error("handleCardButtonClick is null or undefined in Card.jsx");
     return null;
   }
   if (loading) {
@@ -38,7 +37,7 @@ function Card({ theme, title, date, loading, id }) {
           </S.CardTheme>
           <S.CardButton
             onClick={(event) => {
-              event.preventDefault(); // Предотвращаем переход по ссылке
+              event.preventDefault();
               console.log("Click from CardButton!", { id });
               handleCardButtonClick(id);
             }}

@@ -207,7 +207,7 @@ function Calendar({ onDateSelect }) {
 
               return (
                 <div
-                  key={index} // Уникальный ключ для каждого элемента
+                  key={index}
                   className={`calendar__cell _cell-day ${
                     isOtherMonth ? "_other-month" : ""
                   } ${isCurrentDay ? "_active-day" : ""}`}

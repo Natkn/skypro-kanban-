@@ -93,6 +93,7 @@ export const PopBrowseBtnBrowse = styled.div`
   button {
     height: 30px;
     margin-bottom: 10px;
+    margin-right: 8px;
     padding: 0 14px;
   }
 
@@ -104,10 +105,16 @@ export const PopBrowseBtnBrowse = styled.div`
 export const FormBrowseBlock = styled.div`
   display: flex;
   flex-direction: column;
+  font-weight: 600;
+  width: 136;
+  height: 30;
+  border-radius: 24px;
+  padding-right: 14px;
+  padding-bottom: 10px;
+  padding-left: 14px;
 `;
 
 export const FormBrowseArea = styled.textarea`
-  max-width: 370px;
   width: 100%;
   outline: none;
   padding: 14px;
@@ -125,7 +132,10 @@ export const FormBrowseArea = styled.textarea`
     font-size: 14px;
     line-height: 1px;
     color: #94a6be;
-    letter-spacing: -0.14px;
+    padding-top: 14px;
+    font-family: Roboto;
+    line-height: 100%;
+    letter-spacing: 0%;
   }
 
   &::placeholder {
@@ -133,7 +143,10 @@ export const FormBrowseArea = styled.textarea`
     font-size: 14px;
     line-height: 1px;
     color: #94a6be;
-    letter-spacing: -0.14px;
+    padding-top: 14px;
+    font-family: Roboto;
+    line-height: 100%;
+    letter-spacing: 0%;
   }
 `;
 
@@ -143,6 +156,7 @@ export const Status = styled.div`
 
 export const StatusP = styled.p`
   margin-bottom: 14px;
+  font-weight: 600;
 `;
 
 export const StatusThemes = styled.div`
@@ -158,9 +172,9 @@ export const StatusTheme = styled.div`
   color: #94a6be;
   padding: 11px 14px 10px;
   margin-right: 7px;
-  margin-bottom: 7px;
-  display: ${(props) => (props.ishide ? "none" : "block")};
-
+  color: #fff;
+  background-color: #94a6be;
+  display: ${(props) => (props.$ishide === "true" ? "none" : "block")};
   p {
     font-size: 14px;
     line-height: 1;
