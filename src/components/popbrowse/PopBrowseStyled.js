@@ -198,6 +198,14 @@ export const BtnBor = styled.button`
   a {
     color: #565eef;
   }
+
+  &:hover {
+    background-color: #565eef; //  Заливка цветом при нажатии
+    color: #fff;
+    a {
+      color: #fff;
+    }
+  }
 `;
 
 export const BtnBg = styled.button`
