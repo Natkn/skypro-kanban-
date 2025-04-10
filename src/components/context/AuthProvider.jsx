@@ -10,28 +10,34 @@ export const AuthProvider = ({ children }) => {
 
   // Функция для получения данных пользователя (предполагается, что она у вас есть в services/auth.js)
   const loadUser = useCallback(async () => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      try {
-        const userData = await getUser(); // Функция, которая получает данные пользователя на основе токена
-        setUser(userData); // Сохраняем данные пользователя в состояние
+    setIsLoading(true);
+    try {
+      const { isLoggedIn, user } = await getUser();
+      console.log("Load user", user);
+
+      if (isLoggedIn) {
+        setUser(user);
+        localStorage.setItem("user", JSON.stringify(user)); // Сохраняем пользователя в localStorage
         setIsLoggedIn(true);
-      } catch (error) {
-        console.error("Ошибка при загрузке данных пользователя:", error);
+      } else {
         localStorage.removeItem("authToken");
-        localStorage.removeItem("user"); // Также удаляем информацию о пользователе
+        localStorage.removeItem("user");
         setIsLoggedIn(false);
         setUser(null);
-      } finally {
-        setIsLoading(false);
       }
-    } else {
+    } catch (error) {
+      console.error("Ошибка при загрузке данных пользователя:", error);
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
+      setIsLoggedIn(false);
+      setUser(null);
+    } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadUser(); // Загружаем данные пользователя при монтировании компонента
+    loadUser();
   }, [loadUser]);
 
   const updateUserInfo = useCallback((userData) => {
@@ -39,13 +45,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(userData)); // Сохраняем user в localStorage
   }, []);
 
-  const onLogin = useCallback(
-    (userData) => {
-      setIsLoggedIn(true);
-      updateUserInfo(userData); // Обновляем информацию о пользователе и сохраняем ее в localStorage
-    },
-    [updateUserInfo]
-  );
+  const onLogin = useCallback((userData) => {
+    setIsLoggedIn(true);
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  }, []);
 
   const onLogout = useCallback(() => {
     localStorage.removeItem("authToken");

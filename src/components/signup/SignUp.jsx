@@ -91,6 +91,7 @@ function AuthForm({ isSignUp }) {
 
         if (data && data.token) {
           localStorage.setItem("authToken", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
           // Здесь нужно передать данные пользователя в onLogin
           updateUserInfo(data.user); // Обновляем AuthContext
           onLogin(data.user); // Передаем данные пользователя в onLogin

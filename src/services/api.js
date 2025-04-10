@@ -1,4 +1,5 @@
-const API_URL = "https://wedev-api.sky.pro/api/kanban";
+const API_URL = "https://wedev-api.sky.pro/api/kanban"; // Предполагаем, что базовый URL остается прежним
+const token = localStorage.getItem("authToken");
 
 const getAuthToken = () => {
   const token = localStorage.getItem("authToken");
@@ -59,28 +60,31 @@ export const addTask = async (taskData) => {
 };
 
 // Изменить задачу
-export const updateTask = async (id, taskData) => {
+export async function updateTask(taskId, taskData) {
   try {
-    const token = getAuthToken();
-    const url = `${API_URL}/${String(id)}`;
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-    const body = JSON.stringify(taskData);
-
-    const response = await fetch(url, {
+    const taskIdString = String(taskId); // Преобразуем taskId в строку
+    const response = await fetch(`${API_URL}/${taskIdString}`, {
       method: "PUT",
-      headers: headers,
-      body: body,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(taskData),
     });
 
-    const data = await handleResponse(response); // Get JSON from handleResponse
-    return data.tasks; // Return updated tasks
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        errorData.error || `Ошибка при обновлении задачи с ID ${taskId}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error(`Ошибка при обновлении задачи с ID ${id}:`, error);
+    console.error(`Ошибка при обновлении задачи с ID ${taskId}:`, error);
     throw error;
   }
-};
+}
 
 // Удалить задачу
 export const deleteTask = async (id) => {
@@ -103,21 +107,25 @@ export const deleteTask = async (id) => {
 };
 
 export async function getUser() {
-  const token = localStorage.getItem("authToken");
-  const response = await fetch(API_URL + "/me", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`, // Добавьте заголовок Authorization
-    },
-  });
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(API_URL + "/user", {
+      // Убедитесь, что это правильный URL
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(
-      errorData.message || "Ошибка при получении данных пользователя"
-    );
+    if (!response.ok) {
+      //console.error("getUser error:", response.status, response.statusText); // Для отладки
+      return { isLoggedIn: false, user: null }; // Возвращаем объект с isLoggedIn: false
+    }
+
+    const data = await response.json();
+    console.log("getUser data:", data); // Проверьте структуру ответа
+    return { isLoggedIn: true, user: data }; //  Возвращаем объект с данными пользователя и isLoggedIn: true
+  } catch (error) {
+    console.error("getUser error:", error); // Логируем ошибку
+    return { isLoggedIn: false, user: null }; // Возвращаем объект с isLoggedIn: false
   }
-
-  const data = await response.json();
-  return data;
 }
