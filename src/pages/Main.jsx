@@ -19,7 +19,7 @@ const MainPage = () => {
   const [tasks, setTasks] = useState([]);
   const [isPopNewCardOpen, setIsPopNewCardOpen] = useState(false);
   const [isPopBrowseOpen, setIsPopBrowseOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedTask, setSelectedTask, selectedCardId] = useState(null);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { createTask } = useTasks();
@@ -130,7 +130,11 @@ const MainPage = () => {
           )}
           {isPopBrowseOpen && (
             <>
-              <PopBrowse task={selectedTask} onClose={handleClosePopBrowse} />
+              <PopBrowse
+                task={selectedTask}
+                onClose={handleClosePopBrowse}
+                cardId={selectedCardId}
+              />
             </>
           )}
         </main>

@@ -49,7 +49,7 @@ function PopNewCard({ onClose }) {
       description,
       theme: category,
       date: selectedDate ? selectedDate.toISOString() : null,
-      status: "needToDo", //  Set default status
+      status: "noStatus", //  Set default status
     };
     console.log("Создаваемая задача:", newTask);
     try {

@@ -1,19 +1,15 @@
 import Card from "../card/Card";
 import { useTasks } from "../context/UseTask";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 
 const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
   border: 1px solid #ccc;
   margin: 10px;
   width: 250px;
-`;
-
-const ColumnTitle = styled.h2`
-  margin-bottom: 10px;
 `;
 
 function TaskList() {
@@ -29,28 +25,28 @@ function TaskList() {
   }, {});
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-around" }}>
+    <div>
       {Object.entries(groupedTasks).map(([status, tasksForStatus]) => (
         <ColumnContainer key={status}>
-          <ColumnTitle>
-            {status === "noStatus"
-              ? "Без статуса"
-              : status === "needToDo"
-              ? "Нужно сделать"
-              : status === "inProcess"
-              ? "В работе"
-              : status === "test"
-              ? "Тестирование"
-              : "Готово"}
-          </ColumnTitle>
+          {status === "noStatus"
+            ? "Без статуса"
+            : status === "needToDo"
+            ? "Нужно сделать"
+            : status === "inProcess"
+            ? "В работе"
+            : status === "test"
+            ? "Тестирование"
+            : "Готово"}
+
           {tasksForStatus.map((task) => (
             <Card
-              key={task.id}
+              key={task.id || uuidv4()}
               task={task}
               theme={task.theme}
               title={task.title}
               date={task.date}
               loading={false}
+              description={task.description}
             />
           ))}
         </ColumnContainer>

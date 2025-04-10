@@ -42,21 +42,31 @@ export const getTasks = async () => {
 };
 
 // Добавить задачу
-export const addTask = async (taskData) => {
+export async function addTask(taskData) {
   try {
+    const token = localStorage.getItem("authToken");
     const response = await fetch(API_URL, {
+      // Исправлено: используем POST и URL /kanban
       method: "POST",
-      headers: getHeaders(),
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(taskData),
     });
 
-    const data = await handleResponse(response); // Get JSON from handleResponse
-    return data.tasks;
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Ошибка при добавлении задачи");
+    }
+
+    const data = await response.json();
+    console.log("Задача, полученная с сервера:", data); // Проверяем данные
+    return data;
   } catch (error) {
     console.error("Ошибка при добавлении задачи:", error);
     throw error;
   }
-};
+}
 
 // Изменить задачу
 export async function updateTask(taskId, taskData) {
