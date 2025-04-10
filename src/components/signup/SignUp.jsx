@@ -42,8 +42,9 @@ const validateForm = (formData, isSignUp, setError, setErrors) => {
 };
 
 function AuthForm({ isSignUp }) {
-  const { updateUserInfo } = useContext(AuthContext);
+  const { updateUserInfo, onLogin } = useContext(AuthContext);
   const navigate = useNavigate();
+
   // Состояние полей формы
   const [formData, setFormData] = useState({
     name: "",
@@ -74,7 +75,9 @@ function AuthForm({ isSignUp }) {
     async (e) => {
       e.preventDefault();
 
-      if (!validateForm(formData, isSignUp, setError, setErrors)) {
+      const isValid = validateForm(formData, isSignUp, setError, setErrors);
+      if (!isValid) {
+        setError("Пожалуйста, заполните все обязательные поля."); // Or a more specific message
         return;
       }
 
@@ -86,15 +89,20 @@ function AuthForm({ isSignUp }) {
           data = await signIn(formData);
         }
 
-        if (data) {
-          updateUserInfo(data);
+        if (data && data.token) {
+          localStorage.setItem("authToken", data.token);
+          // Здесь нужно передать данные пользователя в onLogin
+          updateUserInfo(data.user); // Обновляем AuthContext
+          onLogin(data.user); // Передаем данные пользователя в onLogin
           navigate("/");
+        } else {
+          setError("Ошибка при входе/регистрации: не получен токен.");
         }
       } catch (err) {
         setError(err.message);
       }
     },
-    [isSignUp, formData, navigate, updateUserInfo]
+    [isSignUp, formData, navigate, updateUserInfo, onLogin]
   );
 
   return (
@@ -145,7 +153,7 @@ function AuthForm({ isSignUp }) {
                 {isSignUp ? (
                   <>
                     <p>Уже есть аккаунт?</p>
-                    <Link to="/signin">Войдите здесь</Link>
+                    <Link to="/login">Войдите здесь</Link>
                   </>
                 ) : (
                   <>

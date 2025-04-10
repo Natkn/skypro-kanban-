@@ -7,6 +7,8 @@ import PopNewCard from "../components/popnewcard/PopNewCard.jsx";
 import PopBrowse from "../components/popbrowse/PopBrowse";
 import { CardContext } from "../components/context/CardContext";
 import { useNavigate } from "react-router-dom";
+import { useTasks } from "../components/context/UseTask.jsx";
+import TaskList from "../components/context/TaskList.jsx";
 
 const Container = styled.div`
   width: 100vw;
@@ -19,6 +21,22 @@ const MainPage = () => {
   const [isPopBrowseOpen, setIsPopBrowseOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { createTask } = useTasks();
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCreateTask = async (newTask) => {
+    try {
+      await createTask(newTask);
+      handleCloseModal();
+    } catch (error) {
+      console.error("Ошибка при создании задачи:", error);
+      alert("Произошла ошибка при создании задачи.");
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -63,6 +81,13 @@ const MainPage = () => {
         <Header openPopNewCard={openPopNewCardHandler} />
         <main className="main">
           <div className="container">
+            <TaskList />
+            {isModalOpen && (
+              <PopNewCard
+                onClose={handleCloseModal}
+                onCreateTask={handleCreateTask}
+              />
+            )}{" "}
             <div className="main__block">
               <Column
                 title={"Без статуса"}

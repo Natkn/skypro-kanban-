@@ -3,12 +3,22 @@ import Calendar from "../calendar/Calendar";
 import PropTypes from "prop-types";
 import * as S from "../popbrowse/PopBrowseStyled";
 import { themePop } from "../../mock/data";
-import { useState, useCallback } from "react";
-import { deleteTask, updateTask } from "../../services/api";
+import { useState, useCallback, useEffect } from "react";
+import dayjs from "dayjs";
+import { useTasks } from "../context/UseTask";
 
-function PopBrowse({ task, onClose, onTaskUpdate, onTaskDelete }) {
+function PopBrowse({ task, onClose }) {
+  const defaultDate = dayjs("2023-10-30").toDate();
+  const [selectedDate, setSelectedDate] = useState(
+    task?.date ? dayjs(task.date).toDate() : defaultDate
+  );
+
+  const [dateLabel, setDateLabel] = useState("Выберите срок исполнения:");
+
   const formatDate = (date) => {
-    if (!date) return "";
+    if (!date || !(date instanceof Date) || isNaN(date)) {
+      return "";
+    }
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
@@ -16,18 +26,30 @@ function PopBrowse({ task, onClose, onTaskUpdate, onTaskDelete }) {
   };
 
   const [isEditing, setIsEditing] = useState(false); // Состояние режима редактирования
-  const [selectedDate, setSelectedDate] = useState(
-    task?.date ? new Date(task.date) : null
-  );
   const [editedStatus, setEditedStatus] = useState(task?.status || "noStatus"); // Состояние для редактируемого статуса
   const [editedDescription, setEditedDescription] = useState(
     task?.description || ""
   );
-
   const themeStyles = task ? themePop[task.theme] || {} : {};
   const formattedSelectedDate = formatDate(selectedDate);
+  const { status } = task || {};
+  const { updateTask: updateTaskContext, deleteTask: deleteTaskContext } =
+    useTasks();
+
+  useEffect(() => {
+    //  Инициализация selectedDate при загрузке компонента
+    if (task?.date) {
+      setSelectedDate(new Date(task.date));
+    }
+  }, [task?.date]);
+
+  useEffect(() => {
+    setDateLabel("Срок исполнения:");
+  }, []);
+
   const handleDateSelect = useCallback(
     (date) => {
+      console.log("handleDateSelect called with:", date);
       setSelectedDate(date);
     },
     [setSelectedDate]
@@ -41,6 +63,7 @@ function PopBrowse({ task, onClose, onTaskUpdate, onTaskDelete }) {
     setIsEditing(false); // Выключаем режим редактирования
     setEditedStatus(task.status); // Reset status
     setEditedDescription(task.description); // Reset description
+    setSelectedDate(task.date ? new Date(task.date) : null);
   };
 
   const handleSaveTask = async () => {
@@ -51,10 +74,8 @@ function PopBrowse({ task, onClose, onTaskUpdate, onTaskDelete }) {
         description: editedDescription,
         date: selectedDate ? selectedDate.toISOString() : null,
       };
-
-      const updatedTasks = await updateTask(task.id, updatedTaskData);
-      onTaskUpdate(updatedTasks); //  TODO:  Передайте actual updatedTasks
-      setIsEditing(false); // Выключаем режим редактирования
+      console.log("Данные для отправки на сервер:", updatedTaskData);
+      await updateTaskContext(task.id, updatedTaskData); // Use the function from context
       onClose();
     } catch (error) {
       console.error("Ошибка при обновлении задачи:", error);
@@ -67,9 +88,8 @@ function PopBrowse({ task, onClose, onTaskUpdate, onTaskDelete }) {
       window.confirm(`Вы уверены, что хотите удалить задачу "${task.title}"?`)
     ) {
       try {
-        await deleteTask(task.id);
-        onTaskDelete(task.id); // Вызываем callback для обновления списка задач в родительском компоненте
-        onClose(); // Закрываем модальное окно
+        await deleteTaskContext(task.id); // Use the function from context
+        onClose();
       } catch (error) {
         console.error("Ошибка при удалении задачи:", error);
         alert("Произошла ошибка при удалении задачи.");
@@ -84,6 +104,8 @@ function PopBrowse({ task, onClose, onTaskUpdate, onTaskDelete }) {
   const handleDescriptionChange = (event) => {
     setEditedDescription(event.target.value);
   };
+
+  const statusOptions = ["noStatus", "needToDo", "inProcess", "test", "ready"];
 
   if (!task) {
     return null;
@@ -109,41 +131,41 @@ function PopBrowse({ task, onClose, onTaskUpdate, onTaskDelete }) {
             <S.Status>
               <S.StatusP>Статус</S.StatusP>
               <S.StatusThemes>
-                <S.StatusTheme
-                  $ishide={(editedStatus !== "noStatus").toString()}
-                  $isselected={editedStatus === "noStatus" ? "true" : "false"}
-                  onClick={() => handleStatusChange("noStatus")}
-                >
-                  <p>Без статуса</p>
-                </S.StatusTheme>
-                <S.StatusTheme
-                  $ishide={(editedStatus !== "needToDo").toString()}
-                  $isselected={editedStatus === "needToDo" ? "true" : "false"}
-                  onClick={() => handleStatusChange("needToDo")}
-                >
-                  <p>Нужно сделать</p>
-                </S.StatusTheme>
-                <S.StatusTheme
-                  $ishide={(editedStatus !== "inProcess").toString()}
-                  $isselected={editedStatus === "inProcess" ? "true" : "false"}
-                  onClick={() => handleStatusChange("inProcess")}
-                >
-                  <p>В работе</p>
-                </S.StatusTheme>
-                <S.StatusTheme
-                  $ishide={(editedStatus !== "test").toString()}
-                  $isselected={editedStatus === "test" ? "true" : "false"}
-                  onClick={() => handleStatusChange("test")}
-                >
-                  <p>Тестирование</p>
-                </S.StatusTheme>
-                <S.StatusTheme
-                  $ishide={(editedStatus !== "ready").toString()}
-                  $isselected={editedStatus === "ready" ? "true" : "false"}
-                  onClick={() => handleStatusChange("ready")}
-                >
-                  <p>Готово</p>
-                </S.StatusTheme>
+                {isEditing ? (
+                  statusOptions.map((option) => (
+                    <S.StatusTheme
+                      key={option}
+                      $isselected={editedStatus === option ? "true" : "false"}
+                      onClick={() => handleStatusChange(option)}
+                    >
+                      <p>
+                        {option === "noStatus"
+                          ? "Без статуса"
+                          : option === "needToDo"
+                          ? "Нужно сделать"
+                          : option === "inProcess"
+                          ? "В работе"
+                          : option === "test"
+                          ? "Тестирование"
+                          : "Готово"}
+                      </p>
+                    </S.StatusTheme>
+                  ))
+                ) : (
+                  <S.StatusTheme $isselected="true">
+                    <p>
+                      {status === "noStatus"
+                        ? "Без статуса"
+                        : status === "needToDo"
+                        ? "Нужно сделать"
+                        : status === "inProcess"
+                        ? "В работе"
+                        : status === "test"
+                        ? "Тестирование"
+                        : "Готово"}
+                    </p>
+                  </S.StatusTheme>
+                )}
               </S.StatusThemes>
             </S.Status>
 
@@ -154,14 +176,23 @@ function PopBrowse({ task, onClose, onTaskUpdate, onTaskDelete }) {
                   <S.FormBrowseArea
                     name="text"
                     id="textArea01"
-                    readOnly
-                    placeholder="Описание задачи"
+                    readOnly={!isEditing}
+                    placeholder={
+                      isEditing
+                        ? "Введите описание задачи..."
+                        : "Описание задачи"
+                    }
                     value={task.description}
                     onChange={handleDescriptionChange}
                   />
                 </S.FormBrowseBlock>
               </S.PopBrowseForm>
-              <Calendar onDateSelect={handleDateSelect} disabled={!isEditing} />
+              <Calendar
+                onDateSelect={handleDateSelect}
+                selectedDate={selectedDate}
+                disabled={!isEditing}
+                dateLabel={dateLabel}
+              />
               <input
                 type="hidden"
                 id="datepick_value"

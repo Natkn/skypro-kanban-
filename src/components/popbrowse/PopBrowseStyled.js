@@ -126,6 +126,7 @@ export const FormBrowseArea = styled.textarea`
   letter-spacing: -0.14px;
   margin-top: 14px;
   height: 200px;
+  color: #000;
 
   &::-moz-placeholder {
     font-weight: 400;
@@ -168,10 +169,11 @@ export const StatusThemes = styled.div`
 
 export const StatusTheme = styled.div`
   border-radius: 24px;
+  height: 30px;
   border: 0.7px solid rgba(148, 166, 190, 0.4);
   color: #94a6be;
-  padding: 11px 14px 10px;
-  margin-right: 7px;
+  padding: 8px 16px 10px;
+  margin-right: 8px;
   color: #fff;
   background-color: #94a6be;
   display: ${(props) => (props.$ishide === "true" ? "none" : "block")};
@@ -200,7 +202,7 @@ export const BtnBor = styled.button`
   }
 
   &:hover {
-    background-color: #565eef; //  Заливка цветом при нажатии
+    background-color: #565eef;
     color: #fff;
     a {
       color: #fff;

@@ -47,7 +47,7 @@ function Header({ openPopNewCard }) {
   };
 
   const name = user ? user.name : "Имя не найдено";
-  const email = user ? user.login : "Почта не найдена";
+  const login = user ? user.login : "Почта не найдена";
 
   return (
     <div className="container">
@@ -74,7 +74,7 @@ function Header({ openPopNewCard }) {
           {isUserSettingsOpen && (
             <HeaderPopUserSet>
               <PopUserSetName>{name}</PopUserSetName>
-              <PopUserSetMail>{email}</PopUserSetMail>
+              <PopUserSetMail>{login}</PopUserSetMail>
               <PopUserSetTheme>
                 <ThemeToggleLabel>Темная тема</ThemeToggleLabel>
                 <ThemeToggleButton

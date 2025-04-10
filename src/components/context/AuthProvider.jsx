@@ -1,54 +1,74 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
 import PropTypes from "prop-types";
+import { getUser } from "../../services/api";
 
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Добавлено состояние isLoggedIn
+  const [isLoading, setIsLoading] = useState(true); // Начинаем с isLoading = true
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem("userInfo");
-      if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-        setIsLoggedIn(true); // Устанавливаем isLoggedIn в true при загрузке из localStorage
+  // Функция для получения данных пользователя (предполагается, что она у вас есть в services/auth.js)
+  const loadUser = useCallback(async () => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      try {
+        const userData = await getUser(); // Функция, которая получает данные пользователя на основе токена
+        setUser(userData); // Сохраняем данные пользователя в состояние
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error("Ошибка при загрузке данных пользователя:", error);
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("user"); // Также удаляем информацию о пользователе
+        setIsLoggedIn(false);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Ошибка при загрузке данных из localStorage:", error);
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
-  const updateUserInfo = (userData) => {
-    setUser(userData);
-    if (userData) {
-      localStorage.setItem("userInfo", JSON.stringify(userData));
-      setIsLoggedIn(true); // Устанавливаем isLoggedIn в true при логине
-    } else {
-      localStorage.removeItem("userInfo");
-      setIsLoggedIn(false); // Устанавливаем isLoggedIn в false при логауте
-    }
-  };
+  useEffect(() => {
+    loadUser(); // Загружаем данные пользователя при монтировании компонента
+  }, [loadUser]);
 
-  const login = (loginData) => {
-    updateUserInfo(loginData);
-    return true;
-  };
+  const updateUserInfo = useCallback((userData) => {
+    setUser(userData); // Просто обновляем состояние user
+    localStorage.setItem("user", JSON.stringify(userData)); // Сохраняем user в localStorage
+  }, []);
 
-  const logout = () => {
-    updateUserInfo(null);
-    return true;
-  };
+  const onLogin = useCallback(
+    (userData) => {
+      setIsLoggedIn(true);
+      updateUserInfo(userData); // Обновляем информацию о пользователе и сохраняем ее в localStorage
+    },
+    [updateUserInfo]
+  );
+
+  const onLogout = useCallback(() => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setUser(null);
+  }, []);
 
   const value = {
     user,
-    isLoggedIn, // Добавлено isLoggedIn в value
-    login,
-    logout,
+    isLoading,
+    isLoggedIn,
     updateUserInfo,
+    onLogin,
+    onLogout,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {isLoading ? <div>Загрузка...</div> : children}{" "}
+      {/* Отображаем индикатор загрузки */}
+    </AuthContext.Provider>
+  );
 };
 
 AuthProvider.propTypes = {

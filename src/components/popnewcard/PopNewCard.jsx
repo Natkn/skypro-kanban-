@@ -20,12 +20,15 @@ import {
   CategoriesTheme,
 } from "./PopNewCardStyled";
 import { theme } from "./PopNewCardStyled";
+import { useTasks } from "../context/UseTask";
 
 function PopNewCard({ onCreateTask, onClose }) {
+  const [dateLabel] = useState("Выберите срок исполнения:");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Web Design");
   const [selectedDate, setSelectedDate] = useState(null);
+  const { createTask } = useTasks();
 
   const handleDateSelect = useCallback(
     (date) => {
@@ -42,13 +45,20 @@ function PopNewCard({ onCreateTask, onClose }) {
 
     // Создание объекта задачи
     const newTask = {
-      id: Date.now(),
       title,
       description,
-      category,
-      dueDate: selectedDate ? selectedDate.toISOString().split("T")[0] : null,
-      status: "todo",
+      theme: category,
+      date: selectedDate ? selectedDate.toISOString() : null,
+      status: "needToDo", //  Set default status
     };
+
+    try {
+      createTask(newTask); //  Use the createTask function from context
+      onClose(); // Close the modal after successful task creation
+    } catch (error) {
+      console.error("Ошибка при создании задачи:", error);
+      alert("Произошла ошибка при создании задачи.");
+    }
 
     // Вызов функции onCreateTask, переданной из родительского компонента
     onCreateTask(newTask);
@@ -104,7 +114,7 @@ function PopNewCard({ onCreateTask, onClose }) {
                   />
                 </FormNewBlock>{" "}
               </PopNewCardForm>
-              <Calendar onDateSelect={handleDateSelect} />
+              <Calendar onDateSelect={handleDateSelect} dateLabel={dateLabel} />
               <input
                 type="hidden"
                 id="datepick_value"
