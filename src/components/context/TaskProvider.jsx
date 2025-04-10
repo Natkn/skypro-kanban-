@@ -35,99 +35,68 @@ const TaskProvider = ({ children, isLoggedIn }) => {
 
   const addTask = useCallback(async (newTask) => {
     try {
-      const updatedTasks = await apiAddTask(newTask); // Используем API-функцию
-      setTasks(updatedTasks);
+      const addedTask = await apiAddTask(newTask);
+      console.log("Задача, возвращенная с сервера:", addedTask); // Проверяем данные
+      setTasks((prevTasks) => [...prevTasks, addedTask]); // Обновляем состояние
     } catch (error) {
       console.error("Ошибка при добавлении задачи:", error);
       setError(error);
-      throw error; //  Re-throw the error to be caught in PopNewCard
+      throw error;
     }
   }, []);
 
-  const updateTask = useCallback(async (id, updatedTask) => {
-    try {
-      const updatedTasks = await apiUpdateTask(id, updatedTask); // Используем API-функцию
-      setTasks(updatedTasks);
-    } catch (error) {
-      console.error("Ошибка при обновлении задачи:", error);
-      setError(error);
-      throw error; // Re-throw the error to be caught in PopBrowse
-    }
-  }, []);
-
-  const deleteTask = useCallback(async (id) => {
-    try {
-      const updatedTasks = await apiDeleteTask(id); // Используем API-функцию
-      setTasks(updatedTasks);
-    } catch (error) {
-      console.error("Ошибка при удалении задачи:", error);
-      setError(error);
-      throw error; //  Re-throw the error to be caught in PopBrowse
-    }
-  }, []);
-
-  const createTask = useCallback(
-    async (newTask) => {
-      try {
-        await addTask(newTask); // Вызываем обернутую API-функцию
-      } catch (error) {
-        console.error("Ошибка при добавлении задачи:", error);
-        setError(error);
-        throw error; //  Re-throw the error to be caught in PopNewCard
-      }
-    },
-    [addTask]
-  );
-
-  const updateTaskContext = useCallback(
+  const updateTask = useCallback(
     async (id, updatedTask) => {
       try {
-        await updateTask(id, updatedTask); // Вызываем обернутую API-функцию
+        const updatedTaskFromServer = await apiUpdateTask(id, updatedTask); //Получаем обновленную задачу с сервера
+        setTasks(
+          (prevTasks) =>
+            prevTasks.map((task) =>
+              task.id === id ? updatedTaskFromServer : task
+            ) // Обновляем задачу в массиве
+        );
       } catch (error) {
         console.error("Ошибка при обновлении задачи:", error);
         setError(error);
-        throw error; // Re-throw the error to be caught in PopBrowse
+        throw error;
       }
     },
-    [updateTask]
+    [] // Убрали зависимости, т.к. setTasks не меняется
   );
 
-  const deleteTaskContext = useCallback(
+  const deleteTask = useCallback(
     async (id) => {
       try {
-        await deleteTask(id); // Вызываем обернутую API-функцию
+        await apiDeleteTask(id); // Просто удаляем задачу на сервере
+        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id)); // Обновляем массив, удаляя задачу
       } catch (error) {
         console.error("Ошибка при удалении задачи:", error);
         setError(error);
-        throw error; //  Re-throw the error to be caught in PopBrowse
+        throw error;
       }
     },
-    [deleteTask]
+    [] // Убрали зависимости, т.к. setTasks не меняется
   );
 
   const value = {
     tasks,
     loading,
     error,
-    createTask,
-    updateTask: updateTaskContext,
-    deleteTask: deleteTaskContext,
+    createTask: addTask,
+    updateTask,
+    deleteTask,
     fetchTasks,
   };
 
   useEffect(() => {
-    const delay = 500; // Задержка в миллисекундах (например, 500 мс)
-    const timeoutId = setTimeout(() => {
+    if (isLoggedIn) {
       fetchTasks();
-    }, delay);
-
-    return () => clearTimeout(timeoutId); // Очистка timeout при размонтировании компонента
-  }, [fetchTasks]);
-
+    }
+  }, [fetchTasks, isLoggedIn]);
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
 };
 TaskProvider.propTypes = {
   children: PropTypes.node.isRequired,
-  isLoggedIn: PropTypes.node.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
 };
 export { TaskProvider };

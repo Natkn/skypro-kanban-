@@ -1,5 +1,4 @@
 const API_URL = "https://wedev-api.sky.pro/api/kanban"; // Предполагаем, что базовый URL остается прежним
-const token = localStorage.getItem("authToken");
 
 const getAuthToken = () => {
   const token = localStorage.getItem("authToken");
@@ -62,10 +61,12 @@ export const addTask = async (taskData) => {
 // Изменить задачу
 export async function updateTask(taskId, taskData) {
   try {
-    const taskIdString = String(taskId); // Преобразуем taskId в строку
-    const response = await fetch(`${API_URL}/${taskIdString}`, {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(`${API_URL}/${String(taskId)}`, {
+      // Преобразуем в строку
       method: "PUT",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(taskData),
@@ -74,8 +75,8 @@ export async function updateTask(taskId, taskData) {
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(
-        errorData.error || `Ошибка при обновлении задачи с ID ${taskId}`
-      );
+        errorData.message || `Ошибка при обновлении задачи с ID ${taskId}`
+      ); // Используем message
     }
 
     const data = await response.json();
@@ -110,22 +111,26 @@ export async function getUser() {
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(API_URL + "/user", {
-      // Убедитесь, что это правильный URL
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
-      //console.error("getUser error:", response.status, response.statusText); // Для отладки
-      return { isLoggedIn: false, user: null }; // Возвращаем объект с isLoggedIn: false
+      console.error("getUser error:", response.status, response.statusText); // Для отладки
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
+      return { isLoggedIn: false, user: null };
     }
 
     const data = await response.json();
-    console.log("getUser data:", data); // Проверьте структуру ответа
-    return { isLoggedIn: true, user: data }; //  Возвращаем объект с данными пользователя и isLoggedIn: true
+    console.log("getUser data:", data);
+    localStorage.setItem("user", JSON.stringify(data)); // Сохраняем данные пользователя
+    return { isLoggedIn: true, user: data };
   } catch (error) {
-    console.error("getUser error:", error); // Логируем ошибку
-    return { isLoggedIn: false, user: null }; // Возвращаем объект с isLoggedIn: false
+    console.error("getUser error:", error);
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("user");
+    return { isLoggedIn: false, user: null };
   }
 }

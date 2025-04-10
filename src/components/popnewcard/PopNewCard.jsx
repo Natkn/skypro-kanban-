@@ -22,7 +22,7 @@ import {
 import { theme } from "./PopNewCardStyled";
 import { useTasks } from "../context/UseTask";
 
-function PopNewCard({ onCreateTask, onClose }) {
+function PopNewCard({ onClose }) {
   const [dateLabel] = useState("Выберите срок исполнения:");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -51,7 +51,7 @@ function PopNewCard({ onCreateTask, onClose }) {
       date: selectedDate ? selectedDate.toISOString() : null,
       status: "needToDo", //  Set default status
     };
-
+    console.log("Создаваемая задача:", newTask);
     try {
       createTask(newTask); //  Use the createTask function from context
       onClose(); // Close the modal after successful task creation
@@ -59,9 +59,6 @@ function PopNewCard({ onCreateTask, onClose }) {
       console.error("Ошибка при создании задачи:", error);
       alert("Произошла ошибка при создании задачи.");
     }
-
-    // Вызов функции onCreateTask, переданной из родительского компонента
-    onCreateTask(newTask);
 
     // Очистка формы
     setTitle("");
@@ -114,7 +111,11 @@ function PopNewCard({ onCreateTask, onClose }) {
                   />
                 </FormNewBlock>{" "}
               </PopNewCardForm>
-              <Calendar onDateSelect={handleDateSelect} dateLabel={dateLabel} />
+              <Calendar
+                onDateSelect={handleDateSelect}
+                selectedDate={selectedDate}
+                dateLabel={dateLabel}
+              />
               <input
                 type="hidden"
                 id="datepick_value"
@@ -148,7 +149,7 @@ function PopNewCard({ onCreateTask, onClose }) {
                 Copywriting
               </CategoriesTheme>
             </CategoriesThemes>
-            <FormNewCreate id="btnCreate" type="submit">
+            <FormNewCreate id="btnCreate" onClick={handleSubmit} href="#">
               Создать задачу
             </FormNewCreate>
           </PopNewCardContent>

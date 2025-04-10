@@ -4,6 +4,7 @@ import * as S from "./Card.styled";
 import { CardContext } from "../context/CardContext";
 
 function Card({ theme, title, date, loading, id }) {
+  console.log("Click from CardButton! Objectid:", id);
   const { handleCardButtonClick } = useContext(CardContext);
 
   if (!handleCardButtonClick) {

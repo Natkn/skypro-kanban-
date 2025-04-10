@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const { isLoggedIn, user } = await getUser();
-      console.log("Load user", user);
 
       if (isLoggedIn) {
         setUser(user);

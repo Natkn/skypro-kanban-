@@ -81,7 +81,7 @@ function AuthForm({ isSignUp }) {
         return;
       }
 
-      try {
+      {
         let data;
         if (isSignUp) {
           data = await signUp(formData);
@@ -89,18 +89,14 @@ function AuthForm({ isSignUp }) {
           data = await signIn(formData);
         }
 
-        if (data && data.token) {
+        if (data.token) {
           localStorage.setItem("authToken", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
-          // Здесь нужно передать данные пользователя в onLogin
-          updateUserInfo(data.user); // Обновляем AuthContext
           onLogin(data.user); // Передаем данные пользователя в onLogin
           navigate("/");
         } else {
           setError("Ошибка при входе/регистрации: не получен токен.");
         }
-      } catch (err) {
-        setError(err.message);
       }
     },
     [isSignUp, formData, navigate, updateUserInfo, onLogin]
