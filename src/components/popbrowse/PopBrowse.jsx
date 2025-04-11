@@ -33,8 +33,7 @@ function PopBrowse({ task, onClose }) {
   const themeStyles = task ? themePop[task.theme] || {} : {};
   const formattedSelectedDate = formatDate(selectedDate);
   const { status } = task || {};
-  const { updateTask: updateTaskContext, deleteTask: deleteTaskContext } =
-    useTasks();
+  const { updateTask: updateTaskContext, deleteTask } = useTasks();
 
   useEffect(() => {
     //  Инициализация selectedDate при загрузке компонента
@@ -83,16 +82,15 @@ function PopBrowse({ task, onClose }) {
   };
 
   const handleDeleteTask = async () => {
-    if (
-      window.confirm(`Вы уверены, что хотите удалить задачу "${task.title}"?`)
-    ) {
-      try {
-        await deleteTaskContext(task.id); // Use the function from context
-        onClose();
-      } catch (error) {
-        console.error("Ошибка при удалении задачи:", error);
-        alert("Произошла ошибка при удалении задачи.");
-      }
+    try {
+      console.log("Удаляем задачу с ID:", task.id); //  Добавлено логирование
+      await deleteTask(task.id); //  Вызываем deleteTask из контекста
+      onClose(); // Закрываем PopBrowse после успешного удаления
+      // Добавьте логику обновления списка задач (если это не происходит автоматически)
+      // Например, вызвать loadTasks() из TaskContext  или обновить tasks в TaskProvider.jsx
+    } catch (error) {
+      console.error("Ошибка при удалении задачи:", error);
+      alert("Произошла ошибка при удалении задачи.");
     }
   };
 

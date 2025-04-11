@@ -15,6 +15,7 @@ const Container = styled.div`
 `;
 const ColumnsWrapper = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 const MainPage = () => {
   const [loading, setLoading] = useState(false);
@@ -88,18 +89,16 @@ const MainPage = () => {
                 onClose={handleCloseModal}
                 onCreateTask={handleCreateTask}
               />
-            )}{" "}
+            )}
             <div className="main__block">
-              {" "}
               <ColumnsWrapper>
-                {" "}
                 <Column
                   title={"Без статуса"}
                   tasks={tasks}
                   loading={loading}
                   status={"noStatus"}
                   handleCardClick={handleCardClick}
-                />{" "}
+                />
                 <TaskList />
               </ColumnsWrapper>
               <Column

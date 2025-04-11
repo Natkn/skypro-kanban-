@@ -5,20 +5,18 @@ function TaskList() {
   const { tasks } = useTasks();
 
   return (
-    <>
-      <ul>
-        {tasks.map((task) => (
-          <Card
-            key={task._id || uuidv4()}
-            id={task.id}
-            theme={task.theme}
-            title={task.title}
-            date={task.date}
-            loading={false}
-          />
-        ))}
-      </ul>
-    </>
+    <ul>
+      {tasks.map((task) => (
+        <Card
+          key={task._id || uuidv4()}
+          id={task.id}
+          theme={task.theme}
+          title={task.title}
+          date={task.date}
+          loading={false}
+        />
+      ))}
+    </ul>
   );
 }
 

@@ -69,33 +69,24 @@ export async function addTask(taskData) {
 }
 
 // Изменить задачу
-export async function updateTask(taskId, taskData) {
+export const apiUpdateTask = async (id, data) => {
   try {
-    const token = localStorage.getItem("authToken");
-    const response = await fetch(`${API_URL}/${String(taskId)}`, {
-      // Преобразуем в строку
-      method: "PUT",
+    const response = await fetch(`${API_URL}/tasks/${id}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(taskData),
+      body: JSON.stringify(data),
     });
-
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.message || `Ошибка при обновлении задачи с ID ${taskId}`
-      ); // Используем message
+      throw new Error(`Ошибка при обновлении задачи с ID ${id}`);
     }
-
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
-    console.error(`Ошибка при обновлении задачи с ID ${taskId}:`, error);
+    console.error("Ошибка при обновлении задачи:", error);
     throw error;
   }
-}
+};
 
 // Удалить задачу
 export const deleteTask = async (id) => {

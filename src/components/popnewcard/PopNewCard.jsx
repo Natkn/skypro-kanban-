@@ -47,7 +47,7 @@ function PopNewCard({ onClose }) {
     const newTask = {
       title,
       description,
-      theme: category,
+      topic: category,
       date: selectedDate ? selectedDate.toISOString() : null,
       status: "noStatus", //  Set default status
     };
