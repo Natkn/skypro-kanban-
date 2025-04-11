@@ -81,7 +81,6 @@ const MainPage = () => {
         <Header openPopNewCard={openPopNewCardHandler} />
         <main className="main">
           <div className="container">
-            <TaskList />
             {isModalOpen && (
               <PopNewCard
                 onClose={handleCloseModal}
@@ -96,6 +95,7 @@ const MainPage = () => {
                 status={"noStatus"}
                 handleCardClick={handleCardClick}
               />
+              <TaskList />
               <Column
                 title={"Нужно сделать"}
                 tasks={tasks}
