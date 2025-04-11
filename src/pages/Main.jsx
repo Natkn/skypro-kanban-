@@ -13,7 +13,9 @@ import TaskList from "../components/context/TaskList.jsx";
 const Container = styled.div`
   width: 100vw;
 `;
-
+const ColumnsWrapper = styled.div`
+  display: flex;
+`;
 const MainPage = () => {
   const [loading, setLoading] = useState(false);
   const [tasks, setTasks] = useState([]);
@@ -88,14 +90,18 @@ const MainPage = () => {
               />
             )}{" "}
             <div className="main__block">
-              <Column
-                title={"Без статуса"}
-                tasks={tasks}
-                loading={loading}
-                status={"noStatus"}
-                handleCardClick={handleCardClick}
-              />
-              <TaskList />
+              {" "}
+              <ColumnsWrapper>
+                {" "}
+                <Column
+                  title={"Без статуса"}
+                  tasks={tasks}
+                  loading={loading}
+                  status={"noStatus"}
+                  handleCardClick={handleCardClick}
+                />{" "}
+                <TaskList />
+              </ColumnsWrapper>
               <Column
                 title={"Нужно сделать"}
                 tasks={tasks}
@@ -123,8 +129,9 @@ const MainPage = () => {
                 status={"ready"}
                 handleCardClick={handleCardClick}
               />
-            </div>
+            </div>{" "}
           </div>
+
           {isPopNewCardOpen && (
             <PopNewCard onClose={() => setIsPopNewCardOpen(false)} />
           )}

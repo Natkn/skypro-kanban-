@@ -49,7 +49,6 @@ function PopBrowse({ task, onClose }) {
 
   const handleDateSelect = useCallback(
     (date) => {
-      console.log("handleDateSelect called with:", date);
       setSelectedDate(date);
     },
     [setSelectedDate]
@@ -74,7 +73,7 @@ function PopBrowse({ task, onClose }) {
         description: editedDescription,
         date: selectedDate ? selectedDate.toISOString() : null,
       };
-      console.log("Данные для отправки на сервер:", updatedTaskData);
+
       await updateTaskContext(task.id, updatedTaskData); // Use the function from context
       onClose();
     } catch (error) {

@@ -36,7 +36,7 @@ const TaskProvider = ({ children, isLoggedIn }) => {
   const addTask = useCallback(async (newTask) => {
     try {
       const addedTask = await apiAddTask(newTask);
-      console.log("Задача, возвращенная с сервера:", addedTask); // Проверяем данные
+
       setTasks((prevTasks) => [...prevTasks, addedTask]); // Обновляем состояние
     } catch (error) {
       console.error("Ошибка при добавлении задачи:", error);

@@ -2,7 +2,7 @@ const API_URL = "https://wedev-api.sky.pro/api/kanban"; // Предполага�
 
 const getAuthToken = () => {
   const token = localStorage.getItem("authToken");
-  console.log("Токен из localStorage:", token); // Add this line
+
   return token;
 };
 
@@ -21,7 +21,7 @@ const handleResponse = async (response) => {
     throw new Error(`Ошибка API: ${response.status} - ${response.statusText}`);
   }
   const data = await response.json();
-  console.log("Данные, полученные от сервера:", data); // Add this line
+
   return data;
 };
 
@@ -60,7 +60,7 @@ export async function addTask(taskData) {
     }
 
     const data = await response.json();
-    console.log("Задача, полученная с сервера:", data); // Проверяем данные
+
     return data;
   } catch (error) {
     console.error("Ошибка при добавлении задачи:", error);
@@ -101,7 +101,7 @@ export async function updateTask(taskId, taskData) {
 export const deleteTask = async (id) => {
   try {
     const token = getAuthToken();
-    console.log("Токен:", token); //  Проверяем токен
+
     const response = await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
       headers: {
@@ -127,18 +127,15 @@ export async function getUser() {
     });
 
     if (!response.ok) {
-      console.error("getUser error:", response.status, response.statusText); // Для отладки
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
       return { isLoggedIn: false, user: null };
     }
 
     const data = await response.json();
-    console.log("getUser data:", data);
     localStorage.setItem("user", JSON.stringify(data)); // Сохраняем данные пользователя
     return { isLoggedIn: true, user: data };
-  } catch (error) {
-    console.error("getUser error:", error);
+  } catch {
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
     return { isLoggedIn: false, user: null };

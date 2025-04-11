@@ -66,12 +66,7 @@ export const AuthProvider = ({ children }) => {
     onLogout,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {isLoading ? <div>Загрузка...</div> : children}{" "}
-      {/* Отображаем индикатор загрузки */}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 AuthProvider.propTypes = {
