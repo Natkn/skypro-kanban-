@@ -24,7 +24,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../components/context/AuthContext";
 
 function Header({ openPopNewCard }) {
-  const { user } = useContext(AuthContext);
+  const { user, userInfo } = useContext(AuthContext);
   const { theme, toggleTheme } = useTheme();
   const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
   const [isPopExitOpen, setIsPopExitOpen] = useState(false);
@@ -47,7 +47,7 @@ function Header({ openPopNewCard }) {
   };
 
   const name = user ? user.name : "Имя не найдено";
-  const login = user ? user.login : "Почта не найдена";
+  const login = userInfo?.login || "Почта не найдена";
 
   return (
     <div className="container">

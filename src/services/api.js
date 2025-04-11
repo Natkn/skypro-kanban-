@@ -1,8 +1,9 @@
 const API_URL = "https://wedev-api.sky.pro/api/kanban"; // Предполагаем, что базовый URL остается прежним
+const token = localStorage.getItem("authToken");
 
 const getAuthToken = () => {
   const token = localStorage.getItem("authToken");
-
+  console.log("Токен из localStorage:", token); // Add this line
   return token;
 };
 
@@ -21,7 +22,7 @@ const handleResponse = async (response) => {
     throw new Error(`Ошибка API: ${response.status} - ${response.statusText}`);
   }
   const data = await response.json();
-
+  console.log("Данные, полученные от сервера:", data); // Add this line
   return data;
 };
 
@@ -42,57 +43,55 @@ export const getTasks = async () => {
 };
 
 // Добавить задачу
-export async function addTask(taskData) {
+export const addTask = async (taskData) => {
   try {
-    const token = localStorage.getItem("authToken");
     const response = await fetch(API_URL, {
-      // Исправлено: используем POST и URL /kanban
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getHeaders(),
       body: JSON.stringify(taskData),
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Ошибка при добавлении задачи");
-    }
-
-    const data = await response.json();
-
-    return data;
+    const data = await handleResponse(response); // Get JSON from handleResponse
+    return data.tasks;
   } catch (error) {
     console.error("Ошибка при добавлении задачи:", error);
     throw error;
   }
-}
+};
 
 // Изменить задачу
-export const apiUpdateTask = async (id, data) => {
+export async function updateTask(taskId, taskData) {
+  // taskId - id задачи, taskData - обновленные данные
   try {
-    const response = await fetch(`${API_URL}/tasks/${id}`, {
-      method: "PATCH",
+    const response = await fetch(`${API_URL}/${taskId}`, {
+      // Используем taskId в URL
+      method: "PUT",
       headers: {
-        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(taskData), // taskData содержит данные для обновления
     });
+
     if (!response.ok) {
-      throw new Error(`Ошибка при обновлении задачи с ID ${id}`);
+      const errorData = await response.json();
+      throw new Error(
+        errorData.error || `Ошибка при обновлении задачи с ID ${taskId}`
+      );
     }
-    return await response.json();
+
+    const data = await response.json();
+    return data; // Возвращаем обновленную задачу (или сообщение об успехе)
   } catch (error) {
-    console.error("Ошибка при обновлении задачи:", error);
-    throw error;
+    console.error(`Ошибка при обновлении задачи с ID ${taskId}:`, error);
+    throw error; //  Передаем ошибку дальше, чтобы можно было ее обработать в компоненте
   }
-};
+}
 
 // Удалить задачу
 export const deleteTask = async (id) => {
   try {
     const token = getAuthToken();
-
+    console.log("Токен:", token); //  Проверяем токен
     const response = await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
       headers: {
@@ -112,23 +111,22 @@ export async function getUser() {
   try {
     const token = localStorage.getItem("authToken");
     const response = await fetch(API_URL + "/user", {
+      // Убедитесь, что это правильный URL
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
     if (!response.ok) {
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("user");
-      return { isLoggedIn: false, user: null };
+      //console.error("getUser error:", response.status, response.statusText); // Для отладки
+      return { isLoggedIn: false, user: null }; // Возвращаем объект с isLoggedIn: false
     }
 
     const data = await response.json();
-    localStorage.setItem("user", JSON.stringify(data)); // Сохраняем данные пользователя
-    return { isLoggedIn: true, user: data };
-  } catch {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
-    return { isLoggedIn: false, user: null };
+    console.log("getUser data:", data); // Проверьте структуру ответа
+    return { isLoggedIn: true, user: data }; //  Возвращаем объект с данными пользователя и isLoggedIn: true
+  } catch (error) {
+    console.error("getUser error:", error); // Логируем ошибку
+    return { isLoggedIn: false, user: null }; // Возвращаем объект с isLoggedIn: false
   }
 }

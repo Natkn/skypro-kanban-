@@ -89,10 +89,11 @@ function AuthForm({ isSignUp }) {
           data = await signIn(formData);
         }
 
-        if (data.token) {
+        if (data && data.token) {
           localStorage.setItem("authToken", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          onLogin(data.user); // Передаем данные пользователя в onLogin
+          console.log("Data from sign up/in:", data);
+          updateUserInfo(data); // Убедитесь, что updateUserInfo правильно обрабатывает данные и сохраняет токен, если это необходимо
+          onLogin(); // Call onLogin to update the isLoggedIn state in AuthContext
           navigate("/");
         } else {
           setError("Ошибка при входе/регистрации: не получен токен.");
@@ -101,7 +102,6 @@ function AuthForm({ isSignUp }) {
     },
     [isSignUp, formData, navigate, updateUserInfo, onLogin]
   );
-
   return (
     <Wrapper>
       <ContainerSignin>

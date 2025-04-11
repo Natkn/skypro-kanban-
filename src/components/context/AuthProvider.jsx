@@ -5,6 +5,7 @@ import { getUser } from "../../services/api";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  console.log("AuthContext user (initial):", user);
   const [isLoading, setIsLoading] = useState(true); // Начинаем с isLoading = true
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -13,8 +14,9 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const { isLoggedIn, user } = await getUser();
+      console.log("Load user", user);
 
-      if (isLoggedIn) {
+      if (isLoggedIn && user) {
         setUser(user);
         localStorage.setItem("user", JSON.stringify(user)); // Сохраняем пользователя в localStorage
         setIsLoggedIn(true);
@@ -40,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   }, [loadUser]);
 
   const updateUserInfo = useCallback((userData) => {
-    setUser(userData); // Просто обновляем состояние user
+    setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData)); // Сохраняем user в localStorage
   }, []);
 
@@ -58,12 +60,12 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const value = {
-    user,
-    isLoading,
     isLoggedIn,
-    updateUserInfo,
     onLogin,
     onLogout,
+    isLoading,
+    user,
+    updateUserInfo,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

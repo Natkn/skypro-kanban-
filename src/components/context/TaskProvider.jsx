@@ -36,7 +36,7 @@ const TaskProvider = ({ children, isLoggedIn }) => {
   const addTask = useCallback(async (newTask) => {
     try {
       const addedTask = await apiAddTask(newTask);
-      localStorage.setItem("lastSyncDate", new Date().toISOString());
+      // Проверяем данные
       setTasks((prevTasks) => [...prevTasks, addedTask]); // Обновляем состояние
     } catch (error) {
       console.error("Ошибка при добавлении задачи:", error);
@@ -45,20 +45,24 @@ const TaskProvider = ({ children, isLoggedIn }) => {
     }
   }, []);
 
-  const updateTask = useCallback(async (id, updatedTask) => {
-    try {
-      const updatedTaskFromServer = await apiUpdateTask(id, updatedTask);
-      setTasks((prevTasks) =>
-        prevTasks.map((task) =>
-          task._id === id ? updatedTaskFromServer : task
-        )
-      );
-    } catch (error) {
-      console.error(`Ошибка при обновлении задачи с ID ${id}:`, error);
-      setError(error);
-      throw error;
-    }
-  }, []);
+  const updateTask = useCallback(
+    async (id, updatedTask) => {
+      try {
+        const updatedTaskFromServer = await apiUpdateTask(id, updatedTask); //Получаем обновленную задачу с сервера
+        setTasks(
+          (prevTasks) =>
+            prevTasks.map((task) =>
+              task.id === id ? updatedTaskFromServer : task
+            ) // Обновляем задачу в массиве
+        );
+      } catch (error) {
+        console.error("Ошибка при обновлении задачи:", error);
+        setError(error);
+        throw error;
+      }
+    },
+    [] // Убрали зависимости, т.к. setTasks не меняется
+  );
 
   const deleteTask = useCallback(
     async (id) => {
