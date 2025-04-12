@@ -3,18 +3,19 @@ import Calendar from "../calendar/Calendar";
 import PropTypes from "prop-types";
 import * as S from "../popbrowse/PopBrowseStyled";
 import { themePop } from "../../mock/data";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useContext } from "react";
 import dayjs from "dayjs";
 import { useTasks } from "../context/UseTask";
+import TaskContext from "../context/TaskContext";
 
 function PopBrowse({ task, onClose }) {
+  const taskId = task?.id || task?._id;
+  const { deleteTask } = useContext(TaskContext);
   const defaultDate = dayjs("2023-10-30").toDate();
   const [selectedDate, setSelectedDate] = useState(
     task?.date ? dayjs(task.date).toDate() : defaultDate
   );
-
   const [dateLabel, setDateLabel] = useState("Выберите срок исполнения:");
-
   const formatDate = (date) => {
     if (!date || !(date instanceof Date) || isNaN(date)) {
       return "";
@@ -24,7 +25,6 @@ function PopBrowse({ task, onClose }) {
     const year = date.getFullYear();
     return `${day}.${month}.${year}`;
   };
-
   const [isEditing, setIsEditing] = useState(false); // Состояние режима редактирования
   const [editedStatus, setEditedStatus] = useState(task?.status || "noStatus"); // Состояние для редактируемого статуса
   const [editedDescription, setEditedDescription] = useState(
@@ -33,37 +33,31 @@ function PopBrowse({ task, onClose }) {
   const themeStyles = task ? themePop[task.theme] || {} : {};
   const formattedSelectedDate = formatDate(selectedDate);
   const { status } = task || {};
-  const { updateTask: updateTaskContext, deleteTask } = useTasks();
-
+  const { updateTask: updateTaskContext } = useTasks();
   useEffect(() => {
     //  Инициализация selectedDate при загрузке компонента
     if (task?.date) {
       setSelectedDate(new Date(task.date));
     }
   }, [task?.date]);
-
   useEffect(() => {
     setDateLabel("Срок исполнения:");
   }, []);
-
   const handleDateSelect = useCallback(
     (date) => {
       setSelectedDate(date);
     },
     [setSelectedDate]
   );
-
   const handleEditTask = () => {
     setIsEditing(true); // Включаем режим редактирования
   };
-
   const handleCancelEdit = () => {
     setIsEditing(false); // Выключаем режим редактирования
     setEditedStatus(task.status); // Reset status
     setEditedDescription(task.description); // Reset description
     setSelectedDate(task.date ? new Date(task.date) : null);
   };
-
   const handleSaveTask = async () => {
     try {
       const updatedTaskData = {
@@ -72,7 +66,6 @@ function PopBrowse({ task, onClose }) {
         description: editedDescription,
         date: selectedDate ? selectedDate.toISOString() : null,
       };
-
       await updateTaskContext(task.id, updatedTaskData); // Use the function from context
       onClose();
     } catch (error) {
@@ -80,30 +73,30 @@ function PopBrowse({ task, onClose }) {
       alert("Произошла ошибка при обновлении задачи.");
     }
   };
-
   const handleDeleteTask = async () => {
-    try {
-      console.log("Удаляем задачу с ID:", task.id); //  Добавлено логирование
-      await deleteTask(task.id); //  Вызываем deleteTask из контекста
-      onClose(); // Закрываем PopBrowse после успешного удаления
-      // Добавьте логику обновления списка задач (если это не происходит автоматически)
-      // Например, вызвать loadTasks() из TaskContext  или обновить tasks в TaskProvider.jsx
-    } catch (error) {
-      console.error("Ошибка при удалении задачи:", error);
-      alert("Произошла ошибка при удалении задачи.");
+    console.log("PopBrowse.jsx: Удаляем задачу с ID:", taskId);
+    if (taskId) {
+      try {
+        await deleteTask(taskId);
+        onClose();
+      } catch (error) {
+        console.error("Ошибка при удалении задачи:", error);
+        alert("Произошла ошибка при удалении задачи.");
+      }
+    } else {
+      console.warn("PopBrowse.jsx: ID задачи отсутствует.");
     }
   };
-
+  if (!task) {
+    return null;
+  }
   const handleStatusChange = (newStatus) => {
     setEditedStatus(newStatus);
   };
-
   const handleDescriptionChange = (event) => {
     setEditedDescription(event.target.value);
   };
-
   const statusOptions = ["noStatus", "needToDo", "inProcess", "test", "ready"];
-
   if (!task) {
     return null;
   }
@@ -113,7 +106,7 @@ function PopBrowse({ task, onClose }) {
         <S.PopBrowseBlock>
           <S.PopBrowseContent>
             <S.PopBrowseTopBlock>
-              <S.PopBrowseTitle>Название задачи</S.PopBrowseTitle>
+              <S.PopBrowseTitle>{task.title}</S.PopBrowseTitle>
               <div
                 className="categories__theme theme-top _active-category "
                 style={{
@@ -230,6 +223,7 @@ function PopBrowse({ task, onClose }) {
 PopBrowse.propTypes = {
   task: PropTypes.shape({
     id: PropTypes.string.isRequired,
+    _id: PropTypes.string,
     title: PropTypes.string.isRequired,
     theme: PropTypes.oneOf(["Web Design", "Research", "Copywriting"])
       .isRequired,

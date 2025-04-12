@@ -56,7 +56,10 @@ const MainPage = () => {
   }, [setIsPopNewCardOpen]);
 
   const handleCardButtonClick = (taskId) => {
-    const task = tasks.find((task) => task.id === taskId);
+    const task = tasks.find(
+      (task) => task.id === taskId || task._id === taskId
+    );
+    console.log("MainPage.jsx: selectedTask =", task); // Add this line
     setSelectedTask(task);
     setIsPopBrowseOpen(true);
   };
@@ -75,54 +78,57 @@ const MainPage = () => {
       <Container>
         <Header openPopNewCard={openPopNewCardHandler} />
         <main className="main">
-          <div className="container">
-            {isModalOpen && (
-              <PopNewCard
-                onClose={handleCloseModal}
-                onCreateTask={handleCreateTask}
-              />
-            )}
-            <div className="main__block">
-              <ColumnsWrapper>
+          {isLoggedIn ? (
+            <div className="container">
+              {isModalOpen && (
+                <PopNewCard
+                  onClose={handleCloseModal}
+                  onCreateTask={handleCreateTask}
+                />
+              )}
+              <div className="main__block">
+                <ColumnsWrapper>
+                  <Column
+                    title={"Без статуса"}
+                    tasks={tasks}
+                    loading={loading}
+                    status={"noStatus"}
+                    handleCardClick={handleCardClick}
+                  />
+                  <TaskList />
+                </ColumnsWrapper>
                 <Column
-                  title={"Без статуса"}
+                  title={"Нужно сделать"}
                   tasks={tasks}
                   loading={loading}
-                  status={"noStatus"}
+                  status={"needToDo"}
                   handleCardClick={handleCardClick}
                 />
-                <TaskList />
-              </ColumnsWrapper>
-              <Column
-                title={"Нужно сделать"}
-                tasks={tasks}
-                loading={loading}
-                status={"needToDo"}
-                handleCardClick={handleCardClick}
-              />
-              <Column
-                title={"В работе"}
-                tasks={tasks}
-                loading={loading}
-                status={"inProcess"}
-              />
-              <Column
-                title={"Тестирование"}
-                tasks={tasks}
-                loading={loading}
-                status={"test"}
-                handleCardClick={handleCardClick}
-              />
-              <Column
-                title={"Готово"}
-                tasks={tasks}
-                loading={loading}
-                status={"ready"}
-                handleCardClick={handleCardClick}
-              />
-            </div>{" "}
-          </div>
-
+                <Column
+                  title={"В работе"}
+                  tasks={tasks}
+                  loading={loading}
+                  status={"inProcess"}
+                />
+                <Column
+                  title={"Тестирование"}
+                  tasks={tasks}
+                  loading={loading}
+                  status={"test"}
+                  handleCardClick={handleCardClick}
+                />
+                <Column
+                  title={"Готово"}
+                  tasks={tasks}
+                  loading={loading}
+                  status={"ready"}
+                  handleCardClick={handleCardClick}
+                />
+              </div>
+            </div>
+          ) : (
+            <p>Пожалуйста, войдите в систему.</p>
+          )}
           {isPopNewCardOpen && (
             <PopNewCard onClose={() => setIsPopNewCardOpen(false)} />
           )}

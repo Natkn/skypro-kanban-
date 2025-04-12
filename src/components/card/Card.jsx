@@ -38,7 +38,6 @@ function Card({ theme, title, date, loading, id }) {
           <S.CardButton
             onClick={(event) => {
               event.preventDefault();
-
               handleCardButtonClick(id);
             }}
           >
@@ -95,7 +94,6 @@ Card.propTypes = {
   date: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
   id: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired,
 };
 
 export default Card;
