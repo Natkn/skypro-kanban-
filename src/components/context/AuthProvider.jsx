@@ -1,73 +1,63 @@
 import { useState, useCallback, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
 import PropTypes from "prop-types";
-import { getUser } from "../../services/api";
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user] = useState(null);
   console.log("AuthContext user (initial):", user);
-  const [isLoading, setIsLoading] = useState(true); // Начинаем с isLoading = true
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("authToken") ? true : false
+  );
+  const [userInfo, setUserInfo] = useState(null);
 
-  // Функция для получения данных пользователя (предполагается, что она у вас есть в services/auth.js)
-  const loadUser = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const { isLoggedIn, user } = await getUser();
-      console.log("Load user", user);
-
-      if (isLoggedIn && user) {
-        setUser(user);
-        localStorage.setItem("user", JSON.stringify(user)); // Сохраняем пользователя в localStorage
-        setIsLoggedIn(true);
-      } else {
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("user");
-        setIsLoggedIn(false);
-        setUser(null);
+  const fetchUserInfo = useCallback(() => {
+    const storedUserInfo = localStorage.getItem("userInfo");
+    if (storedUserInfo) {
+      try {
+        setUserInfo(JSON.parse(storedUserInfo));
+      } catch (error) {
+        console.error("Ошибка при парсинге userInfo из localStorage:", error);
+        // Очищаем некорректные данные
+        localStorage.removeItem("userInfo");
+        setUserInfo(null);
       }
-    } catch (error) {
-      console.error("Ошибка при загрузке данных пользователя:", error);
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("user");
-      setIsLoggedIn(false);
-      setUser(null);
-    } finally {
-      setIsLoading(false);
     }
   }, []);
 
-  useEffect(() => {
-    loadUser();
-  }, [loadUser]);
+  const handleLogin = useCallback(() => {
+    setIsLoggedIn(true);
+  }, []);
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userInfo");
+    setIsLoggedIn(false);
+    setUserInfo(null);
+  }, []);
 
   const updateUserInfo = useCallback((userData) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData)); // Сохраняем user в localStorage
+    setUserInfo(userData);
+    localStorage.setItem("userInfo", JSON.stringify(userData));
   }, []);
 
-  const onLogin = useCallback((userData) => {
-    setIsLoggedIn(true);
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-  }, []);
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchUserInfo();
+    }
+  }, [isLoggedIn, fetchUserInfo]); //fetchUserInfo добавлена как зависимость
 
-  const onLogout = useCallback(() => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
-    setIsLoggedIn(false);
-    setUser(null);
-  }, []);
+  // Загружаем userInfo при первом рендере
+  useEffect(() => {
+    fetchUserInfo();
+  }, [fetchUserInfo]);
 
   const value = {
     isLoggedIn,
-    onLogin,
-    onLogout,
-    isLoading,
-    user,
+    onLogin: handleLogin,
+    onLogout: handleLogout,
+    userInfo,
     updateUserInfo,
   };
-
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
