@@ -1,14 +1,15 @@
 import styled from "styled-components";
 import Header from "../components/header/Header.jsx";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useContext } from "react";
 import Column from "../components/column/Column.jsx";
-import { cardList } from "../mock/data.js";
 import PopNewCard from "../components/popnewcard/PopNewCard.jsx";
 import PopBrowse from "../components/popbrowse/PopBrowse";
 import { CardContext } from "../components/context/CardContext";
 import { useNavigate } from "react-router-dom";
 import { useTasks } from "../components/context/UseTask.jsx";
 import TaskList from "../components/context/TaskList.jsx";
+import { useAuth } from "../components/context/AuthContext.js";
+import TaskContext from "../components/context/TaskContext.js";
 
 const Container = styled.div`
   width: 100vw;
@@ -18,14 +19,22 @@ const ColumnsWrapper = styled.div`
   flex-direction: column;
 `;
 const MainPage = () => {
-  const [loading, setLoading] = useState(false);
-  const [tasks, setTasks] = useState([]);
   const [isPopNewCardOpen, setIsPopNewCardOpen] = useState(false);
   const [isPopBrowseOpen, setIsPopBrowseOpen] = useState(false);
-  const [selectedTask, setSelectedTask, selectedCardId] = useState(null);
-  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const navigate = useNavigate();
   const { createTask } = useTasks();
+  const { isLoggedIn } = useAuth();
+  const { tasks, loading, fetchTasks } = useContext(TaskContext);
+
+  console.log("MainPage: isLoggedIn =", isLoggedIn);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchTasks();
+    }
+  }, [fetchTasks, isLoggedIn]);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -35,28 +44,12 @@ const MainPage = () => {
     try {
       await createTask(newTask);
       handleCloseModal();
+      setIsPopNewCardOpen(false); // Close PopNewCard after creating task
     } catch (error) {
       console.error("Ошибка при создании задачи:", error);
       alert("Произошла ошибка при создании задачи.");
     }
   };
-
-  useEffect(() => {
-    setLoading(true);
-
-    const dataLoadTimer = setTimeout(() => {
-      setTasks(cardList);
-    }, 500);
-
-    const loadingHideTimer = setTimeout(() => {
-      setLoading(false);
-    }, 2500);
-
-    return () => {
-      clearTimeout(dataLoadTimer);
-      clearTimeout(loadingHideTimer);
-    };
-  }, []);
 
   const openPopNewCardHandler = useCallback(() => {
     setIsPopNewCardOpen(true);
@@ -65,7 +58,6 @@ const MainPage = () => {
   const handleCardButtonClick = (taskId) => {
     const task = tasks.find((task) => task.id === taskId);
     setSelectedTask(task);
-
     setIsPopBrowseOpen(true);
   };
 
@@ -136,11 +128,7 @@ const MainPage = () => {
           )}
           {isPopBrowseOpen && (
             <>
-              <PopBrowse
-                task={selectedTask}
-                onClose={handleClosePopBrowse}
-                cardId={selectedCardId}
-              />
+              <PopBrowse task={selectedTask} onClose={handleClosePopBrowse} />
             </>
           )}
         </main>

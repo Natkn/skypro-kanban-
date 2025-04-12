@@ -17,7 +17,7 @@ export function Column({ title, tasks, loading, status, handleCardClick }) {
           ))
         : filteredTasks.map((task) => (
             <Card
-              key={task.id}
+              key={task._id || uuidv4()}
               theme={task.theme}
               title={task.title}
               date={task.date}

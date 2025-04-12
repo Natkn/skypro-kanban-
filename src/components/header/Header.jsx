@@ -20,7 +20,6 @@ import {
   HeaderBtnExit,
   LogoImage,
 } from "./Header.styled";
-
 import { useAuth } from "../../components/context/AuthContext";
 
 function Header({ openPopNewCard }) {
@@ -46,6 +45,9 @@ function Header({ openPopNewCard }) {
     openPopNewCard();
   };
 
+  const name = userInfo?.name || "Имя не найдено";
+  const login = userInfo?.login || "Почта не найдена";
+
   return (
     <div className="container">
       <HeaderBlock>
@@ -67,11 +69,11 @@ function Header({ openPopNewCard }) {
           <HeaderBtnMainNew id="btnMainNew" onClick={handleClick}>
             Создать новую задачу
           </HeaderBtnMainNew>
-          <HeaderUser onClick={toggleUserSettings}>{userInfo.name}</HeaderUser>
+          <HeaderUser onClick={toggleUserSettings}>{name}</HeaderUser>
           {isUserSettingsOpen && (
             <HeaderPopUserSet>
-              <PopUserSetName>{userInfo.name}</PopUserSetName>
-              <PopUserSetMail>{userInfo.login}</PopUserSetMail>
+              <PopUserSetName>{name}</PopUserSetName>
+              <PopUserSetMail>{login}</PopUserSetMail>
               <PopUserSetTheme>
                 <ThemeToggleLabel>Темная тема</ThemeToggleLabel>
                 <ThemeToggleButton

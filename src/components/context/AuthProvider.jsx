@@ -5,9 +5,10 @@ import PropTypes from "prop-types";
 export const AuthProvider = ({ children }) => {
   const [user] = useState(null);
   console.log("AuthContext user (initial):", user);
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem("authToken") ? true : false
-  );
+
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("authToken") ? true : false;
+  });
   const [userInfo, setUserInfo] = useState(null);
 
   const fetchUserInfo = useCallback(() => {
@@ -44,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     if (isLoggedIn) {
       fetchUserInfo();
     }
-  }, [isLoggedIn, fetchUserInfo]); //fetchUserInfo добавлена как зависимость
+  }, [isLoggedIn, fetchUserInfo]);
 
   // Загружаем userInfo при первом рендере
   useEffect(() => {

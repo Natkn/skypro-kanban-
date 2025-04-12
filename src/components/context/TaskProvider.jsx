@@ -88,11 +88,6 @@ const TaskProvider = ({ children, isLoggedIn }) => {
     fetchTasks,
   };
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchTasks();
-    }
-  }, [fetchTasks, isLoggedIn]);
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
 };
 TaskProvider.propTypes = {
