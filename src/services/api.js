@@ -1,16 +1,19 @@
 const API_URL = "https://wedev-api.sky.pro/api/kanban"; // Предполагаем, что базовый URL остается прежним
+console.log("API_URL =", API_URL);
 
 const getAuthToken = () => {
   const token = localStorage.getItem("authToken");
-
+  console.log("getAuthToken: token =", token);
   return token;
 };
 
 const getHeaders = () => {
   const token = getAuthToken();
-  return {
+  const headers = {
     Authorization: `Bearer ${token}`,
   };
+  console.log("getHeaders: headers =", headers);
+  return headers;
 };
 
 // Обработка ошибок и получение JSON
@@ -21,7 +24,7 @@ const handleResponse = async (response) => {
     throw new Error(`Ошибка API: ${response.status} - ${response.statusText}`);
   }
   const data = await response.json();
-
+  console.log("Данные, полученные от сервера:", data); // Add this line
   return data;
 };
 
@@ -34,7 +37,14 @@ export const getTasks = async () => {
     });
 
     const data = await handleResponse(response); // Get JSON from handleResponse
-    return data.tasks;
+
+    // Проверяем, что data существует и содержит tasks
+    if (data && data.tasks) {
+      return data.tasks;
+    } else {
+      console.warn("Не удалось получить задачи. data:", data);
+      return []; // Возвращаем пустой массив
+    }
   } catch (error) {
     console.error("Ошибка при получении задач:", error);
     throw error;
@@ -69,17 +79,15 @@ export async function addTask(taskData) {
 }
 
 // Изменить задачу
-export const apiUpdateTask = async (id, data) => {
+export const apiUpdateTask = async (_id, data) => {
   try {
-    const response = await fetch(`${API_URL}/tasks/${id}`, {
+    const response = await fetch(`${API_URL}/tasks/${_id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: {},
       body: JSON.stringify(data),
     });
     if (!response.ok) {
-      throw new Error(`Ошибка при обновлении задачи с ID ${id}`);
+      throw new Error(`Ошибка при обновлении задачи с ID ${_id}`);
     }
     return await response.json();
   } catch (error) {

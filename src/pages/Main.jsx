@@ -4,12 +4,12 @@ import { useCallback, useState, useEffect, useContext } from "react";
 import Column from "../components/column/Column.jsx";
 import PopNewCard from "../components/popnewcard/PopNewCard.jsx";
 import PopBrowse from "../components/popbrowse/PopBrowse";
-import { CardContext } from "../components/context/CardContext";
 import { useNavigate } from "react-router-dom";
 import { useTasks } from "../components/context/UseTask.jsx";
 import TaskList from "../components/context/TaskList.jsx";
 import { useAuth } from "../components/context/AuthContext.js";
 import TaskContext from "../components/context/TaskContext.js";
+import { CardContext } from "../components/context/CardContext";
 
 const Container = styled.div`
   width: 100vw;
@@ -29,6 +29,8 @@ const MainPage = () => {
   const { tasks, loading, fetchTasks } = useContext(TaskContext);
 
   console.log("MainPage: isLoggedIn =", isLoggedIn);
+  console.log("MainPage: tasks =", tasks);
+  console.log("MainPage: loading =", loading);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -55,15 +57,6 @@ const MainPage = () => {
     setIsPopNewCardOpen(true);
   }, [setIsPopNewCardOpen]);
 
-  const handleCardButtonClick = (taskId) => {
-    const task = tasks.find(
-      (task) => task.id === taskId || task._id === taskId
-    );
-    console.log("MainPage.jsx: selectedTask =", task); // Add this line
-    setSelectedTask(task);
-    setIsPopBrowseOpen(true);
-  };
-
   const handleClosePopBrowse = () => {
     setIsPopBrowseOpen(false);
     setSelectedTask(null);
@@ -71,6 +64,12 @@ const MainPage = () => {
 
   const handleCardClick = (taskId) => {
     navigate(`/card/${taskId}`);
+  };
+  const handleCardButtonClick = (taskId) => {
+    const tasks = tasks.find((task) => task._id === taskId);
+    setSelectedTask(tasks);
+
+    setIsPopBrowseOpen(true);
   };
 
   return (
@@ -92,7 +91,7 @@ const MainPage = () => {
                     title={"Без статуса"}
                     tasks={tasks}
                     loading={loading}
-                    status={"noStatus"}
+                    status={"noStatus"} // Правильно передаем status
                     handleCardClick={handleCardClick}
                   />
                   <TaskList />
@@ -101,7 +100,7 @@ const MainPage = () => {
                   title={"Нужно сделать"}
                   tasks={tasks}
                   loading={loading}
-                  status={"needToDo"}
+                  status={"needToDo"} // Правильно передаем status
                   handleCardClick={handleCardClick}
                 />
                 <Column

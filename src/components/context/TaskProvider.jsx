@@ -135,6 +135,7 @@ const TaskProvider = ({ children }) => {
     tasks,
     loading,
     error,
+    addTask,
     createTask,
     updateTask: updateTaskContext,
     deleteTask: deleteTaskContext,

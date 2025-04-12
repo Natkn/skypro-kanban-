@@ -34,7 +34,7 @@ Column.propTypes = {
   tasks: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      _id: PropTypes.string,
+      _id: PropTypes.string.isRequired,
       theme: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
