@@ -8,12 +8,10 @@ export function Column({
   tasks,
   loading,
   status,
-  handleCardClick,
-  id,
-  _id,
+  handleCardButtonClick,
 }) {
   const filteredTasks = tasks.filter((task) => task.status === status);
-  const taskId = _id || id;
+
   return (
     <MainColumn>
       <ColumnTitle>
@@ -25,14 +23,13 @@ export function Column({
           ))
         : filteredTasks.map((task) => (
             <Card
-              key={task._id || uuidv4()}
+              key={task._id || task.id || uuidv4()}
               theme={task.theme}
               title={task.title}
               date={task.date}
               id={task.id}
               _id={task._id}
-              onClick={() => handleCardClick(taskId || task._id)}
-              handleCardClick={handleCardClick}
+              onClick={() => handleCardButtonClick(task._id || task.id)}
             />
           ))}
     </MainColumn>
@@ -56,6 +53,7 @@ Column.propTypes = {
   _id: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   handleCardClick: PropTypes.func.isRequired,
+  handleCardButtonClick: PropTypes.func.isRequired,
 };
 
 export default Column;

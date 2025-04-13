@@ -6,9 +6,9 @@ import { cardList } from "../mock/data.js";
 import PopNewCard from "../components/popnewcard/PopNewCard.jsx";
 import PopBrowse from "../components/popbrowse/PopBrowse";
 import { CardContext } from "../components/context/CardContext";
-import { useNavigate } from "react-router-dom";
 import { useTasks } from "../components/context/UseTask.jsx";
 import TaskList from "../components/context/TaskList.jsx";
+import { useAuth } from "../components/context/AuthContext.js";
 
 const Container = styled.div`
   width: 100vw;
@@ -22,10 +22,22 @@ const MainPage = () => {
   const [tasks, setTasks] = useState([]);
   const [isPopNewCardOpen, setIsPopNewCardOpen] = useState(false);
   const [isPopBrowseOpen, setIsPopBrowseOpen] = useState(false);
-  const [selectedTask, setSelectedTask, selectedCardId] = useState(null);
-  const navigate = useNavigate();
+  const [selectedTask, setSelectedTask] = useState(null);
+  const { isLoggedIn } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { createTask } = useTasks();
+  const { createTask, fetchTasks } = useTasks();
+
+  console.log("MainPage: isLoggedIn =", isLoggedIn);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchTasks();
+    }
+  }, [fetchTasks, isLoggedIn]);
+
+  useEffect(() => {
+    console.log("MainPage: isLoggedIn =", isLoggedIn);
+  }, [isLoggedIn]);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -35,8 +47,8 @@ const MainPage = () => {
     try {
       await createTask(newTask);
       handleCloseModal();
-    } catch (error) {
-      console.error("Ошибка при создании задачи:", error);
+      setIsPopNewCardOpen(false); // Close PopNewCard after creating task
+    } catch {
       alert("Произошла ошибка при создании задачи.");
     }
   };
@@ -63,7 +75,14 @@ const MainPage = () => {
   }, [setIsPopNewCardOpen]);
 
   const handleCardButtonClick = (taskId) => {
-    const task = tasks.find((task) => task._id === taskId);
+    const taskIdString = String(taskId); // Приводим taskId к строке
+    console.log("handleCardButtonClick: taskIdString =", taskIdString);
+    console.log("handleCardButtonClick: tasks =", tasks);
+    const task = tasks.find(
+      (task) =>
+        String(task._id) === taskIdString || String(task.id) === taskIdString
+    ); // Ищем по _id или id
+    console.log("handleCardButtonClick: task =", task);
     setSelectedTask(task);
     setIsPopBrowseOpen(true);
   };
@@ -73,8 +92,18 @@ const MainPage = () => {
     setSelectedTask(null);
   };
 
+  const handleOpenPopBrowse = () => {
+    setIsPopBrowseOpen(true);
+  };
+
+  useEffect(() => {
+    console.log("MainPage: isLoggedIn =", isLoggedIn);
+    console.log("MainPage: tasks =", tasks);
+  }, [isLoggedIn, tasks]);
   const handleCardClick = (taskId) => {
-    navigate(`/card/${taskId}`);
+    console.log("handleCardClick: taskId =", taskId);
+    setSelectedTask(taskId);
+    handleOpenPopBrowse();
   };
 
   return (
@@ -98,7 +127,7 @@ const MainPage = () => {
                   status={"noStatus"}
                   handleCardClick={handleCardClick}
                 />
-                <TaskList />
+                <TaskList handleCardButtonClick={handleCardButtonClick} />
               </ColumnsWrapper>
               <Column
                 title={"Нужно сделать"}
@@ -112,6 +141,7 @@ const MainPage = () => {
                 tasks={tasks}
                 loading={loading}
                 status={"inProcess"}
+                handleCardClick={handleCardClick}
               />
               <Column
                 title={"Тестирование"}
@@ -136,10 +166,9 @@ const MainPage = () => {
           {isPopBrowseOpen && (
             <>
               <PopBrowse
+                isOpen={isPopBrowseOpen}
                 task={selectedTask}
                 onClose={handleClosePopBrowse}
-                cardId={selectedCardId}
-                taskId={selectedTask?._id}
               />
             </>
           )}

@@ -1,10 +1,7 @@
 const API_URL = "https://wedev-api.sky.pro/api/kanban"; // Предполагаем, что базовый URL остается прежним
-console.log("API_URL =", API_URL);
-
 const token = localStorage.getItem("authToken");
 
 const getAuthToken = () => {
-  console.log("getAuthToken: token =", token);
   return token;
 };
 
@@ -20,8 +17,6 @@ const getHeaders = () => {
 // Обработка ошибок и получение JSON
 const handleResponse = async (response) => {
   if (!response.ok) {
-    const errorData = await response.json();
-    console.error("Ошибка API:", errorData);
     throw new Error(`Ошибка API: ${response.status} - ${response.statusText}`);
   }
   const data = await response.json();
@@ -106,16 +101,17 @@ export async function updateTask(taskId, taskData) {
   }
 }
 
-export const apiUpdateTask = async (taskId) => {
+export const apiUpdateTask = async (id, data) => {
   try {
-    const response = await fetch(`${API_URL}/${taskId}`, {
-      // Исправлено: используем URL /kanban/:id
+    const response = await fetch(`${API_URL}/tasks/${id}`, {
       method: "PATCH",
-      headers: getHeaders(), // Используем getHeaders()
+      headers: {},
       body: JSON.stringify(data),
     });
-    const data = await handleResponse(response);
-    return data;
+    if (!response.ok) {
+      throw new Error(`Ошибка при обновлении задачи с ID ${id}`);
+    }
+    return await response.json();
   } catch (error) {
     console.error("Ошибка при обновлении задачи:", error);
     throw error;
@@ -123,11 +119,11 @@ export const apiUpdateTask = async (taskId) => {
 };
 
 // Удалить задачу
-export const deleteTask = async (taskId) => {
+export const deleteTask = async (_id) => {
   try {
     const token = getAuthToken();
-    console.log("Токен:", token); //  Проверяем токен
-    const response = await fetch(`${API_URL}/${taskId}`, {
+
+    const response = await fetch(`${API_URL}/${_id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -137,7 +133,7 @@ export const deleteTask = async (taskId) => {
     const data = await handleResponse(response); // Get JSON from handleResponse
     return data.tasks;
   } catch (error) {
-    console.error(`Ошибка при удалении задачи с ID ${taskId}:`, error);
+    console.error(`Ошибка при удалении задачи с ID ${_id}:`, error);
     throw error;
   }
 };
