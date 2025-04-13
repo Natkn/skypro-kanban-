@@ -2,12 +2,12 @@ import PopBrowse from "../components/popbrowse/PopBrowse";
 import { useParams } from "react-router-dom";
 
 const CardDetailPage = () => {
-  const { id } = useParams();
+  const { _id } = useParams();
   return (
     <div>
       <p>
         {" "}
-        {id}
+        {_id}
         <PopBrowse />
       </p>
     </div>

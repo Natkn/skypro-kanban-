@@ -8,9 +8,10 @@ function TaskList() {
     <ul>
       {tasks.map((task) => (
         <Card
-          key={task.id || uuidv4()}
+          key={task._id || uuidv4()}
           title={task.title}
           id={task.id}
+          _id={task._id}
           tasks={tasks}
           theme={task.theme}
           date={task.date}

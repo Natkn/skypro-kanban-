@@ -4,6 +4,7 @@ import TaskContext from "../context/TaskContext";
 import {
   getTasks,
   addTask as apiAddTask,
+  updateTask as apiUpdateTask,
   deleteTask as apiDeleteTask,
 } from "../../services/api";
 import { useAuth } from "../context/AuthContext";
@@ -50,13 +51,13 @@ const TaskProvider = ({ children }) => {
   }, []);
 
   const updateTask = useCallback(
-    async (id, updatedTask) => {
+    async (taskId, updatedTask) => {
       try {
-        const updatedTaskFromServer = await (id, updatedTask); //Получаем обновленную задачу с сервера
+        const updatedTaskFromServer = await apiUpdateTask(taskId, updatedTask); //Получаем обновленную задачу с сервера
         setTasks(
           (prevTasks) =>
             prevTasks.map((task) =>
-              task.id === id ? updatedTaskFromServer : task
+              task.id === taskId ? updatedTaskFromServer : task
             ) // Обновляем задачу в массиве
         );
       } catch (error) {
@@ -69,10 +70,10 @@ const TaskProvider = ({ children }) => {
   );
 
   const deleteTask = useCallback(
-    async (id) => {
+    async (taskId) => {
       try {
-        await apiDeleteTask(id); // Просто удаляем задачу на сервере
-        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id)); // Обновляем массив, удаляя задачу
+        await apiDeleteTask(taskId); // Просто удаляем задачу на сервере
+        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId)); // Обновляем массив, удаляя задачу
       } catch (error) {
         console.error("Ошибка при удалении задачи:", error);
         setError(error);
@@ -96,9 +97,9 @@ const TaskProvider = ({ children }) => {
   );
 
   const updateTaskContext = useCallback(
-    async (id, updatedTask) => {
+    async (taskId, updatedTask) => {
       try {
-        await updateTask(id, updatedTask);
+        await updateTask(taskId, updatedTask);
       } catch (error) {
         console.error("Ошибка при обновлении задачи:", error);
         setError(error);
@@ -109,9 +110,9 @@ const TaskProvider = ({ children }) => {
   );
 
   const deleteTaskContext = useCallback(
-    async (id) => {
+    async (taskId) => {
       try {
-        await deleteTask(id);
+        await deleteTask(taskId);
       } catch (error) {
         console.error("Ошибка при удалении задачи:", error);
         setError(error);
@@ -120,10 +121,12 @@ const TaskProvider = ({ children }) => {
     },
     [deleteTask]
   );
+
   const deleteAllTasks = useCallback(async () => {
     for (const task of tasks) {
       try {
-        await deleteTask(task.id);
+        const taskId = task._id || task.id; // Используем _id или id
+        await deleteTask(taskId);
       } catch (error) {
         console.error(`Ошибка при удалении задачи с ID ${task.id}:`, error);
         // Обработайте ошибки удаления отдельной задачи, например, отобразите сообщение об ошибке.

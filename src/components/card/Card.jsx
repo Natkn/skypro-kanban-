@@ -3,9 +3,9 @@ import { useContext } from "react";
 import * as S from "./Card.styled";
 import { CardContext } from "../context/CardContext";
 
-function Card({ theme, title, date, loading, id }) {
+function Card({ theme, title, date, loading, id, _id }) {
   const { handleCardButtonClick } = useContext(CardContext);
-
+  const taskId = _id || id;
   if (!handleCardButtonClick) {
     console.error("handleCardButtonClick is null or undefined in Card.jsx");
     return null;
@@ -39,8 +39,8 @@ function Card({ theme, title, date, loading, id }) {
           <S.CardButton
             onClick={(event) => {
               event.preventDefault();
-              handleCardButtonClick(id);
-              console.log("Click from CardButton!", { id });
+              handleCardButtonClick(taskId);
+              console.log("Click from CardButton!", { taskId });
             }}
           >
             <S.CardButtonDot />
@@ -96,6 +96,7 @@ Card.propTypes = {
   date: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
   id: PropTypes.string.isRequired,
+  _id: PropTypes.string.isRequired,
 };
 
 export default Card;

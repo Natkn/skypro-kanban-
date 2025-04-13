@@ -87,6 +87,7 @@ function PopBrowse({ task, onClose }) {
       console.warn("PopBrowse.jsx: ID задачи отсутствует.");
     }
   };
+
   if (!task) {
     return null;
   }

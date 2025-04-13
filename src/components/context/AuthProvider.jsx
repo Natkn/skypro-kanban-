@@ -26,12 +26,10 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const handleLogin = useCallback(() => {
-    console.log("AuthContext: handleLogin called"); // Add this line
     setIsLoggedIn(true);
   }, []);
 
   const handleLogout = useCallback(() => {
-    console.log("AuthContext: handleLogout called"); // Add this line
     localStorage.removeItem("authToken");
     localStorage.removeItem("userInfo");
     setIsLoggedIn(false);
@@ -47,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     if (isLoggedIn) {
       fetchUserInfo();
     }
-  }, [isLoggedIn, fetchUserInfo]);
+  }, [isLoggedIn, fetchUserInfo]); //fetchUserInfo добавлена как зависимость
 
   // Загружаем userInfo при первом рендере
   useEffect(() => {

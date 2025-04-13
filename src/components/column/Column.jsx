@@ -3,9 +3,17 @@ import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
 import { MainColumn, ColumnTitle, ColumnTitleText } from "./Column.styled";
 
-export function Column({ title, tasks, loading, status, handleCardClick }) {
+export function Column({
+  title,
+  tasks,
+  loading,
+  status,
+  handleCardClick,
+  id,
+  _id,
+}) {
   const filteredTasks = tasks.filter((task) => task.status === status);
-
+  const taskId = _id || id;
   return (
     <MainColumn>
       <ColumnTitle>
@@ -22,7 +30,9 @@ export function Column({ title, tasks, loading, status, handleCardClick }) {
               title={task.title}
               date={task.date}
               id={task.id}
-              onClick={() => handleCardClick(task.id)}
+              _id={task._id}
+              onClick={() => handleCardClick(taskId || task._id)}
+              handleCardClick={handleCardClick}
             />
           ))}
     </MainColumn>
@@ -42,6 +52,8 @@ Column.propTypes = {
     })
   ).isRequired,
   loading: PropTypes.bool.isRequired,
+  id: PropTypes.string.isRequired,
+  _id: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   handleCardClick: PropTypes.func.isRequired,
 };
