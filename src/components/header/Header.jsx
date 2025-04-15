@@ -1,13 +1,11 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import logo from "../../images/logo.png";
-import logoDark from "../../images/logo_dark.png";
+import logodark from "../../images/logo_dark.png";
 import { useTheme } from "../themecontent/themeContext";
 import PopExit from "../popexit/PopExit";
 import {
   HeaderBlock,
-  HeaderLogo,
-  HeaderLogoDark,
   HeaderNav,
   HeaderBtnMainNew,
   HeaderUser,
@@ -18,8 +16,9 @@ import {
   ThemeToggleLabel,
   ThemeToggleButton,
   HeaderBtnExit,
-  LogoImage,
+  HeaderContainer,
 } from "./Header.styled";
+import HeaderLogo from "./HeaderLogo";
 import { useAuth } from "../../components/context/AuthContext";
 
 function Header({ openPopNewCard }) {
@@ -49,22 +48,10 @@ function Header({ openPopNewCard }) {
   const login = userInfo?.login || "Почта не найдена";
 
   return (
-    <div className="container">
-      <HeaderBlock>
-        <HeaderLogo
-          className={`_show _light ${theme === "dark" ? "_hidden" : ""}`}
-        >
-          <a href="/" target="_self">
-            <LogoImage src={logo} alt="logo" />
-          </a>
-        </HeaderLogo>
-        <HeaderLogoDark
-          className={`_dark ${theme === "dark" ? "_show" : "_hidden"}`}
-        >
-          <a href="/" target="_self">
-            <LogoImage src={logoDark} alt="logo" />
-          </a>
-        </HeaderLogoDark>
+    <HeaderContainer>
+      <HeaderBlock theme={theme}>
+        <HeaderLogo logo={logo} logodark={logodark} />
+
         <HeaderNav>
           <HeaderBtnMainNew id="btnMainNew" onClick={handleClick}>
             Создать новую задачу
@@ -90,11 +77,11 @@ function Header({ openPopNewCard }) {
       {isPopExitOpen && (
         <PopExit onClose={closePopExit} isOpen={isPopExitOpen} />
       )}
-    </div>
+    </HeaderContainer>
   );
 }
 Header.propTypes = {
   openPopNewCard: PropTypes.func.isRequired,
 };
 export default Header;
-export { HeaderLogo, HeaderLogoDark, LogoImage };
+export { HeaderLogo };

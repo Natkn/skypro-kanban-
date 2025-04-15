@@ -1,5 +1,12 @@
 import styled from "styled-components";
 
+export const HeaderContainer = styled.header`
+  background: ${({ theme }) => theme.cardBackgroundColor}; /*  Цвет фона */
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 30px;
+  box-sizing: border-box; /*  Включаем отступы в общую ширину */
+`;
 export const HeaderItem = styled.div`
   width: 100%;
   margin: 0 auto;
@@ -8,32 +15,18 @@ export const HeaderItem = styled.div`
 
 export const HeaderBlock = styled.div`
   height: 70px;
+  width: 80%;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   position: relative;
   top: 0;
-  left: 0;
+  left: 11%;
   padding: 0 10px;
-`;
-
-export const HeaderLogo = styled.div`
-  &._hidden {
-    display: none;
-  }
-`;
-
-export const LogoImage = styled.img`
-  width: 85px;
-  height: auto;
-`;
-
-export const HeaderLogoDark = styled.div`
-  display: none;
-  &._show {
-    display: block;
-  }
+  max-width: 1260px;
+  flex-direction: row;
+  align-content: space-around;
 `;
 
 export const HeaderNav = styled.nav`
@@ -88,6 +81,7 @@ export const HeaderUser = styled.button`
   cursor: pointer;
   padding: 0 14px;
   transition: color 0.2s ease;
+  color: ${(props) => props.theme.HeaderBtnExitcolor};
 
   &::after {
     content: "";
@@ -121,8 +115,8 @@ export const HeaderPopUserSet = styled.div`
   height: 205px;
   border-radius: 10px;
   border: 0.7px solid rgba(148, 166, 190, 0.4);
-  background: #fff;
-  box-shadow: 0px 10px 39px 0px rgba(26, 56, 101, 0.21);
+  background-color: ${(props) => props.theme.HeaderPopUserSet};
+  box-shadow: ${(props) => props.theme.HeaderPopUserSetboxShadow};
   padding: 34px;
   text-align: center;
   z-index: 2;
@@ -133,7 +127,7 @@ export const HeaderPopUserSet = styled.div`
 `;
 
 export const PopUserSetName = styled.p`
-  color: #000;
+  color: ${(props) => props.theme.textColor};
   font-size: 14px;
   font-weight: 500;
   line-height: 21px;
@@ -157,7 +151,7 @@ export const PopUserSetTheme = styled.div`
 `;
 
 export const ThemeToggleLabel = styled.p`
-  color: #000;
+  color: ${(props) => props.theme.textColor};
   font-size: 14px;
   line-height: 21px;
   letter-spacing: -0.14px;
@@ -197,12 +191,11 @@ export const HeaderBtnExit = styled.button`
   height: 30px;
   padding: 4px 14px;
   background: transparent;
-  color: #565eef;
+  border: ${(props) => props.theme.HeaderBtnExitborder};
   border-radius: 4px;
-  border: 1px solid #565eef;
   font-size: 14px;
   transition: all 0.2s ease;
-
+  color: ${(props) => props.theme.HeaderBtnExitcolor};
   &:hover {
     background-color: #565eef;
     color: #ffffff;

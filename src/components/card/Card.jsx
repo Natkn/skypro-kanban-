@@ -2,10 +2,11 @@ import PropTypes from "prop-types";
 import { useContext } from "react";
 import * as S from "./Card.styled";
 import { CardContext } from "../context/CardContext";
+import { ThemeContext } from "../../components/themecontent/themeContext";
 
-function Card({ theme, title, date, loading, id }) {
+function Card({ title, date, loading, id, cardtheme }) {
   const { handleCardButtonClick } = useContext(CardContext);
-
+  const { theme } = useContext(ThemeContext);
   if (!handleCardButtonClick) {
     return null;
   }
@@ -29,11 +30,13 @@ function Card({ theme, title, date, loading, id }) {
   }
 
   return (
-    <S.CardItem>
+    <S.CardItem theme={theme} cardtheme={cardtheme}>
       <S.CardWrapper>
         <S.CardGroup>
-          <S.CardTheme theme={theme}>
-            <S.CardThemeText theme={theme}>{theme}</S.CardThemeText>
+          <S.CardTheme theme={theme} cardtheme={cardtheme}>
+            <S.CardThemeText theme={theme} cardtheme={cardtheme}>
+              {cardtheme}
+            </S.CardThemeText>
           </S.CardTheme>
           <S.CardButton
             onClick={(event) => {
@@ -91,6 +94,7 @@ function Card({ theme, title, date, loading, id }) {
 
 Card.propTypes = {
   theme: PropTypes.oneOf(["Research", "Web Design", "Copywriting"]).isRequired,
+  cardtheme: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,

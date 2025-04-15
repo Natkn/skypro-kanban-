@@ -2,12 +2,15 @@ import "../../assets/App.css";
 import Calendar from "../calendar/Calendar";
 import PropTypes from "prop-types";
 import * as S from "../popbrowse/PopBrowseStyled";
-import { themePop } from "../../mock/data";
 import { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { useTasks } from "../context/UseTask";
+import { useTheme } from "../themecontent/themeContext";
+//import { getThemeStyles } from "../../assets/themes";
 
 function PopBrowse({ task, onClose }) {
+  const { themeMode, themes } = useTheme(); // Получаем темы (lightThemeС и darkThemeС) и режим темы из ThemeProvider
+  const themeName = task.theme;
   const defaultDate = dayjs("2023-10-30").toDate();
   const [selectedDate, setSelectedDate] = useState(
     task?.date ? dayjs(task.date).toDate() : defaultDate
@@ -30,7 +33,7 @@ function PopBrowse({ task, onClose }) {
   const [editedDescription, setEditedDescription] = useState(
     task?.description || ""
   );
-  const themeStyles = task ? themePop[task.theme] || {} : {};
+
   const formattedSelectedDate = formatDate(selectedDate);
   const { status } = task || {};
   const { updateTask: updateTaskContext, deleteTask } = useTasks();
@@ -115,15 +118,12 @@ function PopBrowse({ task, onClose }) {
           <S.PopBrowseContent>
             <S.PopBrowseTopBlock>
               <S.PopBrowseTitle>Название задачи</S.PopBrowseTitle>
-              <div
-                className="categories__theme theme-top _active-category "
-                style={{
-                  backgroundColor: themeStyles.background,
-                  color: themeStyles.text,
-                }}
+              <S.PopBrowseTitleTheme
+                theme={themes[themeMode]}
+                themename={themeName}
               >
-                <p style={{ color: themeStyles.text }}>{task.theme}</p>
-              </div>
+                {task.theme}
+              </S.PopBrowseTitleTheme>
             </S.PopBrowseTopBlock>
 
             <S.Status>
@@ -199,7 +199,7 @@ function PopBrowse({ task, onClose }) {
             </S.PopBrowseWrap>
 
             <S.PopBrowseBtnBrowse>
-              <div>
+              <S.BtnBorb>
                 {isEditing ? (
                   <>
                     <S.BtnBor onClick={handleSaveTask}>Сохранить</S.BtnBor>
@@ -211,15 +211,15 @@ function PopBrowse({ task, onClose }) {
                   </S.BtnBor>
                 )}
                 <S.BtnBor onClick={handleDeleteTask}>Удалить задачу</S.BtnBor>
-              </div>
-              <S.BtnBg
+              </S.BtnBorb>
+              <S.BtnBc
                 onClick={(event) => {
                   event.preventDefault();
                   onClose();
                 }}
               >
                 Закрыть
-              </S.BtnBg>
+              </S.BtnBc>
             </S.PopBrowseBtnBrowse>
           </S.PopBrowseContent>
         </S.PopBrowseBlock>
@@ -235,6 +235,7 @@ PopBrowse.propTypes = {
     title: PropTypes.string.isRequired,
     theme: PropTypes.oneOf(["Web Design", "Research", "Copywriting"])
       .isRequired,
+    cardtheme: PropTypes.string.isRequired,
     description: PropTypes.string,
     date: PropTypes.string,
     status: PropTypes.oneOf([
@@ -248,6 +249,7 @@ PopBrowse.propTypes = {
   onClose: PropTypes.func.isRequired,
   onTaskUpdate: PropTypes.func.isRequired,
   onTaskDelete: PropTypes.func.isRequired,
+  themeMode: PropTypes.string.isRequired,
 };
 
 export default PopBrowse;

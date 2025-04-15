@@ -19,7 +19,14 @@ export function Column({
       </ColumnTitle>
       {loading
         ? Array.from({ length: filteredTasks.length }).map(() => (
-            <Card key={uuidv4()} loading={true} theme="" title="" date="" />
+            <Card
+              key={uuidv4()}
+              loading={true}
+              cardTheme=""
+              theme=""
+              title=""
+              date=""
+            />
           ))
         : filteredTasks.map((task) => (
             <Card
@@ -27,6 +34,7 @@ export function Column({
               theme={task.theme}
               title={task.title}
               date={task.date}
+              cardtheme={task.theme}
               id={task.id}
               _id={task._id}
               onClick={() => handleCardButtonClick(task._id || task.id)}
@@ -43,6 +51,7 @@ Column.propTypes = {
       id: PropTypes.string.isRequired,
       _id: PropTypes.string.isRequired,
       theme: PropTypes.string.isRequired,
+      cardtheme: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
       status: PropTypes.string,

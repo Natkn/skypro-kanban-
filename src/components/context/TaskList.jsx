@@ -11,6 +11,7 @@ function TaskList() {
           key={task._id || uuidv4()}
           id={task.id}
           theme={task.theme}
+          cardtheme={task.cardtheme}
           title={task.title}
           date={task.date}
           loading={false}

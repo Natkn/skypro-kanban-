@@ -28,7 +28,7 @@ export const PopNewCardContainer = styled.div`
 export const PopNewCardBlock = styled.div`
   display: block;
   margin: 0 auto;
-  background-color: #ffffff;
+  background-color: ${(props) => props.theme.PopNewCardContainercolor};
   max-width: 630px;
   width: 100%;
   padding: 40px 30px 48px;
@@ -43,7 +43,7 @@ export const PopNewCardContent = styled.div`
 `;
 
 export const PopNewCardTtl = styled.h3`
-  color: #000000;
+  color: ${(props) => props.theme.textColor};
   font-size: 20px;
   font-weight: 600;
   line-height: 24px;
@@ -58,7 +58,7 @@ export const PopNewCardClose = styled.a`
   cursor: pointer;
 
   &:hover {
-    color: #000000;
+    color: ${(props) => props.theme.textColor};
   }
 `;
 
@@ -81,7 +81,7 @@ export const FormNewBlock = styled.div`
 `;
 
 export const FormNewInput = styled.input`
-  color: #000;
+  color: ${(props) => props.theme.textColor};
   width: 100%;
   outline: none;
   padding: 14px;
@@ -103,7 +103,7 @@ export const FormNewInput = styled.input`
 `;
 
 export const FormNewArea = styled.textarea`
-  color: #000;
+  color: ${(props) => props.theme.textColor};
   width: 100%;
   outline: none;
   padding: 14px;
@@ -141,7 +141,7 @@ export const FormNewCreate = styled.button`
 `;
 
 export const Subttl = styled.label`
-  color: #000;
+  color: ${(props) => props.theme.textColor};
   font-size: 14px;
   font-weight: 600;
   line-height: 1;
@@ -149,7 +149,7 @@ export const Subttl = styled.label`
 `;
 
 export const CategoriesP = styled.p`
-  color: #000;
+  color: ${(props) => props.theme.textColor};
   font-size: 14px;
   font-weight: 600;
   line-height: 1;
@@ -174,13 +174,19 @@ export const CategoriesTheme = styled.div`
   margin-right: 10px;
   cursor: pointer;
 
-  color: ${(props) =>
-    props.$active ? props.theme[props.$category].color : "#94a6be"};
+  color: ${(props) => {
+    if (props.$active) {
+      return props.theme[props.$category].color;
+    } else {
+      return "#94a6be"; // Цвет для неактивных элементов всегда
+    }
+  }};
 
   background-color: ${(props) => {
     if (props.$active) {
       return props.theme[props.$category].background;
     } else {
+      //  фон для *всех* неактивных элементов используем значения из *текущей* темы
       switch (props.$category) {
         case "Research":
           return props.theme.Research.background;
@@ -188,9 +194,8 @@ export const CategoriesTheme = styled.div`
           return props.theme.Copywriting.background;
         case "WebDesign":
           return props.theme.WebDesign.background;
-
         default:
-          return "transparent";
+          return "transparent"; // Прозрачный по умолчанию
       }
     }
   }};
@@ -211,5 +216,20 @@ export const theme = {
   Copywriting: {
     background: "#E9D4FF",
     color: "#9A48F1",
+  },
+};
+
+export const themeD = {
+  WebDesign: {
+    background: "#FF6D00",
+    text: "#FFE4C2",
+  },
+  Research: {
+    background: "#06B16E",
+    text: "#B4FDD1",
+  },
+  Copywriting: {
+    background: "#9A48F1",
+    text: "#E9D4FF",
   },
 };

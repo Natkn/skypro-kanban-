@@ -1,4 +1,4 @@
-body.dark-theme body {
+/*body.dark-theme body {
   width: 100%;
   height: 100%;
   font-family: "Roboto", Arial, Helvetica, sans-serif;
@@ -209,21 +209,9 @@ body.dark-theme .main {
   background-color: #151419;
 }
 
-body.dark-theme .cards {
-  width: 100%;
-  display: block;
-}
-
-body.dark-theme .cards__card {
-  background-color: #20202c;
-}
-
-body.dark-theme .card__title {
-  color: #ffffff;
-}
-
 @media screen and (max-width: 660px) {
   body.dark-theme .pop-browse__calendar {
     width: 100%;
   }
 }
+*/

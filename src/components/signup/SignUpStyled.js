@@ -14,6 +14,7 @@ export const ContainerSignin = styled.div`
   width: 100vw;
   min-height: 100vh;
   margin: 0 auto;
+  background-color: ${(props) => props.theme.bodyBackgroundColor};
 `;
 
 export const Hover01 = styled.div`
@@ -31,6 +32,7 @@ export const Modal = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: ${(props) => props.theme.bodyBackgroundColor};
 
   @media screen and (max-width: 375px) {
     background-color: #ffffff;
@@ -40,7 +42,7 @@ export const Modal = styled.div`
 export const ModalBlock = styled.div`
   display: block;
   margin: 0 auto;
-  background-color: #ffffff;
+  background-color: ${(props) => props.theme.cardBackgroundColor};
   max-width: 368px;
   width: 100%;
   padding: 50px 60px;
@@ -88,8 +90,8 @@ export const ModalInput = styled.input`
   border: 0.7px solid rgba(148, 166, 190, 0.4);
   outline: none;
   padding: 10px 8px;
-  background-color: #ffffff;
-  color: black;
+  background-color: ${(props) => props.theme.cardBackgroundColor};
+  color: ${(props) => props.theme.textColor};
 
   &::placeholder {
     font-family: "Roboto", sans-serif;

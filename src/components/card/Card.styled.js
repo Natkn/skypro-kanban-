@@ -1,4 +1,23 @@
 import styled from "styled-components";
+import { getBackgroundColor, getTextColor } from "../../assets/themes";
+
+export const CardsContainer = styled.div`
+  width: 100%;
+  display: flex;
+  overflow-y: auto;
+`;
+
+export const Card = styled.div`
+  width: 220px;
+  height: 130px;
+  background-color: ${(props) => props.theme.cardBackgroundColor};
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: stretch;
+  padding: 15px 13px 19px;
+`;
 
 export const CardItem = styled.div`
   padding: 5px;
@@ -10,7 +29,7 @@ export const CardItem = styled.div`
 export const CardWrapper = styled.div`
   width: 220px;
   height: 130px;
-  background-color: #ffffff;
+  background-color: ${(props) => props.theme.cardBackgroundColor};
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -33,31 +52,17 @@ export const CardTheme = styled.div`
   height: 20px;
   padding: 5px 14px;
   border-radius: 18px;
-  background-color: ${({ theme }) =>
-    ({
-      Research: "#B4FDD1",
-      "Web Design": "#FFE4C2",
-      Copywriting: "#E9D4FF",
-    }[theme] || "#FFFFFF")};
+  background-color: ${({ theme, cardtheme }) =>
+    getBackgroundColor(theme, cardtheme)};
 `;
 
 export const CardThemeText = styled.p`
   font-size: 10px;
   font-weight: 600;
   line-height: 10px;
-  color: ${({ theme }) => {
-    switch (theme) {
-      case "Research":
-        return "#06B16E";
-      case "Web Design":
-        return "#FF6D00";
-      case "Copywriting":
-        return "#9A48F1";
-      default:
-        return "#000000";
-    }
-  }};
+  color: ${({ theme, cardtheme }) => getTextColor(theme, cardtheme)};
 `;
+
 export const CardButton = styled.div`
   width: 24px;
   height: 24px;
@@ -79,7 +84,7 @@ export const CardTitle = styled.h3`
   font-size: 14px;
   font-weight: 500;
   line-height: 18px;
-  color: #000000;
+  color: ${(props) => props.theme.cardTitleColor};
   margin-bottom: 10px;
 `;
 

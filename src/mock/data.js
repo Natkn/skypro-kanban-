@@ -78,12 +78,6 @@ export const cardList = [
   },
 ];
 
-export const theme = {
-  WebDesign: "#ffe4c2",
-  Research: "#b4fdd1",
-  Copywriting: "#e9d4ff",
-};
-
 export const cardStatuses = {
   noStatus: "Без статуса",
   needToDo: "Нужно сделать",
@@ -94,15 +88,21 @@ export const cardStatuses = {
 
 export const themePop = {
   "Web Design": {
-    background: "#FFE4C2",
-    text: "#FF6D00",
+    light: {
+      background: "#FFE4C2",
+      text: "#FF6D00",
+    },
   },
   Research: {
-    background: "#B4FDD1",
-    text: "#06B16E",
+    light: {
+      background: "#B4FDD1",
+      text: "#06B16E",
+    },
   },
   Copywriting: {
-    background: "#E9D4FF",
-    text: "#9A48F1",
+    light: {
+      background: "#E9D4FF",
+      text: "#9A48F1",
+    },
   },
 };

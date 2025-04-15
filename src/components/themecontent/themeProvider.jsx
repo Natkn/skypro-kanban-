@@ -1,32 +1,49 @@
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { ThemeContext } from "../themecontent/themeContext"; // Correct import
+import { ThemeProvider as StyledThemeProvider } from "styled-components";
+import { lightTheme, darkTheme } from "../../assets/themes";
+import PropTypes from "prop-types";
+import { lightThemeС, darkThemeС } from "../../assets/themes";
+
+const getThemeFromLocalStorage = () => {
+  const storedTheme = localStorage.getItem("theme");
+  return storedTheme || "light"; // Значение по умолчанию - светлая тема
+};
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    if (theme === "dark") {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
-    }
-  }, [theme]);
+  const [themeMode, setThemeMode] = useState(getThemeFromLocalStorage); // Изменил theme на themeMode
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+    setThemeMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
   };
 
-  const value = {
-    theme,
-    toggleTheme,
+  useEffect(() => {
+    localStorage.setItem("theme", themeMode);
+    document.body.classList.toggle("dark-theme", themeMode === "dark");
+  }, [themeMode]);
+
+  const themeObject = themeMode === "light" ? lightTheme : darkTheme;
+  // Передаем themeObject и themeMode
+  const themes = {
+    light: lightThemeС,
+    dark: darkThemeС,
   };
+  const themeWithMode = { ...themeObject, name: themeMode }; // Добавляем theme.name!
+  console.log("ThemeProvider: themeMode", themeMode); // Добавили лог
+  console.log("ThemeProvider: themeWithMode", themeWithMode); // Добавили лог
 
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider
+      value={{ theme: themeWithMode, toggleTheme, themeMode, themes }}
+    >
+      <StyledThemeProvider theme={themeWithMode}>
+        {children}
+      </StyledThemeProvider>
+    </ThemeContext.Provider>
   );
 };
 
 ThemeProvider.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired, // Исправил тип для children
 };
+export default ThemeProvider;
