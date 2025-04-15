@@ -78,23 +78,18 @@ function PopBrowse({ task, onClose }) {
 
       await updateTaskContext(task.id, updatedTaskData); // Use the function from context
       onClose();
-    } catch (error) {
-      console.error("Ошибка при обновлении задачи:", error);
+    } catch {
       alert("Произошла ошибка при обновлении задачи.");
     }
   };
 
   const handleDeleteTask = async () => {
     if (!task) {
-      console.error("Нет задачи для удаления");
       return;
     }
-    console.log("PopBrowse.jsx: Удаляем задачу с ID:", task.id); // Проверяем task._id
-    try {
-      await deleteTask(task.id); // Используем task._id
+    {
+      await deleteTask(task.id);
       onClose();
-    } catch (error) {
-      console.error("Ошибка при удалении задачи:", error);
     }
   };
 

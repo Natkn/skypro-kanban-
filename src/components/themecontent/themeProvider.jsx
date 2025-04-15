@@ -29,8 +29,6 @@ export const ThemeProvider = ({ children }) => {
     dark: darkThemeС,
   };
   const themeWithMode = { ...themeObject, name: themeMode }; // Добавляем theme.name!
-  console.log("ThemeProvider: themeMode", themeMode); // Добавили лог
-  console.log("ThemeProvider: themeWithMode", themeWithMode); // Добавили лог
 
   return (
     <ThemeContext.Provider

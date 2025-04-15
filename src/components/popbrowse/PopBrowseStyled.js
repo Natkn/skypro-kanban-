@@ -185,7 +185,7 @@ export const FormBrowseArea = styled.textarea`
   letter-spacing: -0.14px;
   margin-top: 14px;
   height: 200px;
-  color: ${(props) => props.theme.PopNewCardContainercolor};
+  color: ${(props) => props.theme.textColor};
 
   &::-moz-placeholder {
     font-weight: 400;

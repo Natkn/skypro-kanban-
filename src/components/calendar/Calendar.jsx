@@ -103,10 +103,7 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
     if (!disabled) {
       const { date, isOtherMonth } = dayInfo;
       if (!isOtherMonth) {
-        console.log("handleDayClick clickedDate:", date);
         onDateSelect(date);
-      } else {
-        console.log("Клик по дню другого месяца");
       }
     }
   };

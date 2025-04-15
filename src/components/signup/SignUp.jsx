@@ -91,7 +91,7 @@ function AuthForm({ isSignUp }) {
 
         if (data && data.token) {
           localStorage.setItem("authToken", data.token);
-          console.log("Data from sign up/in:", data);
+
           updateUserInfo(data); // Убедитесь, что updateUserInfo правильно обрабатывает данные и сохраняет токен, если это необходимо
           onLogin(); // Call onLogin to update the isLoggedIn state in AuthContext
           navigate("/");

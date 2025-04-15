@@ -46,17 +46,16 @@ function PopNewCard({ onClose }) {
     // Создание объекта задачи
     const newTask = {
       title,
-      description,
+      description: description,
       topic: category,
       date: selectedDate ? selectedDate.toISOString() : null,
       status: "noStatus", //  Set default status
     };
-    console.log("Создаваемая задача:", newTask);
+
     try {
       createTask(newTask); //  Use the createTask function from context
       onClose(); // Close the modal after successful task creation
-    } catch (error) {
-      console.error("Ошибка при создании задачи:", error);
+    } catch {
       alert("Произошла ошибка при создании задачи.");
     }
 

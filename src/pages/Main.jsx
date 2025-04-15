@@ -9,6 +9,7 @@ import { CardContext } from "../components/context/CardContext";
 import { useTasks } from "../components/context/UseTask.jsx";
 import TaskList from "../components/context/TaskList.jsx";
 import { useAuth } from "../components/context/AuthContext.js";
+//import { deleteTask } from "../../src/services/api.js";
 
 const Container = styled.div`
   width: 100vw;
@@ -24,66 +25,58 @@ const MainPage = () => {
   const [isPopBrowseOpen, setIsPopBrowseOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const { isLoggedIn } = useAuth();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen] = useState(false);
   const { createTask, fetchTasks } = useTasks();
 
-  console.log("MainPage: isLoggedIn =", isLoggedIn);
-
   useEffect(() => {
+    let dataLoadTimer;
+    let loadingHideTimer;
     if (isLoggedIn) {
-      fetchTasks();
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          dataLoadTimer = setTimeout(() => {
+            setTasks(cardList);
+          }, 500);
+        } catch {
+          alert("Произошла ошибка при загрузке данных.");
+        } finally {
+          loadingHideTimer = setTimeout(() => {
+            setLoading(false);
+          }, 2500);
+        }
+      };
+      fetchData();
+    } else {
+      setLoading(false);
     }
-  }, [fetchTasks, isLoggedIn]);
 
-  useEffect(() => {
-    console.log("MainPage: isLoggedIn =", isLoggedIn);
-  }, [isLoggedIn]);
+    return () => {
+      clearTimeout(dataLoadTimer);
+      clearTimeout(loadingHideTimer);
+    };
+  }, [isLoggedIn, fetchTasks]);
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
+    setIsPopNewCardOpen(false);
   };
 
   const handleCreateTask = async (newTask) => {
     try {
       await createTask(newTask);
       handleCloseModal();
-      setIsPopNewCardOpen(false); // Close PopNewCard after creating task
+      setIsPopNewCardOpen(false);
     } catch {
       alert("Произошла ошибка при создании задачи.");
     }
   };
-
-  useEffect(() => {
-    setLoading(true);
-
-    const dataLoadTimer = setTimeout(() => {
-      setTasks(cardList);
-    }, 500);
-
-    const loadingHideTimer = setTimeout(() => {
-      setLoading(false);
-    }, 2500);
-
-    return () => {
-      clearTimeout(dataLoadTimer);
-      clearTimeout(loadingHideTimer);
-    };
-  }, []);
 
   const openPopNewCardHandler = useCallback(() => {
     setIsPopNewCardOpen(true);
   }, [setIsPopNewCardOpen]);
 
   const handleCardButtonClick = (taskId) => {
-    const taskIdString = String(taskId); // Приводим taskId к строке
-    console.log("handleCardButtonClick: taskIdString =", taskIdString);
-    console.log("handleCardButtonClick: tasks =", tasks);
-    const task = tasks.find(
-      (task) =>
-        String(task._id) === taskIdString || String(task.id) === taskIdString
-    ); // Ищем по _id или id
-    console.log("handleCardButtonClick: task =", task);
-    setSelectedTask(task);
+    setSelectedTask(tasks.find((task) => task._id === taskId));
     setIsPopBrowseOpen(true);
   };
 
@@ -92,18 +85,9 @@ const MainPage = () => {
     setSelectedTask(null);
   };
 
-  const handleOpenPopBrowse = () => {
-    setIsPopBrowseOpen(true);
-  };
-
-  useEffect(() => {
-    console.log("MainPage: isLoggedIn =", isLoggedIn);
-    console.log("MainPage: tasks =", tasks);
-  }, [isLoggedIn, tasks]);
   const handleCardClick = (taskId) => {
-    console.log("handleCardClick: taskId =", taskId);
-    setSelectedTask(taskId);
-    handleOpenPopBrowse();
+    setSelectedTask(tasks.find((task) => task._id === taskId));
+    setIsPopBrowseOpen(true);
   };
 
   return (

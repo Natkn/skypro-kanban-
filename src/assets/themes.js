@@ -37,9 +37,8 @@ export const darkTheme = {
 export const GlobalStyles = createGlobalStyle`
   body, html {
     width: 100%;
-  
     font-family: "Roboto", Arial, Helvetica, sans-serif;
-    background: ${({ theme }) => theme.cardBackgroundColor};
+    background: ${({ theme }) => theme.wrapperTheme};
     color: ${({ theme }) => theme.textColor};
     transition: .3s ease;
   }
@@ -161,33 +160,3 @@ export const darkThemeС = {
     color: "#E9D4FF",
   },
 };
-
-/*export function getThemeStyles(themeName, themeMode) {
-  const isDarkTheme = themeMode === "dark";
-  const currentTheme = isDarkTheme ? darkThemeС : lightThemeС;
-  console.log("themeMode:", themeMode); // Проверяем themeMode
-  console.log("currentTheme:", currentTheme);
-  switch (themeName) {
-    case "Web Design":
-      return (
-        currentTheme["Web Design"] || {
-          background: "transparent",
-          color: "black",
-        }
-      );
-    case "Research":
-      return (
-        currentTheme.Research || { background: "transparent", color: "black" }
-      );
-    case "Copywriting":
-      return (
-        currentTheme.Copywriting || {
-          background: "transparent",
-          color: "black",
-        }
-      );
-    default:
-      return { background: "transparent", color: "black" };
-  }
-}
-*/

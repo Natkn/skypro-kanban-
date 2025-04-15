@@ -3,9 +3,6 @@ import { AuthContext } from "./AuthContext";
 import PropTypes from "prop-types";
 
 export const AuthProvider = ({ children }) => {
-  const [user] = useState(null);
-  console.log("AuthContext user (initial):", user);
-
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem("authToken") ? true : false;
   });
@@ -16,8 +13,7 @@ export const AuthProvider = ({ children }) => {
     if (storedUserInfo) {
       try {
         setUserInfo(JSON.parse(storedUserInfo));
-      } catch (error) {
-        console.error("Ошибка при парсинге userInfo из localStorage:", error);
+      } catch {
         // Очищаем некорректные данные
         localStorage.removeItem("userInfo");
         setUserInfo(null);
@@ -40,12 +36,6 @@ export const AuthProvider = ({ children }) => {
     setUserInfo(userData);
     localStorage.setItem("userInfo", JSON.stringify(userData));
   }, []);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchUserInfo();
-    }
-  }, [isLoggedIn, fetchUserInfo]); //fetchUserInfo добавлена как зависимость
 
   // Загружаем userInfo при первом рендере
   useEffect(() => {

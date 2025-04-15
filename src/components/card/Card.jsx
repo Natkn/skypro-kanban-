@@ -4,7 +4,7 @@ import * as S from "./Card.styled";
 import { CardContext } from "../context/CardContext";
 import { ThemeContext } from "../../components/themecontent/themeContext";
 
-function Card({ title, date, loading, id, cardtheme }) {
+function Card({ title, date, loading, id, cardtheme, description, topic }) {
   const { handleCardButtonClick } = useContext(CardContext);
   const { theme } = useContext(ThemeContext);
   if (!handleCardButtonClick) {
@@ -36,12 +36,12 @@ function Card({ title, date, loading, id, cardtheme }) {
           <S.CardTheme theme={theme} cardtheme={cardtheme}>
             <S.CardThemeText theme={theme} cardtheme={cardtheme}>
               {cardtheme}
+              {topic}
             </S.CardThemeText>
           </S.CardTheme>
           <S.CardButton
             onClick={(event) => {
               event.preventDefault();
-
               handleCardButtonClick(id);
             }}
           >
@@ -52,6 +52,8 @@ function Card({ title, date, loading, id, cardtheme }) {
         </S.CardGroup>
         <S.CardTitle>{title}</S.CardTitle>
         <S.CardContent>
+          {" "}
+          {description}
           <S.CardDate>
             <S.CardDateIcon>
               <svg
@@ -96,6 +98,8 @@ Card.propTypes = {
   theme: PropTypes.oneOf(["Research", "Web Design", "Copywriting"]).isRequired,
   cardtheme: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  topic: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
   id: PropTypes.string.isRequired,

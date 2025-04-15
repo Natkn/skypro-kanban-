@@ -20,13 +20,13 @@ const handleResponse = async (response) => {
     throw new Error(`Ошибка API: ${response.status} - ${response.statusText}`);
   }
   const data = await response.json();
-  console.log("Данные, полученные от сервера:", data); // Add this line
+
   return data;
 };
 
 // Получить список задач
 export const getTasks = async () => {
-  try {
+  {
     const response = await fetch(API_URL, {
       method: "GET",
       headers: getHeaders(),
@@ -40,15 +40,23 @@ export const getTasks = async () => {
     } else {
       return []; // Возвращаем пустой массив
     }
-  } catch (error) {
-    console.error("Ошибка при получении задач:", error);
-    throw error;
   }
+};
+
+export const apiGetTasks = async () => {
+  const response = await fetch("/api/tasks");
+  const data = await response.json();
+  return data.map((task) => ({
+    ...task,
+    status: task.status || "noStatus",
+    theme: task.theme || "defaultTheme",
+    cardtheme: task.cardtheme || "defaultCardTheme",
+  }));
 };
 
 // Добавить задачу
 export async function addTask(taskData) {
-  try {
+  {
     const token = localStorage.getItem("authToken");
     const response = await fetch(API_URL, {
       // Исправлено: используем POST и URL /kanban
@@ -67,16 +75,23 @@ export async function addTask(taskData) {
     const data = await response.json();
 
     return data;
-  } catch (error) {
-    console.error("Ошибка при добавлении задачи:", error);
-    throw error;
   }
 }
+
+export const apiAddTask = async (newTask) => {
+  const response = await fetch("/api/tasks", {
+    method: "POST",
+    headers: {},
+    body: JSON.stringify(newTask),
+  });
+  const data = await response.json();
+  return data; // Возвращаем обновленные данные
+};
 
 // Изменить задачу
 export async function updateTask(taskId, taskData) {
   // taskId - id задачи, taskData - обновленные данные
-  try {
+  {
     const response = await fetch(`${API_URL}/${taskId}`, {
       // Используем taskId в URL
       method: "PUT",
@@ -95,14 +110,11 @@ export async function updateTask(taskId, taskData) {
 
     const data = await response.json();
     return data; // Возвращаем обновленную задачу (или сообщение об успехе)
-  } catch (error) {
-    console.error(`Ошибка при обновлении задачи с ID ${taskId}:`, error);
-    throw error; //  Передаем ошибку дальше, чтобы можно было ее обработать в компоненте
   }
 }
 
 export const apiUpdateTask = async (id, data) => {
-  try {
+  {
     const response = await fetch(`${API_URL}/tasks/${id}`, {
       method: "PATCH",
       headers: {},
@@ -112,29 +124,30 @@ export const apiUpdateTask = async (id, data) => {
       throw new Error(`Ошибка при обновлении задачи с ID ${id}`);
     }
     return await response.json();
-  } catch (error) {
-    console.error("Ошибка при обновлении задачи:", error);
-    throw error;
   }
 };
 
 // Удалить задачу
-export const deleteTask = async (_id) => {
-  try {
-    const token = getAuthToken();
-
-    const response = await fetch(`${API_URL}/${_id}`, {
+export const deleteTask = async (taskId) => {
+  {
+    const response = await fetch(`${API_URL}/${taskId}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Не забудьте про авторизацию
       },
     });
 
-    const data = await handleResponse(response); // Get JSON from handleResponse
-    return data.tasks;
-  } catch (error) {
-    console.error(`Ошибка при удалении задачи с ID ${_id}:`, error);
-    throw error;
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(
+        `Ошибка API: ${response.status} - ${
+          errorData.message || "Неизвестная ошибка"
+        }`
+      );
+    }
+
+    const data = await response.json();
+    return data; // Возвращаем обновленный список задач с сервера
   }
 };
 

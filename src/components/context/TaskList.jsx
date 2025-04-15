@@ -10,9 +10,12 @@ function TaskList() {
         <Card
           key={task._id || uuidv4()}
           id={task.id}
+          title={task.title}
           theme={task.theme}
           cardtheme={task.cardtheme}
-          title={task.title}
+          description={task.description}
+          topic={task.topic}
+          status={task.status}
           date={task.date}
           loading={false}
         />
