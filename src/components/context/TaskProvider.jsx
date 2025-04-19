@@ -1,86 +1,123 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import TaskContext from "../context/TaskContext";
 import {
+  updateTask as apiUpdateTask,
   getTasks as apiGetTasks,
   addTask as apiAddTask,
-  updateTask as apiUpdateTask,
   deleteTask as apiDeleteTask,
 } from "../../services/api";
 
 const TaskProvider = ({ children, isLoggedIn }) => {
   const [tasks, setTasks] = useState([]);
-  const [setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchTasks = useCallback(async () => {
+    setLoading(isLoggedIn); // Тут мы при монтировании сразу задаем значение
+    setLoading(false);
     if (!isLoggedIn) {
       setTasks([]); // Очищаем задачи, если пользователь не залогинен
       return;
     }
     try {
+      setLoading(true);
       const fetchedTasks = await apiGetTasks();
-      setTasks(fetchedTasks);
+      const tasksWithId = fetchedTasks.map((task) => ({
+        ...task,
+        id: task._id,
+      }));
+      setTasks(tasksWithId);
     } catch (error) {
       setError(error);
+    } finally {
+      setLoading(false);
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, setLoading, setTasks, setError]);
 
-  const addTask = useCallback(async (newTask) => {
-    try {
-      const addedTask = await apiAddTask(newTask);
-      // Проверяем данные
-      setTasks((prevTasks) => [...prevTasks, addedTask]); // Обновляем состояние
-    } catch (error) {
-      setError(error);
-      throw error;
+  useEffect(() => {
+    //   Теперь эта функция просто наблюдает за isLoggedIn и, если он true,
+    // вызывает fetchTasks.
+    if (isLoggedIn) {
+      fetchTasks();
     }
-  }, []);
+  }, [isLoggedIn, fetchTasks]);
 
-  const updateTask = useCallback(async (id, updatedTask) => {
-    try {
-      const updatedTaskFromServer = await apiUpdateTask(id, updatedTask); //Получаем обновленную задачу с сервера
-      setTasks(
-        (prevTasks) =>
-          prevTasks.map((task) =>
-            task.id === id ? updatedTaskFromServer : task
-          ) // Обновляем задачу в массиве
-      );
-    } catch (error) {
-      setError(error);
-      throw error;
-    }
-  }, []);
-
-  const deleteTask = useCallback(
-    async (id) => {
-      const taskIdString = String(id); // Приводим id к строке
-
+  const addTask = useCallback(
+    async (newTask) => {
       try {
-        await apiDeleteTask(taskIdString); // Просто удаляем задачу на сервере
-        setTasks((prevTasks) =>
-          prevTasks.filter((task) => String(task._id) !== taskIdString)
-        ); // Обновляем массив, удаляя задачу
+        setLoading(true);
+        const addedTask = await apiAddTask(newTask);
+        setTasks((prevTasks) => [...prevTasks, addedTask]);
       } catch (error) {
         setError(error);
+        throw error;
       } finally {
         setLoading(false);
       }
     },
-    [setLoading]
+    [setTasks, setError]
+  );
+
+  const updateTask = useCallback(
+    async (taskId, taskData) => {
+      try {
+        setLoading(true);
+        const updatedTask = await apiUpdateTask(taskId, taskData);
+        setTasks((prevTasks) =>
+          prevTasks.map((task) =>
+            task._id === taskId ? { ...task, ...updatedTask } : task
+          )
+        );
+        return updatedTask;
+      } catch (error) {
+        setError(error);
+        throw error;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setTasks, setError]
+  );
+
+  const deleteTask = useCallback(
+    async (_id) => {
+      try {
+        setLoading(true);
+        const taskIdString = String(_id);
+
+        await apiDeleteTask(taskIdString);
+
+        // Обновляем массив, удаляя задачу, и возвращаем новый массив
+        setTasks((prevTasks) => {
+          const newTasks = prevTasks.filter(
+            (task) => String(task._id) !== taskIdString
+          );
+          return newTasks;
+        });
+      } catch (error) {
+        console.error("Ошибка при удалении задачи:", error);
+        setError(error);
+        alert("Произошла ошибка при удалении задачи.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setTasks, setError]
   );
 
   const deleteTaskContext = async (taskId) => {
-    // Передаем _id задачи
-    {
-      const updatedTasks = await deleteTask(taskId); // Передаем _id в API
-      setTasks(updatedTasks.tasks);
+    try {
+      setLoading(true);
+      await deleteTask(taskId); // Просто вызываем deleteTask
+    } finally {
+      setLoading(false);
     }
   };
 
   const value = {
     tasks,
-
+    loading, //  Теперь loading экспортируется
     error,
     createTask: addTask,
     updateTask,

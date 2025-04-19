@@ -41,7 +41,7 @@ export const CardWrapper = styled.div`
 export const CardGroup = styled.div`
   width: 100%;
   height: 20px;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -85,7 +85,7 @@ export const CardTitle = styled.h3`
   font-weight: 500;
   line-height: 18px;
   color: ${(props) => props.theme.cardTitleColor};
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 `;
 
 export const CardContent = styled.div`
@@ -96,11 +96,17 @@ export const CardContent = styled.div`
   justify-content: space-between;
 `;
 
+export const CardContentAdd = styled.div`
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+`;
+
 export const CardDate = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin-top: 20px;
+  margin-top: 8px;
 `;
 
 export const CardDateIcon = styled.svg`

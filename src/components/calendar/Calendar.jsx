@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { useState, useEffect } from "react";
 import {
   CalendarContainer,
   CalendarTitle,
@@ -18,21 +18,17 @@ import {
   CalendarSpan,
 } from "../calendar/Calendar.styled";
 
-function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [internalSelectedDate, setInternalSelectedDate] =
-    useState(selectedDate);
+function Calendar({ onDateSelect, disabled }) {
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth()); // Текущий месяц (0-11)
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // Текущий год
 
   useEffect(() => {
-    setInternalSelectedDate(selectedDate);
-  }, [selectedDate]);
-
-  useEffect(() => {
-    if (internalSelectedDate) {
-      onDateSelect(internalSelectedDate);
+    // Вызываем onDateSelect при изменении selectedDate
+    if (selectedDate) {
+      onDateSelect(selectedDate); // Передаем выбранную дату
     }
-  }, [internalSelectedDate, onDateSelect]);
+  }, [selectedDate, onDateSelect]);
 
   const getDayNames = () => {
     return ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
@@ -47,7 +43,6 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
     }
     return days;
   };
-
   const getDaysFromPreviousMonth = (month, year) => {
     const firstDayOfMonth = new Date(year, month, 1);
     const firstDayOfWeek = firstDayOfMonth.getDay();
@@ -75,6 +70,7 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
     const days = [];
 
     if (lastDayOfWeek !== 0) {
+      // если последний день месяца не воскресенье
       for (
         let i = 1;
         i <= 7 - (lastDayOfWeek === 6 ? 7 : lastDayOfWeek + 1);
@@ -99,12 +95,12 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
     };
   };
 
-  const handleDayClick = (dayInfo) => {
-    if (!disabled) {
-      const { date, isOtherMonth } = dayInfo;
-      if (!isOtherMonth) {
-        onDateSelect(date);
-      }
+  const handleDayClick = (day) => {
+    if (typeof day === "number") {
+      const clickedDate = new Date(currentYear, currentMonth, day);
+      setSelectedDate(clickedDate);
+    } else {
+      console.log("Клик по дню другого месяца");
     }
   };
 
@@ -115,7 +111,7 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
     } else {
       setCurrentMonth(currentMonth - 1);
     }
-    setInternalSelectedDate(null);
+    setSelectedDate(null); // Сбрасываем выбранную дату при переходе к другому месяцу
   };
 
   const goToNextMonth = () => {
@@ -125,23 +121,21 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
     } else {
       setCurrentMonth(currentMonth + 1);
     }
-    setInternalSelectedDate(null);
+    setSelectedDate(null); // Сбрасываем выбранную дату при переходе к другому месяцу
   };
 
   const { prevMonthDays, daysInMonth, nextMonthDays } = getAllDays();
   const allDays = [
     ...prevMonthDays.map((day) => ({ day, isOtherMonth: true })),
-    ...daysInMonth.map((date) => ({ date, isOtherMonth: false })),
+    ...daysInMonth.map((day) => ({ day: day.getDate(), isOtherMonth: false })),
     ...nextMonthDays.map((day) => ({ day, isOtherMonth: true })),
   ];
 
   const formatDate = (date) => {
-    if (!date || !(date instanceof Date) || isNaN(date)) {
-      return "";
-    }
+    if (!date) return "";
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = String(date.getFullYear()); // Convert year to string
+    const year = date.getFullYear();
     return `${day}.${month}.${year}`;
   };
 
@@ -160,7 +154,7 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
     "Декабрь",
   ];
   const currentMonthName = monthNames[currentMonth];
-  const formattedSelectedDate = formatDate(internalSelectedDate);
+  const formattedSelectedDate = formatDate(selectedDate);
 
   return (
     <CalendarContainer className="pop-new-card__calendar calendar">
@@ -211,22 +205,22 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
           </CalendarDaysNames>
           <CalendarCells className="calendar__cells">
             {allDays.map((dayInfo, index) => {
-              const { date, isOtherMonth } = dayInfo;
+              const { day, isOtherMonth } = dayInfo;
               const isCurrentDay =
-                internalSelectedDate &&
-                internalSelectedDate.getDate() === date?.getDate() &&
-                internalSelectedDate.getMonth() === currentMonth &&
-                internalSelectedDate.getFullYear() === currentYear;
+                selectedDate &&
+                selectedDate.getDate() === day &&
+                selectedDate.getMonth() === currentMonth &&
+                selectedDate.getFullYear() === currentYear;
 
               return (
                 <CalendarCell
-                  key={index}
+                  key={index} // Уникальный ключ для каждого элемента
                   className={`calendar__cell _cell-day ${
                     isOtherMonth ? "_other-month" : ""
                   } ${isCurrentDay ? "_active-day" : ""}`}
-                  onClick={() => handleDayClick(dayInfo)}
+                  onClick={disabled ? null : () => handleDayClick(dayInfo)}
                 >
-                  {date ? date.getDate() : dayInfo.day}
+                  {dayInfo.isOtherMonth ? day : dayInfo.day}
                 </CalendarCell>
               );
             })}
@@ -235,11 +229,10 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
         <input type="hidden" id="datepick_value" value="08.09.2023" />
         <CalendarPeriod className="calendar__period">
           <CalendarText className="calendar__p date-end">
-            {dateLabel}
+            Выберите срок исполнения:
             <CalendarSpan className="date-control">
               {formattedSelectedDate}
             </CalendarSpan>
-            .
           </CalendarText>
         </CalendarPeriod>
       </CalendarBlock>
@@ -249,7 +242,7 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
 
 Calendar.propTypes = {
   onDateSelect: PropTypes.func.isRequired,
-  selectedDate: PropTypes.instanceOf(Date),
+  selectedDate: PropTypes.instanceOf(Date).isRequired,
   disabled: PropTypes.bool,
   dateLabel: PropTypes.string,
 };

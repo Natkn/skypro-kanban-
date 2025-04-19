@@ -5,7 +5,7 @@ import { CardContext } from "../context/CardContext";
 import { ThemeContext } from "../../components/themecontent/themeContext";
 import { useDraggable } from "@dnd-kit/core";
 
-function Card({ title, date, loading, id, cardtheme }) {
+function Card({ title, date, loading, id, topic, cardtheme, description }) {
   const { handleCardButtonClick } = useContext(CardContext);
   const { theme } = useContext(ThemeContext);
 
@@ -28,6 +28,13 @@ function Card({ title, date, loading, id, cardtheme }) {
   if (!handleCardButtonClick) {
     return null;
   }
+
+  const formattedDate = new Date(date).toLocaleDateString("ru-RU", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  });
+
   if (loading) {
     return (
       <S.CardItem>
@@ -61,6 +68,7 @@ function Card({ title, date, loading, id, cardtheme }) {
           <S.CardTheme theme={theme} cardtheme={cardtheme}>
             <S.CardThemeText theme={theme} cardtheme={cardtheme}>
               {cardtheme}
+              {topic}
             </S.CardThemeText>
           </S.CardTheme>
           <S.CardButton
@@ -76,7 +84,7 @@ function Card({ title, date, loading, id, cardtheme }) {
         </S.CardGroup>
         <S.CardTitle>{title}</S.CardTitle>
         <S.CardContent>
-          {" "}
+          <S.CardContentAdd>{description}</S.CardContentAdd>
           <S.CardDate>
             <S.CardDateIcon>
               <svg
@@ -109,7 +117,7 @@ function Card({ title, date, loading, id, cardtheme }) {
                 </defs>
               </svg>
             </S.CardDateIcon>
-            <S.CardDateText>{date}</S.CardDateText>
+            <S.CardDateText>{formattedDate}</S.CardDateText>
           </S.CardDate>
         </S.CardContent>
       </S.CardWrapper>
@@ -124,6 +132,8 @@ Card.propTypes = {
   date: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
   id: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  topic: PropTypes.string.isRequired,
 };
 
 export default Card;

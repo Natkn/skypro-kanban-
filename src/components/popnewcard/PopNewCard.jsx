@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Calendar from "../calendar/Calendar";
 import PropTypes from "prop-types";
 import {
@@ -22,20 +22,27 @@ import {
 import { theme } from "./PopNewCardStyled";
 import { useTasks } from "../context/UseTask";
 
-function PopNewCard({ onClose }) {
-  const [dateLabel] = useState("Выберите срок исполнения:");
+function PopNewCard({ task, onClose }) {
+  const [dateLabel, setDateLabel] = useState("Выберите срок исполнения:"); // Правильно используем useState
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Web Design");
-  const [selectedDate, setSelectedDate] = useState(null);
   const { createTask } = useTasks();
+  const [isEditing] = useState(false);
+  const initialDate = task?.date ? new Date(task.date) : new Date();
+  const [selectedDate, setSelectedDate] = useState(initialDate);
 
-  const handleDateSelect = useCallback(
-    (date) => {
-      setSelectedDate(date);
-    },
-    [setSelectedDate]
-  );
+  const formattedSelectedDate = selectedDate.toISOString();
+
+  useEffect(() => {
+    console.log("selectedDate changed:", selectedDate); // Проверяем selectedDate
+    setDateLabel(selectedDate.toLocaleDateString("ru-RU")); // Обновляем dateLabel
+  }, [selectedDate, setDateLabel]);
+
+  const handleDateSelect = (date) => {
+    console.log("handleDateSelect called with:", date); // Проверяем вызов
+    setSelectedDate(date);
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -48,7 +55,7 @@ function PopNewCard({ onClose }) {
       title,
       description: description,
       topic: category,
-      date: selectedDate ? selectedDate.toISOString() : null,
+      date: formattedSelectedDate,
       status: "noStatus", //  Set default status
     };
 
@@ -63,18 +70,8 @@ function PopNewCard({ onClose }) {
     setTitle("");
     setDescription("");
     setCategory("Web Design");
-    setSelectedDate(null);
+    setSelectedDate(new Date());
   };
-
-  const formatDate = (date) => {
-    if (!date) return "";
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}.${month}.${year}`;
-  };
-
-  const formattedSelectedDate = formatDate(selectedDate);
 
   return (
     <PopNewCardWrapper onClick={(e) => e.stopPropagation()}>
@@ -113,8 +110,10 @@ function PopNewCard({ onClose }) {
               <Calendar
                 onDateSelect={handleDateSelect}
                 selectedDate={selectedDate}
+                disabled={!isEditing}
                 dateLabel={dateLabel}
               />
+
               <input
                 type="hidden"
                 id="datepick_value"
@@ -159,7 +158,9 @@ function PopNewCard({ onClose }) {
 }
 
 PopNewCard.propTypes = {
+  task: PropTypes.shape({
+    date: PropTypes.string,
+  }),
   onClose: PropTypes.func.isRequired,
-  onCreateTask: PropTypes.func.isRequired,
 };
 export default PopNewCard;

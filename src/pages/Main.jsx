@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Header from "../components/header/Header.jsx";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 import Column from "../components/column/Column.jsx";
 //import { cardList } from "../mock/data.js";
 import PopNewCard from "../components/popnewcard/PopNewCard.jsx";
@@ -10,8 +10,8 @@ import { useTasks } from "../components/context/UseTask.jsx";
 import TaskList from "../components/context/TaskList.jsx";
 //import { useAuth } from "../components/context/AuthContext.js";
 //import { deleteTask } from "../../src/services/api.js";
-import { toast } from "react-toastify";
-import { getTasks } from "../services/api.js";
+//import { toast } from "react-toastify";
+//import { getTasks } from "../services/api.js";
 
 const Container = styled.div`
   width: 100vw;
@@ -21,32 +21,16 @@ const ColumnsWrapper = styled.div`
   flex-direction: column;
 `;
 const MainPage = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading] = useState(true);
   const [isPopNewCardOpen, setIsPopNewCardOpen] = useState(false);
   const [isPopBrowseOpen, setIsPopBrowseOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  //const [isLoggedIn] = useState(() => {
+  //  return localStorage.getItem("authToken") ? true : false;
+  // });
 
   const [isModalOpen] = useState(false);
-  const { createTask, setTasks, tasks } = useTasks();
-
-  useEffect(() => {
-    getTasks({
-      token: JSON.parse(localStorage.getItem("userInfo")).token,
-    })
-      .then((data) => {
-        setTasks(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        toast.error("Ошибка при получении списка задач " + error, {
-          position: "top-right",
-          toastId: "getKanbanTasks",
-        });
-      });
-  }, [setTasks]);
-
-  console.log("MainPage tasks:", tasks); // Check if tasks is defined
-  console.log("MainPage createTask:", createTask); // Check if createTask is defined
+  const { createTask, tasks } = useTasks();
 
   const handleCloseModal = () => {
     setIsPopNewCardOpen(false);
@@ -80,7 +64,7 @@ const MainPage = () => {
     setSelectedTask(tasks.find((task) => task._id === taskId));
     setIsPopBrowseOpen(true);
   };
-  console.log("MainPage: tasks before Column =", tasks);
+
   return (
     <CardContext.Provider value={{ handleCardButtonClick }}>
       <Container>
