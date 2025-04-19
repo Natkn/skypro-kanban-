@@ -3,10 +3,28 @@ import { useContext } from "react";
 import * as S from "./Card.styled";
 import { CardContext } from "../context/CardContext";
 import { ThemeContext } from "../../components/themecontent/themeContext";
+import { useDraggable } from "@dnd-kit/core";
 
-function Card({ title, date, loading, id, cardtheme, description, topic }) {
+function Card({ title, date, loading, id, cardtheme }) {
   const { handleCardButtonClick } = useContext(CardContext);
   const { theme } = useContext(ThemeContext);
+
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: id,
+    });
+
+  const style = {
+    transform: transform
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      : undefined,
+    position: isDragging ? "relative" : "static",
+    zIndex: isDragging ? 999 : 1,
+    opacity: isDragging ? 0.8 : 1,
+    transition: "box-shadow 0.2s ease",
+    boxShadow: isDragging ? "0 0 10px rgba(0,0,0,0.2)" : "none",
+  };
+
   if (!handleCardButtonClick) {
     return null;
   }
@@ -30,13 +48,19 @@ function Card({ title, date, loading, id, cardtheme, description, topic }) {
   }
 
   return (
-    <S.CardItem theme={theme} cardtheme={cardtheme}>
+    <S.CardItem
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={style}
+      theme={theme}
+      cardtheme={cardtheme}
+    >
       <S.CardWrapper>
         <S.CardGroup>
           <S.CardTheme theme={theme} cardtheme={cardtheme}>
             <S.CardThemeText theme={theme} cardtheme={cardtheme}>
               {cardtheme}
-              {topic}
             </S.CardThemeText>
           </S.CardTheme>
           <S.CardButton
@@ -53,7 +77,6 @@ function Card({ title, date, loading, id, cardtheme, description, topic }) {
         <S.CardTitle>{title}</S.CardTitle>
         <S.CardContent>
           {" "}
-          {description}
           <S.CardDate>
             <S.CardDateIcon>
               <svg
@@ -98,12 +121,9 @@ Card.propTypes = {
   theme: PropTypes.oneOf(["Research", "Web Design", "Copywriting"]).isRequired,
   cardtheme: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  topic: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
   id: PropTypes.string.isRequired,
-  _id: PropTypes.string.isRequired,
 };
 
 export default Card;

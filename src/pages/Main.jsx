@@ -2,14 +2,16 @@ import styled from "styled-components";
 import Header from "../components/header/Header.jsx";
 import { useCallback, useState, useEffect } from "react";
 import Column from "../components/column/Column.jsx";
-import { cardList } from "../mock/data.js";
+//import { cardList } from "../mock/data.js";
 import PopNewCard from "../components/popnewcard/PopNewCard.jsx";
 import PopBrowse from "../components/popbrowse/PopBrowse";
 import { CardContext } from "../components/context/CardContext";
 import { useTasks } from "../components/context/UseTask.jsx";
 import TaskList from "../components/context/TaskList.jsx";
-import { useAuth } from "../components/context/AuthContext.js";
+//import { useAuth } from "../components/context/AuthContext.js";
 //import { deleteTask } from "../../src/services/api.js";
+import { toast } from "react-toastify";
+import { getTasks } from "../services/api.js";
 
 const Container = styled.div`
   width: 100vw;
@@ -19,43 +21,32 @@ const ColumnsWrapper = styled.div`
   flex-direction: column;
 `;
 const MainPage = () => {
-  const [loading, setLoading] = useState(false);
-  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isPopNewCardOpen, setIsPopNewCardOpen] = useState(false);
   const [isPopBrowseOpen, setIsPopBrowseOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
-  const { isLoggedIn } = useAuth();
+
   const [isModalOpen] = useState(false);
-  const { createTask, fetchTasks } = useTasks();
+  const { createTask, setTasks, tasks } = useTasks();
 
   useEffect(() => {
-    let dataLoadTimer;
-    let loadingHideTimer;
-    if (isLoggedIn) {
-      const fetchData = async () => {
-        setLoading(true);
-        try {
-          dataLoadTimer = setTimeout(() => {
-            setTasks(cardList);
-          }, 500);
-        } catch {
-          alert("Произошла ошибка при загрузке данных.");
-        } finally {
-          loadingHideTimer = setTimeout(() => {
-            setLoading(false);
-          }, 2500);
-        }
-      };
-      fetchData();
-    } else {
-      setLoading(false);
-    }
+    getTasks({
+      token: JSON.parse(localStorage.getItem("userInfo")).token,
+    })
+      .then((data) => {
+        setTasks(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        toast.error("Ошибка при получении списка задач " + error, {
+          position: "top-right",
+          toastId: "getKanbanTasks",
+        });
+      });
+  }, [setTasks]);
 
-    return () => {
-      clearTimeout(dataLoadTimer);
-      clearTimeout(loadingHideTimer);
-    };
-  }, [isLoggedIn, fetchTasks]);
+  console.log("MainPage tasks:", tasks); // Check if tasks is defined
+  console.log("MainPage createTask:", createTask); // Check if createTask is defined
 
   const handleCloseModal = () => {
     setIsPopNewCardOpen(false);
@@ -89,7 +80,7 @@ const MainPage = () => {
     setSelectedTask(tasks.find((task) => task._id === taskId));
     setIsPopBrowseOpen(true);
   };
-
+  console.log("MainPage: tasks before Column =", tasks);
   return (
     <CardContext.Provider value={{ handleCardButtonClick }}>
       <Container>
@@ -113,6 +104,7 @@ const MainPage = () => {
                 />
                 <TaskList handleCardButtonClick={handleCardButtonClick} />
               </ColumnsWrapper>
+
               <Column
                 title={"Нужно сделать"}
                 tasks={tasks}

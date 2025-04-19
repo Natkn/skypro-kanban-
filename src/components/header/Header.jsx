@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import logo from "../../images/logo.png";
-import logodark from "../../images/logo_dark.png";
+import logo from "../../../public/images/images/logo.png";
+import logodark from "../../../public/images/images/logo_dark.png";
 import { useTheme } from "../themecontent/themeContext";
 import PopExit from "../popexit/PopExit";
 import {

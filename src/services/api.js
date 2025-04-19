@@ -1,177 +1,112 @@
-const API_URL = "https://wedev-api.sky.pro/api/kanban"; // Предполагаем, что базовый URL остается прежним
-const token = localStorage.getItem("authToken");
+const API_URL = "https://wedev-api.sky.pro/api/kanban";
+import axios from "axios";
 
-const getAuthToken = () => {
-  return token;
-};
+const getAuthToken = () => localStorage.getItem("authToken");
 
-const getHeaders = () => {
+const getHeaders = (contentType = "application/json") => {
   const token = getAuthToken();
   const headers = {
     Authorization: `Bearer ${token}`,
   };
-
+  if (contentType) {
+    headers["Content-Type"] = contentType;
+  }
   return headers;
 };
 
-// Обработка ошибок и получение JSON
 const handleResponse = async (response) => {
   if (!response.ok) {
-    throw new Error(`Ошибка API: ${response.status} - ${response.statusText}`);
+    const errorData = await response.json();
+    throw new Error(
+      `API error: ${response.status} - ${
+        errorData.message || response.statusText
+      }`
+    );
   }
-  const data = await response.json();
-
-  return data;
+  return response.json();
 };
 
-// Получить список задач
-export const getTasks = async () => {
-  {
-    const response = await fetch(API_URL, {
+/*export const getTasks = async () => {
+  try {
+    const data = await fetch(API_URL, {
       method: "GET",
       headers: getHeaders(),
-    });
-
-    const data = await handleResponse(response); // Get JSON from handleResponse
-
-    // Проверяем, что data существует и содержит tasks
-    if (data && data.tasks) {
-      return data.tasks;
-    } else {
-      return []; // Возвращаем пустой массив
-    }
+    }).then(handleResponse);
+    return data.tasks || [];
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    throw error;
   }
-};
+};*/
 
-export const apiGetTasks = async () => {
-  const response = await fetch("/api/tasks");
-  const data = await response.json();
-  return data.map((task) => ({
-    ...task,
-    status: task.status || "noStatus",
-    theme: task.theme || "defaultTheme",
-    cardtheme: task.cardtheme || "defaultCardTheme",
-  }));
-};
-
-// Добавить задачу
-export async function addTask(taskData) {
-  {
-    const token = localStorage.getItem("authToken");
-    const response = await fetch(API_URL, {
-      // Исправлено: используем POST и URL /kanban
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(taskData),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Ошибка при добавлении задачи");
-    }
-
-    const data = await response.json();
-
-    return data;
-  }
-}
-
-export const apiAddTask = async (newTask) => {
-  const response = await fetch("/api/tasks", {
-    method: "POST",
-    headers: {},
-    body: JSON.stringify(newTask),
-  });
-  const data = await response.json();
-  return data; // Возвращаем обновленные данные
-};
-
-// Изменить задачу
-export async function updateTask(taskId, taskData) {
-  // taskId - id задачи, taskData - обновленные данные
-  {
-    const response = await fetch(`${API_URL}/${taskId}`, {
-      // Используем taskId в URL
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(taskData), // taskData содержит данные для обновления
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.error || `Ошибка при обновлении задачи с ID ${taskId}`
-      );
-    }
-
-    const data = await response.json();
-    return data; // Возвращаем обновленную задачу (или сообщение об успехе)
-  }
-}
-
-export const apiUpdateTask = async (id, data) => {
-  {
-    const response = await fetch(`${API_URL}/tasks/${id}`, {
-      method: "PATCH",
-      headers: {},
-      body: JSON.stringify(data),
-    });
-    if (!response.ok) {
-      throw new Error(`Ошибка при обновлении задачи с ID ${id}`);
-    }
-    return await response.json();
-  }
-};
-
-// Удалить задачу
-export const deleteTask = async (taskId) => {
-  {
-    const response = await fetch(`${API_URL}/${taskId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Не забудьте про авторизацию
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        `Ошибка API: ${response.status} - ${
-          errorData.message || "Неизвестная ошибка"
-        }`
-      );
-    }
-
-    const data = await response.json();
-    return data; // Возвращаем обновленный список задач с сервера
-  }
-};
-
-export async function getUser() {
+export async function getTasks({ token, taskId }) {
   try {
-    const token = localStorage.getItem("authToken");
-    const response = await fetch(API_URL + "/user", {
+    const data = await axios.get(API_URL + "/" + taskId, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        authorization: `Bearer ${token}`.replaceAll('"', ""),
       },
     });
+    return data.data.task;
+  } catch (error) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+}
 
-    if (!response.ok) {
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("user");
-      return { isLoggedIn: false, user: null };
-    }
+export const addTask = async (taskData) => {
+  try {
+    const data = await fetch(API_URL, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(taskData),
+    }).then(handleResponse);
+    return data; // Or data.task if the API returns the added task
+  } catch (error) {
+    console.error("Error adding task:", error);
+    throw error;
+  }
+};
 
-    const data = await response.json();
-    localStorage.setItem("user", JSON.stringify(data)); // Сохраняем данные пользователя
+export const updateTask = async (taskId, taskData) => {
+  try {
+    const data = await fetch(`${API_URL}/${taskId}`, {
+      method: "PUT",
+      headers: getHeaders(),
+      body: JSON.stringify(taskData),
+    }).then(handleResponse);
+    return data; // Or data.task if the API returns the updated task
+  } catch (error) {
+    console.error("Error updating task:", error);
+    throw error;
+  }
+};
+
+export const deleteTask = async (taskId) => {
+  try {
+    await fetch(`${API_URL}/${taskId}`, {
+      method: "DELETE",
+      headers: getHeaders(),
+    }).then(handleResponse);
+    // No data is usually returned on DELETE, so return undefined
+    return;
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    throw error;
+  }
+};
+
+export const getUser = async () => {
+  try {
+    const data = await fetch(`${API_URL}/user`, {
+      headers: getHeaders(),
+    }).then(handleResponse);
+
+    localStorage.setItem("user", JSON.stringify(data));
     return { isLoggedIn: true, user: data };
-  } catch {
+  } catch (error) {
+    console.error("Error getting user:", error);
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
     return { isLoggedIn: false, user: null };
   }
-}
+};

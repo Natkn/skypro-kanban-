@@ -9,13 +9,9 @@ function TaskList() {
       {tasks.map((task) => (
         <Card
           key={task._id || uuidv4()}
-          id={task.id}
+          id={task._id}
+          theme={task.topic}
           title={task.title}
-          theme={task.theme}
-          cardtheme={task.cardtheme}
-          description={task.description}
-          topic={task.topic}
-          status={task.status}
           date={task.date}
           loading={false}
         />

@@ -2,17 +2,21 @@ import Card from "../card/Card";
 import PropTypes from "prop-types";
 import { v4 as uuidv4 } from "uuid";
 import { MainColumn, ColumnTitle, ColumnTitleText } from "./Column.styled";
-
+import { useDroppable } from "@dnd-kit/core";
 export function Column({ title, tasks, loading, status, handleCardClick }) {
-  const filteredTasks = tasks.filter((task) => task.status === status);
+  console.log("Column: tasks =", tasks);
+  const { setNodeRef } = useDroppable({
+    id: title,
+  });
 
+  const filteredTasks = (tasks || []).filter((task) => task.status === status);
   return (
-    <MainColumn>
+    <MainColumn ref={setNodeRef}>
       <ColumnTitle>
         <ColumnTitleText>{title}</ColumnTitleText>
       </ColumnTitle>
       {loading
-        ? Array.from({ length: filteredTasks.length }).map(() => (
+        ? Array.from({ length: (tasks || []).length }).map(() => (
             <Card
               key={uuidv4()}
               loading={true}
@@ -29,15 +33,11 @@ export function Column({ title, tasks, loading, status, handleCardClick }) {
         : filteredTasks.map((task) => (
             <Card
               key={task._id || uuidv4()}
-              theme={task.theme}
+              id={task._id}
+              theme={task.topic}
               title={task.title}
-              description={task.description}
-              topic={task.topic}
               date={task.date}
-              cardtheme={task.theme}
-              status={task.status}
-              id={task.id}
-              onClick={() => handleCardClick(task.id)}
+              onClick={() => handleCardClick(task._id)}
             />
           ))}
     </MainColumn>
