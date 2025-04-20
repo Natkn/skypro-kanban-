@@ -3,6 +3,8 @@ import { css } from "styled-components";
 import {
   getTextColorBrowse,
   getBackgroundColorBrowse,
+  getTextColor,
+  getBackgroundColor,
 } from "../../assets/themes";
 
 export const PopBrowseContainer = styled.div`
@@ -29,7 +31,6 @@ export const PopBrowseWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
 `;
 
 export const PopBrowseBlock = styled.div`
@@ -75,6 +76,18 @@ export const PopBrowseTitle = styled.h3`
   font-weight: 600;
   line-height: 24px;
   color: ${(props) => props.theme.textColor};
+`;
+
+export const PopBrowseTopic = styled.h3`
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  padding: 8px 20px;
+  border-radius: 24px;
+
+  background-color: ${({ theme, $category }) =>
+    getBackgroundColor(theme, $category)};
+  color: ${({ theme, $category }) => getTextColor(theme, $category)};
 `;
 
 export const PopBrowseTitleTheme = styled.div`
@@ -225,23 +238,28 @@ export const StatusThemes = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
 `;
-
 export const StatusTheme = styled.div`
   border-radius: 24px;
   height: 30px;
   border: 0.7px solid rgba(148, 166, 190, 0.4);
-  color: #94a6be;
   padding: 8px 16px 10px;
   margin-right: 8px;
-  color: #fff;
-  background-color: #94a6be;
+  background-color: ${(props) => (props.$isselected ? "#94A6BE" : "white")};
+  color: ${(props) =>
+    props.$isselected ? "white" : "#94A6BE"}; // Используем isSelected
   display: ${(props) => (props.$ishide === "true" ? "none" : "block")};
   p {
     font-size: 14px;
     line-height: 1;
     letter-spacing: -0.14px;
-    color: ${(props) => props.theme.StatusThemecolor};
   }
+
+  /* Стили для нередактируемого состояния */
+  ${(props) =>
+    !props.$isediting &&
+    css`
+      background-color: #94a6be; /* Серый фон */
+    `}
 
   ${(props) =>
     props.isgray &&

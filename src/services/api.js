@@ -38,7 +38,7 @@ const handleResponse = async (response) => {
 };
 
 export const getTasks = async () => {
-  try {
+  {
     const response = await fetch(API_URL, {
       method: "GET",
       headers: getHeaders(),
@@ -51,7 +51,6 @@ export const getTasks = async () => {
     const data = await response.json();
 
     if (data && data.tasks) {
-      console.log("getTasks: data.tasks =", data.tasks);
       const tasksWithId = data.tasks.map((task) => ({
         ...task,
         id: task._id, // Копируем значение из _id в id
@@ -63,9 +62,6 @@ export const getTasks = async () => {
       );
       return [];
     }
-  } catch (error) {
-    console.error("Ошибка при выполнении запроса:", error);
-    throw error;
   }
 };
 

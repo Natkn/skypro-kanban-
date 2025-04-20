@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { getTextColor, getBackgroundColor } from "../../assets/themes";
 
 export const PopNewCardWrapper = styled.div`
   display: flex;
@@ -173,63 +174,10 @@ export const CategoriesTheme = styled.div`
   border: 0.7px solid #94a6be;
   margin-right: 10px;
   cursor: pointer;
-
-  color: ${(props) => {
-    if (props.$active) {
-      return props.theme[props.$category].color;
-    } else {
-      return "#94a6be"; // Цвет для неактивных элементов всегда
-    }
-  }};
-
-  background-color: ${(props) => {
-    if (props.$active) {
-      return props.theme[props.$category].background;
-    } else {
-      //  фон для *всех* неактивных элементов используем значения из *текущей* темы
-      switch (props.$category) {
-        case "Research":
-          return props.theme.Research.background;
-        case "Copywriting":
-          return props.theme.Copywriting.background;
-        case "WebDesign":
-          return props.theme.WebDesign.background;
-        default:
-          return "transparent"; // Прозрачный по умолчанию
-      }
-    }
-  }};
+  background-color: ${({ theme, $category }) =>
+    getBackgroundColor(theme, $category)};
+  color: ${({ theme, $category }) => getTextColor(theme, $category)};
 
   opacity: ${(props) => (props.$active ? "100%" : "40%")};
   border-color: #94a6be;
 `;
-
-export const theme = {
-  WebDesign: {
-    background: "#FFE4C2",
-    color: "#FF6D00",
-  },
-  Research: {
-    background: "#B4FDD1",
-    color: "#06B16E",
-  },
-  Copywriting: {
-    background: "#E9D4FF",
-    color: "#9A48F1",
-  },
-};
-
-export const themeD = {
-  WebDesign: {
-    background: "#FF6D00",
-    text: "#FFE4C2",
-  },
-  Research: {
-    background: "#06B16E",
-    text: "#B4FDD1",
-  },
-  Copywriting: {
-    background: "#9A48F1",
-    text: "#E9D4FF",
-  },
-};

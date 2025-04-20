@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 import PropTypes from "prop-types";
 import Popbrowse from "../popbrowse/PopBrowse";
+//import { getTasks } from "../../services/api";
 import { useDroppable } from "@dnd-kit/core";
 
 function TaskList({ tasks, loading, updateTask, id }) {
@@ -20,7 +21,6 @@ function TaskList({ tasks, loading, updateTask, id }) {
       try {
         // Обновляем задачу с помощью updateTask
         await updateTask(updatedTask._id, updatedTask);
-        console.log("Задача успешно обновлена:", updatedTask);
       } catch (error) {
         console.error("Ошибка при обновлении задачи:", error);
       } finally {
@@ -94,6 +94,7 @@ TaskList.propTypes = {
   ),
   loading: PropTypes.bool,
   updateTask: PropTypes.func.isRequired,
+
   id: PropTypes.string.isRequired,
 };
 

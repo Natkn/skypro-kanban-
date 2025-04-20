@@ -34,7 +34,6 @@ Column.propTypes = {
       id: PropTypes.string.isRequired,
       _id: PropTypes.isRequired,
       theme: PropTypes.string.isRequired,
-      cardtheme: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
       date: PropTypes.string.isRequired,
       status: PropTypes.string,

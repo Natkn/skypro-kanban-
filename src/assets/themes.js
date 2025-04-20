@@ -97,25 +97,24 @@ export const GlobalStyles = createGlobalStyle`
 }
 `;
 
-export const getBackgroundColor = (theme, cardtheme) => {
+export const getBackgroundColor = (theme, $topic) => {
   // Определяем, какая тема сейчас активна (light или dark)
   const isDarkTheme = theme.name === "dark";
   // Выбираем тему по умолчанию в зависимости от того, какая сейчас активна
   const defaultTheme = isDarkTheme ? darkThemeС : lightThemeС;
   // Проверяем, есть ли тема для данного cardtheme
-  const themeToUse = theme[cardtheme] ? theme : defaultTheme;
-  return themeToUse[cardtheme]?.background || "transparent";
+  const themeToUse = theme[$topic] ? theme : defaultTheme;
+  return themeToUse[$topic]?.background || "transparent";
   // Возвращаем background или transparent, если background не найден
 };
 
-export const getTextColor = (theme, cardtheme) => {
-  // Определяем, какая тема сейчас активна (light или dark)
+export const getTextColor = (theme, $topic) => {
   const isDarkTheme = theme.name === "dark";
-  // Выбираем тему по умолчанию в зависимости от того, какая сейчас активна
+
   const defaultTheme = isDarkTheme ? darkThemeС : lightThemeС;
-  // Проверяем, есть ли тема для данного cardtheme
-  const themeToUse = theme[cardtheme] ? theme : defaultTheme;
-  return themeToUse[cardtheme]?.color || "black"; // Возвращаем color или black, если color не найден
+
+  const themeToUse = theme[$topic] ? theme : defaultTheme;
+  return themeToUse[$topic]?.color || "black";
 };
 
 // helpers.js (или где у вас хранятся вспомогательные функции)

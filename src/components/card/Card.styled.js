@@ -41,7 +41,7 @@ export const CardWrapper = styled.div`
 export const CardGroup = styled.div`
   width: 100%;
   height: 20px;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -50,7 +50,6 @@ export const CardGroup = styled.div`
 export const CardTheme = styled.div`
   width: auto;
   height: 20px;
-  padding: 5px 14px;
   border-radius: 18px;
   background-color: ${({ theme, cardtheme }) =>
     getBackgroundColor(theme, cardtheme)};
@@ -60,7 +59,10 @@ export const CardThemeText = styled.p`
   font-size: 10px;
   font-weight: 600;
   line-height: 10px;
-  color: ${({ theme, cardtheme }) => getTextColor(theme, cardtheme)};
+  padding: 5px 14px;
+  border-radius: 24px;
+  background-color: ${({ theme, $topic }) => getBackgroundColor(theme, $topic)};
+  color: ${({ theme, $topic }) => getTextColor(theme, $topic)};
 `;
 
 export const CardButton = styled.div`

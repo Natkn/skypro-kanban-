@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback, useContext } from "react";
 import Calendar from "../calendar/Calendar";
 import PropTypes from "prop-types";
+import { ThemeContext } from "../../components/themecontent/themeContext";
 import {
   PopNewCardWrapper,
   PopNewCardContainer,
@@ -19,30 +20,25 @@ import {
   CategoriesThemes,
   CategoriesTheme,
 } from "./PopNewCardStyled";
-import { theme } from "./PopNewCardStyled";
 import { useTasks } from "../context/UseTask";
 
-function PopNewCard({ task, onClose }) {
-  const [dateLabel, setDateLabel] = useState("Выберите срок исполнения:"); // Правильно используем useState
+function PopNewCard({ onClose, cardtheme }) {
+  const [dateLabel] = useState("Выберите срок исполнения:");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Web Design");
   const { createTask } = useTasks();
-  const [isEditing] = useState(false);
-  const initialDate = task?.date ? new Date(task.date) : new Date();
-  const [selectedDate, setSelectedDate] = useState(initialDate);
+  //const [isEditing] = useState(false);
+  // const initialDate = task?.date ? new Date(task.date) : new Date();
+  const [selectedDate, setSelectedDate] = useState(null);
+  const { theme } = useContext(ThemeContext);
 
-  const formattedSelectedDate = selectedDate.toISOString();
-
-  useEffect(() => {
-    console.log("selectedDate changed:", selectedDate); // Проверяем selectedDate
-    setDateLabel(selectedDate.toLocaleDateString("ru-RU")); // Обновляем dateLabel
-  }, [selectedDate, setDateLabel]);
-
-  const handleDateSelect = (date) => {
-    console.log("handleDateSelect called with:", date); // Проверяем вызов
-    setSelectedDate(date);
-  };
+  const handleDateSelect = useCallback(
+    (date) => {
+      setSelectedDate(date);
+    },
+    [setSelectedDate]
+  );
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -52,10 +48,10 @@ function PopNewCard({ task, onClose }) {
 
     // Создание объекта задачи
     const newTask = {
-      title,
+      title: title,
       description: description,
       topic: category,
-      date: formattedSelectedDate,
+      date: selectedDate ? selectedDate.toISOString() : null,
       status: "noStatus", //  Set default status
     };
 
@@ -70,11 +66,25 @@ function PopNewCard({ task, onClose }) {
     setTitle("");
     setDescription("");
     setCategory("Web Design");
-    setSelectedDate(new Date());
+    setSelectedDate(null);
   };
 
+  const formatDate = (date) => {
+    if (!date) return "";
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+  };
+
+  const formattedSelectedDate = formatDate(selectedDate);
+
   return (
-    <PopNewCardWrapper onClick={(e) => e.stopPropagation()}>
+    <PopNewCardWrapper
+      onClick={(e) => e.stopPropagation()}
+      theme={theme}
+      cardtheme={cardtheme}
+    >
       <PopNewCardContainer>
         <PopNewCardBlock>
           <PopNewCardContent>
@@ -110,22 +120,22 @@ function PopNewCard({ task, onClose }) {
               <Calendar
                 onDateSelect={handleDateSelect}
                 selectedDate={selectedDate}
-                disabled={!isEditing}
                 dateLabel={dateLabel}
               />
-
               <input
                 type="hidden"
                 id="datepick_value"
                 value={formattedSelectedDate}
               />
             </PopNewCardWrap>
-            <CategoriesP>Категория</CategoriesP>
+            <CategoriesP theme={theme} cardtheme={cardtheme}>
+              Категория
+            </CategoriesP>
             <CategoriesThemes>
               <CategoriesTheme
                 $active={category === "Web Design"}
                 onClick={() => setCategory("Web Design")}
-                $category="WebDesign"
+                $category="Web Design"
                 theme={theme}
               >
                 Web Design
@@ -162,5 +172,8 @@ PopNewCard.propTypes = {
     date: PropTypes.string,
   }),
   onClose: PropTypes.func.isRequired,
+  theme: PropTypes.func.isRequired,
+  topic: PropTypes.func.isRequired,
+  cardtheme: PropTypes.string.isRequired,
 };
 export default PopNewCard;

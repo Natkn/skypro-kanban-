@@ -5,7 +5,7 @@ import { CardContext } from "../context/CardContext";
 import { ThemeContext } from "../../components/themecontent/themeContext";
 import { useDraggable } from "@dnd-kit/core";
 
-function Card({ title, date, loading, id, topic, cardtheme, description }) {
+function Card({ title, date, loading, id, cardtheme, description, topic }) {
   const { handleCardButtonClick } = useContext(CardContext);
   const { theme } = useContext(ThemeContext);
 
@@ -66,8 +66,7 @@ function Card({ title, date, loading, id, topic, cardtheme, description }) {
       <S.CardWrapper>
         <S.CardGroup>
           <S.CardTheme theme={theme} cardtheme={cardtheme}>
-            <S.CardThemeText theme={theme} cardtheme={cardtheme}>
-              {cardtheme}
+            <S.CardThemeText theme={theme} $topic={topic}>
               {topic}
             </S.CardThemeText>
           </S.CardTheme>
@@ -126,6 +125,10 @@ function Card({ title, date, loading, id, topic, cardtheme, description }) {
 }
 
 Card.propTypes = {
+  task: PropTypes.shape({
+    title: PropTypes.string,
+    topic: PropTypes.string,
+  }),
   theme: PropTypes.oneOf(["Research", "Web Design", "Copywriting"]).isRequired,
   cardtheme: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
