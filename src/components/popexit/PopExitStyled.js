@@ -49,6 +49,10 @@ export const PopExitBlock = styled.div`
   border: 0.7px solid #d4dbe5;
   box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
   background-color: ${(props) => props.theme.HeaderPopUserSet};
+
+  @media only screen and (max-width: 375px) {
+    padding: 50px 20px;
+  }
 `;
 
 export const PopExitTtl = styled.div`
@@ -90,6 +94,13 @@ export const PopExitExitYes = styled.button`
     justify-content: center;
     text-decoration: none;
   }
+
+  @media only screen and (max-width: 375px) {
+    width: 100%;
+    height: 40px;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 `;
 
 export const PopExitExitNo = styled.button`
@@ -118,6 +129,11 @@ export const PopExitExitNo = styled.button`
     align-items: center;
     justify-content: center;
     text-decoration: none;
+
+    @media only screen and (max-width: 375px) {
+      width: 100%;
+      height: 40px;
+    }
   }
 `;
 
@@ -126,4 +142,8 @@ export const PopExitFormGroup = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media only screen and (max-width: 375px) {
+    display: block;
+  }
 `;

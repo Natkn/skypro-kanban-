@@ -1,43 +1,43 @@
-import Card from "../card/Card";
+import Card from "../components/card/Card";
 import { useState, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 import PropTypes from "prop-types";
-import Popbrowse from "../popbrowse/PopBrowse";
-//import { getTasks } from "../../services/api";
+import Popbrowse from "../components/popbrowse/PopBrowse";
 import { useDroppable } from "@dnd-kit/core";
 
-function TaskList({ tasks, loading, updateTask, id }) {
+function TaskList({ tasks, loading, updateTask, id, getTasks }) {
   const [selectedTask, setSelectedTask] = useState(null);
   const [isPopbrowseOpen, setIsPopbrowseOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [setTasks] = useState([]);
 
   const handleCardClick = (task) => {
     setSelectedTask(task);
-    setIsPopbrowseOpen(true); // Открываем Popbrowse
+    setIsPopbrowseOpen(true);
   };
 
   const handleUpdateTask = useCallback(
     async (updatedTask) => {
       try {
-        // Обновляем задачу с помощью updateTask
         await updateTask(updatedTask._id, updatedTask);
+        await getTasks();
       } catch (error) {
         console.error("Ошибка при обновлении задачи:", error);
       } finally {
         setIsPopbrowseOpen(false);
-        setSelectedTask(null); // Закрываем форму редактирования
+        setSelectedTask(null);
       }
     },
-    [updateTask]
+    [updateTask, getTasks]
   );
 
   const handleClosePopbrowse = () => {
     setIsPopbrowseOpen(false);
-    setSelectedTask(null); // Закрываем Popbrowse
+    setSelectedTask(null);
   };
 
   const handleDateSelect = (date) => {
-    setSelectedDate(date); // Обновляем состояние selectedDate
+    setSelectedDate(date);
   };
 
   const { setNodeRef } = useDroppable({
@@ -65,16 +65,16 @@ function TaskList({ tasks, loading, updateTask, id }) {
         ))
       ) : null}
 
-      {isPopbrowseOpen &&
-        selectedTask && ( // Используем isPopbrowseOpen для отображения Popbrowse
-          <Popbrowse
-            task={selectedTask}
-            onClose={handleClosePopbrowse}
-            onUpdate={handleUpdateTask}
-            selectedDate={selectedDate} // Передаем selectedDate в PopNewCard
-            onDateSelect={handleDateSelect}
-          />
-        )}
+      {isPopbrowseOpen && selectedTask && (
+        <Popbrowse
+          task={selectedTask}
+          onClose={handleClosePopbrowse}
+          onUpdate={handleUpdateTask}
+          selectedDate={selectedDate}
+          onDateSelect={handleDateSelect}
+          setTasks={setTasks}
+        />
+      )}
     </ul>
   );
 }
@@ -82,8 +82,8 @@ function TaskList({ tasks, loading, updateTask, id }) {
 TaskList.propTypes = {
   tasks: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string, // optional
-      _id: PropTypes.string, // optional
+      id: PropTypes.string,
+      _id: PropTypes.string,
       theme: PropTypes.string.isRequired,
       cardtheme: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
@@ -94,7 +94,7 @@ TaskList.propTypes = {
   ),
   loading: PropTypes.bool,
   updateTask: PropTypes.func.isRequired,
-
+  getTasks: PropTypes.func.isRequired,
   id: PropTypes.string.isRequired,
 };
 

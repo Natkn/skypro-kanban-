@@ -14,7 +14,6 @@ export const AuthProvider = ({ children }) => {
       try {
         setUserInfo(JSON.parse(storedUserInfo));
       } catch {
-        // Очищаем некорректные данные
         localStorage.removeItem("userInfo");
         setUserInfo(null);
       }
@@ -37,7 +36,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("userInfo", JSON.stringify(userData));
   }, []);
 
-  // Загружаем userInfo при первом рендере
   useEffect(() => {
     fetchUserInfo();
   }, [fetchUserInfo]);

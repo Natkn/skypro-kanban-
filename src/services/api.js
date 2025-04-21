@@ -1,12 +1,11 @@
 const API_URL = "https://wedev-api.sky.pro/api/kanban";
-//import axios from "axios";
 
 const getAuthToken = () => {
   try {
     return localStorage.getItem("authToken");
   } catch (error) {
     console.error("Ошибка при получении токена из localStorage:", error);
-    return null; // Или другое значение по умолчанию, например, ""
+    return null;
   }
 };
 
@@ -53,7 +52,7 @@ export const getTasks = async () => {
     if (data && data.tasks) {
       const tasksWithId = data.tasks.map((task) => ({
         ...task,
-        id: task._id, // Копируем значение из _id в id
+        id: task._id,
       }));
       return tasksWithId;
     } else {
@@ -72,7 +71,7 @@ export const addTask = async (taskData) => {
       headers: getHeaders(),
       body: JSON.stringify(taskData),
     }).then(handleResponse);
-    return data; // Or data.task if the API returns the added task
+    return data;
   } catch (error) {
     console.error("Error adding task:", error);
     throw error;
@@ -113,7 +112,7 @@ export const deleteTask = async (taskId) => {
       method: "DELETE",
       headers: getHeaders(),
     }).then(handleResponse);
-    // No data is usually returned on DELETE, so return undefined
+
     return;
   } catch (error) {
     console.error("Error deleting task:", error);

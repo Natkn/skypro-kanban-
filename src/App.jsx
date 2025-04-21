@@ -1,10 +1,10 @@
 import "../src/assets/App.css";
 import AppRoutes from "./AppRoutes.jsx";
-import { ThemeProvider } from "../src/components/themecontent/themeProvider.jsx";
-import AuthProvider from "./components/context/AuthProvider.jsx";
-import { TaskProvider } from "./components/context/TaskProvider.jsx";
+import { ThemeProvider } from "../src/themecontent/themeProvider.jsx";
+import AuthProvider from "../src/context/AuthProvider.jsx";
+import { TaskProvider } from "../src/context/TaskProvider.jsx";
 import { useState, useEffect } from "react";
-//mport { ThemeContext } from "../src/components/themecontent/themeContext.js";
+
 import { GlobalStyles } from "../src/assets/themes.js";
 
 function App() {
@@ -13,29 +13,24 @@ function App() {
   );
 
   useEffect(() => {
-    // Check if the token exists on component mount
     const token = localStorage.getItem("authToken");
-    setIsLoggedIn(!!token); // Set to true if token exists, false otherwise
-  }, []); // Run only once on mount
+    setIsLoggedIn(!!token);
+  }, []);
 
   const handleLogin = () => {
-    // Function to call after successful login
     setIsLoggedIn(true);
   };
 
   const handleLogout = () => {
-    // Function to call after successful logout
     localStorage.removeItem("authToken");
     setIsLoggedIn(false);
   };
 
-  // Добавь состояние theme
   const [theme, setTheme] = useState(() => {
     const storedTheme = localStorage.getItem("theme");
     return storedTheme || "light";
   });
 
-  // Добавь функцию toggleTheme
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };

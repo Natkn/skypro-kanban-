@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
 export const HeaderContainer = styled.header`
-  background: ${({ theme }) => theme.cardBackgroundColor}; /*  Цвет фона */
+  background: ${({ theme }) => theme.cardBackgroundColor};
   width: 100%;
   margin: 0 auto;
   padding: 0 30px;
-  box-sizing: border-box; /*  Включаем отступы в общую ширину */
+  box-sizing: border-box;
 `;
 export const HeaderItem = styled.div`
   width: 100%;
@@ -27,6 +27,14 @@ export const HeaderBlock = styled.div`
   max-width: 1260px;
   flex-direction: row;
   align-content: space-around;
+
+  @media screen and (max-width: 660px) {
+    width: 100%;
+    left: 0%;
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+  }
 `;
 
 export const HeaderNav = styled.nav`

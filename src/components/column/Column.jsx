@@ -1,8 +1,8 @@
-import TaskList from "../context/TaskList";
+import TaskList from "../../context/TaskList";
 import PropTypes from "prop-types";
 import { MainColumn, ColumnTitle, ColumnTitleText } from "./Column.styled";
 import { useDroppable } from "@dnd-kit/core";
-import { useTasks } from "../context/UseTask";
+import { useTasks } from "../../context/UseTask";
 
 export function Column({ title, tasks, status, handleCardClick }) {
   const { setNodeRef } = useDroppable({

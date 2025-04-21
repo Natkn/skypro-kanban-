@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import TaskContext from "../context/TaskContext";
 import {
   updateTask as apiUpdateTask,
-  getTasks as apiGetTasks,
+  getTasks,
   addTask as apiAddTask,
   deleteTask as apiDeleteTask,
-} from "../../services/api";
+} from "../services/api";
 
 const TaskProvider = ({ children, isLoggedIn }) => {
   const [tasks, setTasks] = useState([]);
@@ -14,50 +14,38 @@ const TaskProvider = ({ children, isLoggedIn }) => {
   const [error, setError] = useState(null);
 
   const fetchTasks = useCallback(async () => {
-    setLoading(isLoggedIn); // Тут мы при монтировании сразу задаем значение
-    setLoading(false);
     if (!isLoggedIn) {
-      setTasks([]); // Очищаем задачи, если пользователь не залогинен
+      setTasks([]);
       return;
     }
+
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      const fetchedTasks = await apiGetTasks();
-      const tasksWithId = fetchedTasks.map((task) => ({
-        ...task,
-        id: task._id,
-      }));
-      setTasks(tasksWithId);
+      const fetchedTasks = await getTasks();
+      setTasks(fetchedTasks);
     } catch (error) {
+      console.error("Ошибка при загрузке задач:", error);
       setError(error);
     } finally {
       setLoading(false);
     }
-  }, [isLoggedIn, setLoading, setTasks, setError]);
+  }, [isLoggedIn]);
 
   useEffect(() => {
-    //   Теперь эта функция просто наблюдает за isLoggedIn и, если он true,
-    // вызывает fetchTasks.
-    if (isLoggedIn) {
-      fetchTasks();
-    }
-  }, [isLoggedIn, fetchTasks]);
+    fetchTasks();
+  }, [fetchTasks]);
 
-  const addTask = useCallback(
-    async (newTask) => {
-      try {
-        setLoading(true);
-        const addedTask = await apiAddTask(newTask);
-        setTasks((prevTasks) => [...prevTasks, addedTask]);
-      } catch (error) {
-        setError(error);
-        throw error;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [setTasks, setError]
-  );
+  const addTask = useCallback(async (newTask) => {
+    try {
+      const addedTask = await apiAddTask(newTask);
+      setTasks((prevTasks) => [...prevTasks, addedTask]);
+    } catch (error) {
+      console.error("Ошибка при добавлении задачи:", error);
+      setError(error);
+      throw error;
+    }
+  }, []);
 
   const updateTask = useCallback(
     async (taskId, taskData) => {
@@ -85,10 +73,7 @@ const TaskProvider = ({ children, isLoggedIn }) => {
       try {
         setLoading(true);
         const taskIdString = String(_id);
-
         await apiDeleteTask(taskIdString);
-
-        // Обновляем массив, удаляя задачу, и возвращаем новый массив
         setTasks((prevTasks) => {
           const newTasks = prevTasks.filter(
             (task) => String(task._id) !== taskIdString
@@ -96,7 +81,6 @@ const TaskProvider = ({ children, isLoggedIn }) => {
           return newTasks;
         });
       } catch (error) {
-        console.error("Ошибка при удалении задачи:", error);
         setError(error);
         alert("Произошла ошибка при удалении задачи.");
       } finally {
@@ -109,7 +93,7 @@ const TaskProvider = ({ children, isLoggedIn }) => {
   const deleteTaskContext = async (taskId) => {
     try {
       setLoading(true);
-      await deleteTask(taskId); // Просто вызываем deleteTask
+      await deleteTask(taskId);
     } finally {
       setLoading(false);
     }
@@ -117,7 +101,7 @@ const TaskProvider = ({ children, isLoggedIn }) => {
 
   const value = {
     tasks,
-    loading, //  Теперь loading экспортируется
+    loading,
     error,
     createTask: addTask,
     updateTask,

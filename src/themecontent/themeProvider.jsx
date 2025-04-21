@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
-import { ThemeContext } from "../themecontent/themeContext"; // Correct import
+import { ThemeContext } from "../themecontent/themeContext";
 import { ThemeProvider as StyledThemeProvider } from "styled-components";
-import { lightTheme, darkTheme } from "../../assets/themes";
+import { lightTheme, darkTheme } from "../assets/themes";
 import PropTypes from "prop-types";
-import { lightThemeС, darkThemeС } from "../../assets/themes";
+import { lightThemeС, darkThemeС } from "../assets/themes";
 
 const getThemeFromLocalStorage = () => {
   const storedTheme = localStorage.getItem("theme");
-  return storedTheme || "light"; // Значение по умолчанию - светлая тема
+  return storedTheme || "light";
 };
 
 export const ThemeProvider = ({ children }) => {
-  const [themeMode, setThemeMode] = useState(getThemeFromLocalStorage); // Изменил theme на themeMode
+  const [themeMode, setThemeMode] = useState(getThemeFromLocalStorage);
 
   const toggleTheme = () => {
     setThemeMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
@@ -23,12 +23,11 @@ export const ThemeProvider = ({ children }) => {
   }, [themeMode]);
 
   const themeObject = themeMode === "light" ? lightTheme : darkTheme;
-  // Передаем themeObject и themeMode
   const themes = {
     light: lightThemeС,
     dark: darkThemeС,
   };
-  const themeWithMode = { ...themeObject, name: themeMode }; // Добавляем theme.name!
+  const themeWithMode = { ...themeObject, name: themeMode };
 
   return (
     <ThemeContext.Provider
@@ -42,6 +41,6 @@ export const ThemeProvider = ({ children }) => {
 };
 
 ThemeProvider.propTypes = {
-  children: PropTypes.node.isRequired, // Исправил тип для children
+  children: PropTypes.node.isRequired,
 };
 export default ThemeProvider;

@@ -13,7 +13,7 @@ import {
 } from "./SignUpStyled";
 import { useNavigate, Link } from "react-router-dom";
 import { signIn, signUp } from "../../services/auth";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const validateForm = (formData, isSignUp, setError, setErrors) => {
   const newErrors = { name: "", login: "", password: "" };
@@ -45,24 +45,20 @@ function AuthForm({ isSignUp }) {
   const { updateUserInfo, onLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Состояние полей формы
   const [formData, setFormData] = useState({
     name: "",
     login: "",
     password: "",
   });
 
-  // Состояние ошибок
   const [errors, setErrors] = useState({
     name: "",
     login: "",
     password: "",
   });
 
-  // Состояние текста ошибки, чтобы показать пользователю
   const [error, setError] = useState("");
 
-  // Функция, которая отслеживает изменения в полях и меняет состояние компонента
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -70,14 +66,13 @@ function AuthForm({ isSignUp }) {
     setError("");
   };
 
-  // Функция отправки формы
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
 
       const isValid = validateForm(formData, isSignUp, setError, setErrors);
       if (!isValid) {
-        setError("Пожалуйста, заполните все обязательные поля."); // Or a more specific message
+        setError("Пожалуйста, заполните все обязательные поля.");
         return;
       }
 
@@ -92,8 +87,8 @@ function AuthForm({ isSignUp }) {
         if (data && data.token) {
           localStorage.setItem("authToken", data.token);
 
-          updateUserInfo(data); // Убедитесь, что updateUserInfo правильно обрабатывает данные и сохраняет токен, если это необходимо
-          onLogin(); // Call onLogin to update the isLoggedIn state in AuthContext
+          updateUserInfo(data);
+          onLogin();
           navigate("/");
         } else {
           setError("Ошибка при входе/регистрации: не получен токен.");

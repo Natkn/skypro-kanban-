@@ -2,7 +2,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import logo from "../../../public/images/images/logo.png";
 import logodark from "../../../public/images/images/logo_dark.png";
-import { useTheme } from "../themecontent/themeContext";
+import { useTheme } from "../../themecontent/themeContext";
 import PopExit from "../popexit/PopExit";
 import {
   HeaderBlock,
@@ -19,7 +19,7 @@ import {
   HeaderContainer,
 } from "./Header.styled";
 import HeaderLogo from "./HeaderLogo";
-import { useAuth } from "../../components/context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 function Header({ openPopNewCard }) {
   const { userInfo } = useAuth();

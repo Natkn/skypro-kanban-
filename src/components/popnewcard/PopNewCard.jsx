@@ -1,7 +1,7 @@
 import { useState, useCallback, useContext } from "react";
 import Calendar from "../calendar/Calendar";
 import PropTypes from "prop-types";
-import { ThemeContext } from "../../components/themecontent/themeContext";
+import { ThemeContext } from "../../themecontent/themeContext";
 import {
   PopNewCardWrapper,
   PopNewCardContainer,
@@ -20,7 +20,8 @@ import {
   CategoriesThemes,
   CategoriesTheme,
 } from "./PopNewCardStyled";
-import { useTasks } from "../context/UseTask";
+import TaskContext from "../../context/TaskContext";
+import { useTasks } from "../../context/UseTask";
 
 function PopNewCard({ onClose, cardtheme }) {
   const [dateLabel] = useState("Выберите срок исполнения:");
@@ -28,10 +29,9 @@ function PopNewCard({ onClose, cardtheme }) {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Web Design");
   const { createTask } = useTasks();
-  //const [isEditing] = useState(false);
-  // const initialDate = task?.date ? new Date(task.date) : new Date();
   const [selectedDate, setSelectedDate] = useState(null);
   const { theme } = useContext(ThemeContext);
+  const { fetchTasks } = useContext(TaskContext);
 
   const handleDateSelect = useCallback(
     (date) => {
@@ -46,23 +46,23 @@ function PopNewCard({ onClose, cardtheme }) {
       return;
     }
 
-    // Создание объекта задачи
     const newTask = {
       title: title,
       description: description,
       topic: category,
       date: selectedDate ? selectedDate.toISOString() : null,
-      status: "noStatus", //  Set default status
+      status: "noStatus",
     };
-
+    console.log("Создаваемая задача:", newTask);
     try {
-      createTask(newTask); //  Use the createTask function from context
-      onClose(); // Close the modal after successful task creation
-    } catch {
+      createTask(newTask);
+      onClose();
+      fetchTasks();
+    } catch (error) {
+      console.error("Ошибка при создании задачи:", error);
       alert("Произошла ошибка при создании задачи.");
     }
 
-    // Очистка формы
     setTitle("");
     setDescription("");
     setCategory("Web Design");
@@ -175,5 +175,6 @@ PopNewCard.propTypes = {
   theme: PropTypes.func.isRequired,
   topic: PropTypes.func.isRequired,
   cardtheme: PropTypes.string.isRequired,
+  getTasks: PropTypes.func.isRequired,
 };
 export default PopNewCard;

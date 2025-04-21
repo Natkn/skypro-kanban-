@@ -1,5 +1,91 @@
 import { createGlobalStyle } from "styled-components";
 
+export const GlobalStyles = createGlobalStyle`
+ * {
+    font-family: 'Roboto', sans-serif;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  *:before,
+  *:after {
+    box-sizing: border-box;
+  }
+
+  a,
+  a:visited {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  button,
+  ._btn {
+    cursor: pointer;
+    outline: none;
+  }
+
+  ul li {
+    list-style: none;
+  }
+
+  @keyframes card-animation {
+    0% {
+      height: 0;
+      opacity: 0;
+    }
+    100% {
+      height: auto;
+      opacity: 1;
+    }
+  }
+
+  body, html {
+    width: 100%;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    background: ${({ theme }) => theme.wrapperTheme};
+    color: ${({ theme }) => theme.textColor};
+    transition: .3s ease;
+  }
+
+  h2 {
+    color: ${({ theme }) => theme.headingColor};
+  }
+
+  .wrapper {
+    background: ${({ theme }) => theme.wrapperTheme}; 
+    position: relative;
+    top: 0;
+    left: 0;
+    ; 
+  }
+
+
+  ._hover03:hover {
+    background-color: ${({ theme }) => theme.primaryColor}; 
+    color: ${({ theme }) => theme.textColorOnPrimary}; 
+    border-color: ${({ theme }) => theme.primaryColor};
+    ; 
+  }
+  ; 
+
+
+.main {
+  width: 100%;
+}
+
+.main__content {
+  width: 100%;
+  display: flex;
+}
+.main__column {
+  margin: 0 auto;
+  display: block;
+}
+`;
+
 export const lightTheme = {
   name: "light",
   bodyBackgroundColor: "#ffffff",
@@ -34,102 +120,31 @@ export const darkTheme = {
   wrapperTheme: "#000000",
 };
 
-export const GlobalStyles = createGlobalStyle`
-  body, html {
-    width: 100%;
-    font-family: "Roboto", Arial, Helvetica, sans-serif;
-    background: ${({ theme }) => theme.wrapperTheme};
-    color: ${({ theme }) => theme.textColor};
-    transition: .3s ease;
-  }
-
-  h2 {
-    color: ${({ theme }) => theme.headingColor};
-  }
-
-  /* Добавьте стили для wrapper */
-  .wrapper {
-    background: ${({ theme }) =>
-      theme.wrapperTheme}; /* Используем cardBackgroundColor для wrapper */
-    position: relative;
-    top: 0;
-    left: 0;
-    ; /* Добавили точку с запятой */
-  }
-
-  /* Добавьте стили для _hover03 */
-  ._hover03:hover {
-    background-color: ${({ theme }) =>
-      theme.primaryColor}; /*  Используем primaryColor для hover */
-    color: ${({ theme }) =>
-      theme.textColorOnPrimary}; /*  Используем textColorOnPrimary для hover */
-    border-color: ${({ theme }) =>
-      theme.primaryColor}; /*  Используем primaryColor для hover */
-    ; /* Добавили точку с запятой */
-  }
-  ; /* Добавили точку с запятой */
-
-  .container {
-  max-width: 1260px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 30px;
- 
-}
-
-.main {
-  width: 100%;
-}
-.main__block {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 25px 0 49px;
-}
-.main__content {
-  width: 100%;
-  display: flex;
-}
-.main__column {
-  margin: 0 auto;
-  display: block;
-}
-`;
-
 export const getBackgroundColor = (theme, $topic) => {
-  // Определяем, какая тема сейчас активна (light или dark)
   const isDarkTheme = theme.name === "dark";
-  // Выбираем тему по умолчанию в зависимости от того, какая сейчас активна
   const defaultTheme = isDarkTheme ? darkThemeС : lightThemeС;
-  // Проверяем, есть ли тема для данного cardtheme
   const themeToUse = theme[$topic] ? theme : defaultTheme;
   return themeToUse[$topic]?.background || "transparent";
-  // Возвращаем background или transparent, если background не найден
 };
 
 export const getTextColor = (theme, $topic) => {
   const isDarkTheme = theme.name === "dark";
-
   const defaultTheme = isDarkTheme ? darkThemeС : lightThemeС;
-
   const themeToUse = theme[$topic] ? theme : defaultTheme;
   return themeToUse[$topic]?.color || "black";
 };
 
-// helpers.js (или где у вас хранятся вспомогательные функции)
 export const getBackgroundColorBrowse = (theme, themeName) => {
-  const themeStyles = theme[themeName] || {}; // Получаем стили для темы или пустой объект
-  return themeStyles.background || "transparent"; // Возвращаем цвет фона или transparent по умолчанию
+  const themeStyles = theme[themeName] || {};
+  return themeStyles.background || "transparent";
 };
 
 export const getTextColorBrowse = (theme, themeName) => {
-  const themeStyles = theme[themeName] || {}; // Получаем стили для темы или пустой объект
-  return themeStyles.color || "black"; // Возвращаем цвет текста или black по умолчанию
+  const themeStyles = theme[themeName] || {};
+  return themeStyles.color || "black";
 };
 
 export const lightThemeС = {
-  // Обратите внимание: переименовано в lightTheme
   "Web Design": {
     background: "#FFE4C2",
     color: "#FF6D00",
@@ -145,7 +160,6 @@ export const lightThemeС = {
 };
 
 export const darkThemeС = {
-  // Обратите внимание: переименовано в darkTheme
   "Web Design": {
     background: "#FF6D00",
     color: "#FFE4C2",

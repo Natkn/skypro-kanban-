@@ -1,15 +1,12 @@
 import styled from "styled-components";
-import { useTheme } from "../../components/themecontent/themeContext"; // Путь к ThemeProvider
+import { useTheme } from "../../themecontent/themeContext";
 import PropTypes from "prop-types";
 
-// Стили для логотипа (общие для обоих логотипов)
 const HeaderLogoStyle = styled.div`
   a {
-    /* Ваши общие стили для ссылки */
   }
 `;
 
-// Стили для изображения логотипа
 const LogoImage = styled.img`
   width: 85px;
   height: auto;

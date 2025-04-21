@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import * as S from "./Card.styled";
-import { CardContext } from "../context/CardContext";
-import { ThemeContext } from "../../components/themecontent/themeContext";
+import { CardContext } from "../../context/CardContext";
+import { ThemeContext } from "../../themecontent/themeContext";
 import { useDraggable } from "@dnd-kit/core";
 
 function Card({ title, date, loading, id, cardtheme, description, topic }) {

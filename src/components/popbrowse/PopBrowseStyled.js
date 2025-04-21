@@ -20,6 +20,12 @@ export const PopBrowseContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media screen and (max-width: 660px) {
+    padding: 0;
+    justify-content: flex-start;
+    top: 70px;
+  }
 `;
 
 export const PopBrowseWrapper = styled.div`
@@ -44,6 +50,14 @@ export const PopBrowseBlock = styled.div`
   border-radius: 10px;
   border: 0.7px solid #d4dbe5;
   position: relative;
+
+  @media screen and (max-width: 660px) {
+    border-radius: 0;
+  }
+
+  @media screen and (max-width: 495px) {
+    padding: 20px 16px 32px;
+  }
 `;
 
 export const PopBrowseContent = styled.div`
@@ -61,6 +75,16 @@ export const PopBrowseContent = styled.div`
 
   .theme-top {
     display: block;
+  }
+
+  @media screen and (max-width: 495px) {
+    .theme-down {
+      display: block;
+      margin-bottom: 20px;
+    }
+    .theme-top {
+      display: none;
+    }
   }
 `;
 
@@ -120,6 +144,10 @@ export const PopBrowseWrap = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+
+  @media screen and (max-width: 660px) {
+    display: block;
+  }
 `;
 
 export const PopBrowseForm = styled.form`
@@ -127,6 +155,10 @@ export const PopBrowseForm = styled.form`
   width: 100%;
   display: block;
   margin-bottom: 20px;
+
+  @media screen and (max-width: 495px) {
+    max-width: 100%;
+  }
 `;
 
 export const PopBrowseBtnBrowse = styled.div`
@@ -146,6 +178,24 @@ export const PopBrowseBtnBrowse = styled.div`
 
   .btn-group button {
     margin-right: 8px;
+  }
+
+  @media screen and (max-width: 660px) {
+    &.pop-browse__btn-browse button,
+    &.pop-browse__btn-edit button {
+      width: 100%;
+      height: 40px;
+    }
+
+    &.pop-browse__btn-browse .btn-group,
+    &.pop-browse__btn-edit .btn-group {
+      width: 100%;
+    }
+
+    &.pop-browse__btn-browse .btn-group button,
+    &.pop-browse__btn-edit .btn-group button {
+      margin-right: 0px;
+    }
   }
 `;
 export const BtnBorb = styled.div`
@@ -221,6 +271,11 @@ export const FormBrowseArea = styled.textarea`
     line-height: 100%;
     letter-spacing: 0%;
   }
+
+  @media screen and (max-width: 495px) {
+    max-width: 100%;
+    height: 37px;
+  }
 `;
 
 export const Status = styled.div`
@@ -245,8 +300,7 @@ export const StatusTheme = styled.div`
   padding: 8px 16px 10px;
   margin-right: 8px;
   background-color: ${(props) => (props.$isselected ? "#94A6BE" : "white")};
-  color: ${(props) =>
-    props.$isselected ? "white" : "#94A6BE"}; // Используем isSelected
+  color: ${(props) => (props.$isselected ? "white" : "#94A6BE")};
   display: ${(props) => (props.$ishide === "true" ? "none" : "block")};
   p {
     font-size: 14px;
@@ -254,11 +308,10 @@ export const StatusTheme = styled.div`
     letter-spacing: -0.14px;
   }
 
-  /* Стили для нередактируемого состояния */
   ${(props) =>
     !props.$isediting &&
     css`
-      background-color: #94a6be; /* Серый фон */
+      background-color: #94a6be;
     `}
 
   ${(props) =>

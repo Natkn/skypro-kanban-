@@ -21,18 +21,12 @@ import {
 function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [internalSelectedDate, setInternalSelectedDate] =
-    useState(selectedDate);
 
   useEffect(() => {
-    setInternalSelectedDate(selectedDate);
-  }, [selectedDate]);
-
-  useEffect(() => {
-    if (internalSelectedDate) {
-      onDateSelect(internalSelectedDate);
+    if (selectedDate) {
+      onDateSelect(selectedDate);
     }
-  }, [internalSelectedDate, onDateSelect]);
+  }, [selectedDate, onDateSelect]);
 
   const getDayNames = () => {
     return ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
@@ -118,7 +112,6 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
     } else {
       setCurrentMonth(currentMonth - 1);
     }
-    setInternalSelectedDate(null);
   };
 
   const goToNextMonth = () => {
@@ -128,7 +121,6 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
     } else {
       setCurrentMonth(currentMonth + 1);
     }
-    setInternalSelectedDate(null);
   };
 
   const { prevMonthDays, daysInMonth, nextMonthDays } = getAllDays();
@@ -144,7 +136,7 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
     }
     const day = String(date.getDate()).padStart(2, "0");
     const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = String(date.getFullYear()); // Convert year to string
+    const year = String(date.getFullYear());
     return `${day}.${month}.${year}`;
   };
 
@@ -163,22 +155,18 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
     "Декабрь",
   ];
   const currentMonthName = monthNames[currentMonth];
-  const formattedSelectedDate = formatDate(internalSelectedDate);
+  const formattedSelectedDate = formatDate(selectedDate);
 
   return (
-    <CalendarContainer className="pop-new-card__calendar calendar">
-      <CalendarTitle className="calendar__ttl subttl">Даты</CalendarTitle>
-      <CalendarBlock className="calendar__block">
-        <CalendarNav className="calendar__nav">
-          <CalendarMonth className="calendar__month">
+    <CalendarContainer>
+      <CalendarTitle>Даты</CalendarTitle>
+      <CalendarBlock>
+        <CalendarNav>
+          <CalendarMonth>
             {currentMonthName} {currentYear}
           </CalendarMonth>
-          <NavActions className="nav__actions">
-            <NavAction
-              className="nav__action"
-              data-action="prev"
-              onClick={goToPreviousMonth}
-            >
+          <NavActions>
+            <NavAction data-action="prev" onClick={goToPreviousMonth}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="6"
@@ -188,11 +176,7 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
                 <path d="M5.72945 1.95273C6.09018 1.62041 6.09018 1.0833 5.72945 0.750969C5.36622 0.416344 4.7754 0.416344 4.41218 0.750969L0.528487 4.32883C-0.176162 4.97799 -0.176162 6.02201 0.528487 6.67117L4.41217 10.249C4.7754 10.5837 5.36622 10.5837 5.72945 10.249C6.09018 9.9167 6.09018 9.37959 5.72945 9.04727L1.87897 5.5L5.72945 1.95273Z" />
               </svg>
             </NavAction>
-            <NavAction
-              className="nav__action"
-              data-action="next"
-              onClick={goToNextMonth}
-            >
+            <NavAction data-action="next" onClick={goToNextMonth}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="6"
@@ -204,22 +188,20 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
             </NavAction>
           </NavActions>
         </CalendarNav>
-        <CalendarContent className="calendar__content">
-          <CalendarDaysNames className="calendar__days-names">
+        <CalendarContent>
+          <CalendarDaysNames>
             {getDayNames().map((dayName) => (
-              <CalendarDayName key={dayName} className="calendar__day-name">
-                {dayName}
-              </CalendarDayName>
+              <CalendarDayName key={dayName}>{dayName}</CalendarDayName>
             ))}
           </CalendarDaysNames>
-          <CalendarCells className="calendar__cells">
+          <CalendarCells>
             {allDays.map((dayInfo, index) => {
               const { date, isOtherMonth } = dayInfo;
               const isCurrentDay =
-                internalSelectedDate &&
-                internalSelectedDate.getDate() === date?.getDate() &&
-                internalSelectedDate.getMonth() === currentMonth &&
-                internalSelectedDate.getFullYear() === currentYear;
+                selectedDate &&
+                selectedDate.getDate() === date?.getDate() &&
+                selectedDate.getMonth() === currentMonth &&
+                selectedDate.getFullYear() === currentYear;
 
               return (
                 <CalendarCell
@@ -236,13 +218,10 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
           </CalendarCells>
         </CalendarContent>
         <input type="hidden" id="datepick_value" value="08.09.2023" />
-        <CalendarPeriod className="calendar__period">
-          <CalendarText className="calendar__p date-end">
+        <CalendarPeriod>
+          <CalendarText>
             {dateLabel}
-            <CalendarSpan className="date-control">
-              {formattedSelectedDate}
-            </CalendarSpan>
-            .
+            <CalendarSpan>{formattedSelectedDate}</CalendarSpan>.
           </CalendarText>
         </CalendarPeriod>
       </CalendarBlock>

@@ -4,26 +4,30 @@ import PropTypes from "prop-types";
 import * as S from "../popbrowse/PopBrowseStyled";
 import { useState, useContext, useEffect } from "react";
 import { updateTask, deleteTask } from "../../services/api";
-import { ThemeContext } from "../../components/themecontent/themeContext";
+import { ThemeContext } from "../../themecontent/themeContext";
+import TaskContext from "../../context/TaskContext";
 
-const statusOptions = ["noStatus", "needToDo", "inProcess", "test", "done"];
+const statusOptions = ["noStatus", "needToDo", "inProcess", "test", "ready"];
 
-function Popbrowse({ task, onClose, onUpdate, cardtheme }) {
+function Popbrowse({ task, onClose, cardtheme }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedDescription, setEditedDescription] = useState(task.description);
   const [editedStatus, setEditedStatus] = useState(task.status);
-  const [editedTitle, setEditedTitle] = useState(task.title); // Состояние для title
-  const [editedTopic, setEditedTopic] = useState(task.topic); // Состояние для topic
+  const [editedTitle, setEditedTitle] = useState(task.title);
+  const [editedTopic, setEditedTopic] = useState(task.topic);
+  const [dateLabel] = useState("Срок исполнения:");
+  const initialDate = task.date ? new Date(task.date) : new Date();
+  const [selectedDate, setSelectedDate] = useState(initialDate);
+  const { fetchTasks } = useContext(TaskContext);
 
-  const [selectedDate, setSelectedDate] = useState(new Date(task.date));
-  const [, setDateLabel] = useState(
-    new Date(task.date).toLocaleDateString("ru-RU")
+  const [formattedSelectedDate, setFormattedSelectedDate] = useState(
+    initialDate.toISOString().split("T")[0]
   );
 
-  const formattedSelectedDate = selectedDate.toLocaleDateString("ru-RU");
-
   useEffect(() => {
-    setDateLabel(selectedDate.toLocaleDateString("ru-RU"));
+    if (selectedDate) {
+      setFormattedSelectedDate(selectedDate.toISOString().split("T")[0]);
+    }
   }, [selectedDate]);
 
   const handleEditTask = () => {
@@ -34,10 +38,9 @@ function Popbrowse({ task, onClose, onUpdate, cardtheme }) {
     setIsEditing(false);
     setEditedDescription(task.description);
     setEditedStatus(task.status);
-    setSelectedDate(task.date);
+    setSelectedDate(task.date ? new Date(task.date) : new Date());
     setEditedTitle(task.title);
     setEditedTopic(task.topic);
-    setDateLabel(new Date(task.date).toLocaleDateString("ru-RU"));
   };
 
   const handleSaveTask = async () => {
@@ -50,11 +53,11 @@ function Popbrowse({ task, onClose, onUpdate, cardtheme }) {
         topic: editedTopic,
       };
 
-      const updatedTask = await updateTask(task._id, taskData);
-      onUpdate(updatedTask); // Обновляем задачу в TaskList
+      await updateTask(task._id, taskData);
       setIsEditing(false);
-      console.log("onClose вызывается"); // Добавляем console.log
-      onClose(); // Закрываем Popbrowse после успешного сохранения
+      console.log("onClose вызывается");
+      onClose();
+      fetchTasks();
     } catch (error) {
       console.error("Ошибка при сохранении задачи:", error);
     }
@@ -78,16 +81,17 @@ function Popbrowse({ task, onClose, onUpdate, cardtheme }) {
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
-    setDateLabel(new Date(date).toLocaleDateString("ru-RU"));
+    date.toLocaleDateString("ru-RU");
   };
 
   const handleDeleteTask = async () => {
-    if (!task) {
-      return;
-    }
-    {
-      await deleteTask(task.id);
+    try {
+      await deleteTask(task._id);
+      console.log("Задача успешно удалена");
       onClose();
+      fetchTasks();
+    } catch (error) {
+      console.error("Ошибка при удалении задачи:", error);
     }
   };
 
@@ -131,15 +135,14 @@ function Popbrowse({ task, onClose, onUpdate, cardtheme }) {
                           ? "В работе"
                           : option === "test"
                           ? "Тестирование"
+                          : option === "ready"
+                          ? "Готово"
                           : "Готово"}
                       </p>
                     </S.StatusTheme>
                   ))
                 ) : (
-                  <S.StatusTheme
-                    $isselected={true}
-                    $isediting="false" // Указываем, что не в режиме редактирования
-                  >
+                  <S.StatusTheme $isselected={true} $isediting="false">
                     <p>
                       {task.status === "noStatus"
                         ? "Без статуса"
@@ -149,6 +152,8 @@ function Popbrowse({ task, onClose, onUpdate, cardtheme }) {
                         ? "В работе"
                         : task.status === "test"
                         ? "Тестирование"
+                        : task.status === "ready"
+                        ? "Готово"
                         : "Готово"}
                     </p>
                   </S.StatusTheme>
@@ -177,6 +182,7 @@ function Popbrowse({ task, onClose, onUpdate, cardtheme }) {
                 onDateSelect={isEditing ? handleDateSelect : () => {}}
                 selectedDate={selectedDate}
                 disabled={!isEditing}
+                dateLabel={dateLabel}
               />
               <input
                 type="hidden"
@@ -224,12 +230,13 @@ Popbrowse.propTypes = {
     date: PropTypes.string,
     topic: PropTypes.string,
     status: PropTypes.string,
-    description: PropTypes.string, // Добавлено описание
+    description: PropTypes.string,
   }).isRequired,
   onClose: PropTypes.func.isRequired,
-  onUpdate: PropTypes.func.isRequired,
+
   topic: PropTypes.string.isRequired,
   cardtheme: PropTypes.string,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default Popbrowse;
