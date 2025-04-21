@@ -8,6 +8,8 @@ import { CardContext } from "../../context/CardContext.js";
 import { useTasks } from "../../context/UseTask.jsx";
 import TaskList from "../../context/TaskList.jsx";
 import { MainContainer, MainBlock } from "./Main.js";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const Container = styled.div`
   width: 100vw;
@@ -59,74 +61,76 @@ const MainPage = () => {
   };
 
   return (
-    <CardContext.Provider value={{ handleCardButtonClick }}>
-      <Container>
-        <Header openPopNewCard={openPopNewCardHandler} />
+    <DndProvider backend={HTML5Backend}>
+      <CardContext.Provider value={{ handleCardButtonClick }}>
+        <Container>
+          <Header openPopNewCard={openPopNewCardHandler} />
 
-        <MainContainer>
-          {isModalOpen && (
-            <PopNewCard
-              onClose={handleCloseModal}
-              onCreateTask={handleCreateTask}
-            />
-          )}
-          <MainBlock>
-            <ColumnsWrapper>
+          <MainContainer>
+            {isModalOpen && (
+              <PopNewCard
+                onClose={handleCloseModal}
+                onCreateTask={handleCreateTask}
+              />
+            )}
+            <MainBlock>
+              <ColumnsWrapper>
+                <Column
+                  title={"Без статуса"}
+                  tasks={tasks}
+                  loading={loading}
+                  status={"noStatus"}
+                  handleCardClick={handleCardClick}
+                />
+                <TaskList handleCardButtonClick={handleCardButtonClick} />
+              </ColumnsWrapper>
+
               <Column
-                title={"Без статуса"}
+                title={"Нужно сделать"}
                 tasks={tasks}
                 loading={loading}
-                status={"noStatus"}
+                status={"needToDo"}
                 handleCardClick={handleCardClick}
               />
-              <TaskList handleCardButtonClick={handleCardButtonClick} />
-            </ColumnsWrapper>
+              <Column
+                title={"В работе"}
+                tasks={tasks}
+                loading={loading}
+                status={"inProcess"}
+                handleCardClick={handleCardClick}
+              />
+              <Column
+                title={"Тестирование"}
+                tasks={tasks}
+                loading={loading}
+                status={"test"}
+                handleCardClick={handleCardClick}
+              />
+              <Column
+                title={"Готово"}
+                tasks={tasks}
+                loading={loading}
+                status={"ready"}
+                handleCardClick={handleCardClick}
+              />
+            </MainBlock>{" "}
+          </MainContainer>
 
-            <Column
-              title={"Нужно сделать"}
-              tasks={tasks}
-              loading={loading}
-              status={"needToDo"}
-              handleCardClick={handleCardClick}
-            />
-            <Column
-              title={"В работе"}
-              tasks={tasks}
-              loading={loading}
-              status={"inProcess"}
-              handleCardClick={handleCardClick}
-            />
-            <Column
-              title={"Тестирование"}
-              tasks={tasks}
-              loading={loading}
-              status={"test"}
-              handleCardClick={handleCardClick}
-            />
-            <Column
-              title={"Готово"}
-              tasks={tasks}
-              loading={loading}
-              status={"ready"}
-              handleCardClick={handleCardClick}
-            />
-          </MainBlock>{" "}
-        </MainContainer>
-
-        {isPopNewCardOpen && (
-          <PopNewCard onClose={() => setIsPopNewCardOpen(false)} />
-        )}
-        {isPopBrowseOpen && (
-          <>
-            <PopBrowse
-              isOpen={isPopBrowseOpen}
-              task={selectedTask}
-              onClose={handleClosePopBrowse}
-            />
-          </>
-        )}
-      </Container>
-    </CardContext.Provider>
+          {isPopNewCardOpen && (
+            <PopNewCard onClose={() => setIsPopNewCardOpen(false)} />
+          )}
+          {isPopBrowseOpen && (
+            <>
+              <PopBrowse
+                isOpen={isPopBrowseOpen}
+                task={selectedTask}
+                onClose={handleClosePopBrowse}
+              />
+            </>
+          )}
+        </Container>
+      </CardContext.Provider>
+    </DndProvider>
   );
 };
 

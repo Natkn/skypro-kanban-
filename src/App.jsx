@@ -4,6 +4,8 @@ import { ThemeProvider } from "../src/themecontent/themeProvider.jsx";
 import AuthProvider from "../src/context/AuthProvider.jsx";
 import { TaskProvider } from "../src/context/TaskProvider.jsx";
 import { useState, useEffect } from "react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 import { GlobalStyles } from "../src/assets/themes.js";
 
@@ -45,19 +47,21 @@ function App() {
   }, [theme]);
 
   return (
-    <ThemeProvider value={{ theme, toggleTheme }}>
-      <GlobalStyles />
+    <DndProvider backend={HTML5Backend}>
+      <ThemeProvider value={{ theme, toggleTheme }}>
+        <GlobalStyles />
 
-      <AuthProvider
-        onLogin={handleLogin}
-        onLogout={handleLogout}
-        isLoggedIn={isLoggedIn}
-      >
-        <TaskProvider isLoggedIn={isLoggedIn}>
-          <AppRoutes isLoggedIn={isLoggedIn} />
-        </TaskProvider>
-      </AuthProvider>
-    </ThemeProvider>
+        <AuthProvider
+          onLogin={handleLogin}
+          onLogout={handleLogout}
+          isLoggedIn={isLoggedIn}
+        >
+          <TaskProvider isLoggedIn={isLoggedIn}>
+            <AppRoutes isLoggedIn={isLoggedIn} />
+          </TaskProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </DndProvider>
   );
 }
 

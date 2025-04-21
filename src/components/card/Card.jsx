@@ -3,27 +3,29 @@ import { useContext } from "react";
 import * as S from "./Card.styled";
 import { CardContext } from "../../context/CardContext";
 import { ThemeContext } from "../../themecontent/themeContext";
-import { useDraggable } from "@dnd-kit/core";
+import { useDrag } from "react-dnd";
+import { ItemTypes } from "./ItemTypes";
 
-function Card({ title, date, loading, id, cardtheme, description, topic }) {
+function Card({
+  task,
+  title,
+  date,
+  loading,
+  id,
+  cardtheme,
+  description,
+  topic,
+}) {
   const { handleCardButtonClick } = useContext(CardContext);
   const { theme } = useContext(ThemeContext);
 
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: id,
-    });
-
-  const style = {
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      : undefined,
-    position: isDragging ? "relative" : "static",
-    zIndex: isDragging ? 999 : 1,
-    opacity: isDragging ? 0.8 : 1,
-    transition: "box-shadow 0.2s ease",
-    boxShadow: isDragging ? "0 0 10px rgba(0,0,0,0.2)" : "none",
-  };
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemTypes.CARD,
+    item: { id: task?._id, status: task?.status },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
 
   if (!handleCardButtonClick) {
     return null;
@@ -56,10 +58,11 @@ function Card({ title, date, loading, id, cardtheme, description, topic }) {
 
   return (
     <S.CardItem
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      style={style}
+      ref={drag}
+      style={{
+        opacity: isDragging ? 0.5 : 1,
+        cursor: "move",
+      }}
       theme={theme}
       cardtheme={cardtheme}
     >
@@ -128,6 +131,8 @@ Card.propTypes = {
   task: PropTypes.shape({
     title: PropTypes.string,
     topic: PropTypes.string,
+    _id: PropTypes.string,
+    status: PropTypes.string,
   }),
   theme: PropTypes.oneOf(["Research", "Web Design", "Copywriting"]).isRequired,
   cardtheme: PropTypes.string.isRequired,

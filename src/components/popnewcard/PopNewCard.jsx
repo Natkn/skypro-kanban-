@@ -53,7 +53,7 @@ function PopNewCard({ onClose, cardtheme }) {
       date: selectedDate ? selectedDate.toISOString() : null,
       status: "noStatus",
     };
-    console.log("Создаваемая задача:", newTask);
+
     try {
       createTask(newTask);
       onClose();

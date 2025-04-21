@@ -44,7 +44,7 @@ function Popbrowse({ task, onClose, cardtheme }) {
   };
 
   const handleSaveTask = async () => {
-    try {
+    {
       const taskData = {
         description: editedDescription,
         status: editedStatus,
@@ -55,11 +55,8 @@ function Popbrowse({ task, onClose, cardtheme }) {
 
       await updateTask(task._id, taskData);
       setIsEditing(false);
-      console.log("onClose вызывается");
       onClose();
       fetchTasks();
-    } catch (error) {
-      console.error("Ошибка при сохранении задачи:", error);
     }
   };
 
@@ -87,7 +84,7 @@ function Popbrowse({ task, onClose, cardtheme }) {
   const handleDeleteTask = async () => {
     try {
       await deleteTask(task._id);
-      console.log("Задача успешно удалена");
+
       onClose();
       fetchTasks();
     } catch (error) {

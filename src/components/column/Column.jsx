@@ -1,19 +1,32 @@
 import TaskList from "../../context/TaskList";
 import PropTypes from "prop-types";
+import { useContext } from "react";
 import { MainColumn, ColumnTitle, ColumnTitleText } from "./Column.styled";
-import { useDroppable } from "@dnd-kit/core";
+import { useDrop } from "react-dnd";
 import { useTasks } from "../../context/UseTask";
+import { ItemTypes } from "../card/ItemTypes";
+import TaskContext from "../../context/TaskContext";
 
 export function Column({ title, tasks, status, handleCardClick }) {
-  const { setNodeRef } = useDroppable({
-    id: title,
-  });
-
   const filteredTasks = tasks.filter((task) => task.status === status);
   const { loading } = useTasks();
+  const { fetchTasks } = useContext(TaskContext);
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: ItemTypes.CARD,
+    drop: (item) => {
+      fetchTasks();
+      item.id, { status: status };
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  }));
 
   return (
-    <MainColumn ref={setNodeRef}>
+    <MainColumn
+      ref={drop}
+      style={{ backgroundColor: isOver ? "transparent" : "transparent" }}
+    >
       <ColumnTitle>
         <ColumnTitleText>{title}</ColumnTitleText>
       </ColumnTitle>

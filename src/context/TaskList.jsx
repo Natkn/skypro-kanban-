@@ -1,15 +1,37 @@
 import Card from "../components/card/Card";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import { v4 as uuidv4 } from "uuid";
 import PropTypes from "prop-types";
 import Popbrowse from "../components/popbrowse/PopBrowse";
-import { useDroppable } from "@dnd-kit/core";
+import TaskContext from "../../src/context/TaskContext";
+import { useDrop } from "react-dnd";
+import { ItemTypes } from "../components/card/ItemTypes";
 
-function TaskList({ tasks, loading, updateTask, id, getTasks }) {
+function TaskList({ tasks, loading, updateTask, getTasks }) {
   const [selectedTask, setSelectedTask] = useState(null);
   const [isPopbrowseOpen, setIsPopbrowseOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [setTasks] = useState([]);
+  const { fetchTasks } = useContext(TaskContext);
+
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: ItemTypes.CARD,
+    drop: (item) => handleDrop(item),
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  }));
+
+  const handleDrop = async (item) => {
+    if (item.status !== status) {
+      try {
+        await updateTask(item.id, { status: status });
+        fetchTasks();
+      } catch (error) {
+        console.error("Ошибка при обновлении статуса:", error);
+      }
+    }
+  };
 
   const handleCardClick = (task) => {
     setSelectedTask(task);
@@ -40,14 +62,19 @@ function TaskList({ tasks, loading, updateTask, id, getTasks }) {
     setSelectedDate(date);
   };
 
-  const { setNodeRef } = useDroppable({
-    id: id,
-  });
-
   return (
     <ul>
       {loading ? (
-        <Card key={uuidv4()} loading={true} ref={setNodeRef} />
+        <Card
+          key={uuidv4()}
+          loading={true}
+          ref={drop}
+          style={{
+            backgroundColor: isOver ? "lightgreen" : "white",
+            padding: "10px",
+            minHeight: "200px",
+          }}
+        />
       ) : Array.isArray(tasks) && tasks.length > 0 ? (
         tasks.map((task) => (
           <Card
