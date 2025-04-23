@@ -100,7 +100,7 @@ export const lightTheme = {
   HeaderBtnExitcolor: " #565eef",
   PopNewCardContainercolor: " #ffffff",
   StatusThemecolor: " #ffffff",
-  wrapperTheme: "#D4DBE5",
+  wrapperTheme: " #EAEEF6;",
 };
 
 export const darkTheme = {

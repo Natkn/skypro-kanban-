@@ -98,8 +98,6 @@ function Calendar({ onDateSelect, selectedDate, disabled, dateLabel }) {
       const { date, isOtherMonth } = dayInfo;
       if (!isOtherMonth) {
         onDateSelect(date);
-      } else {
-        console.log("Клик по дню другого месяца");
       }
     }
   };

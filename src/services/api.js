@@ -36,33 +36,26 @@ const handleResponse = async (response) => {
   return response.json();
 };
 
-export const getTasks = async () => {
-  {
-    const response = await fetch(API_URL, {
-      method: "GET",
-      headers: getHeaders(),
-    });
+export async function getTasks() {
+  const token = localStorage.getItem("authToken");
 
-    if (!response.ok) {
-      throw new Error(`Ошибка при получении задач: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (data && data.tasks) {
-      const tasksWithId = data.tasks.map((task) => ({
-        ...task,
-        id: task._id,
-      }));
-      return tasksWithId;
-    } else {
-      console.warn(
-        "В ответе от сервера нет поля tasks. Возвращаю пустой массив."
-      );
-      return [];
-    }
+  if (!token) {
+    return [];
   }
-};
+
+  const response = await fetch(API_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Ошибка при загрузке задач");
+  }
+
+  const data = await response.json();
+  return data.tasks;
+}
 
 export const addTask = async (taskData) => {
   try {

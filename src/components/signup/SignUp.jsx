@@ -14,6 +14,7 @@ import {
 import { useNavigate, Link } from "react-router-dom";
 import { signIn, signUp } from "../../services/auth";
 import { AuthContext } from "../../context/AuthContext";
+import TaskContext from "../../context/TaskContext";
 
 const validateForm = (formData, isSignUp, setError, setErrors) => {
   const newErrors = { name: "", login: "", password: "" };
@@ -42,6 +43,7 @@ const validateForm = (formData, isSignUp, setError, setErrors) => {
 };
 
 function AuthForm({ isSignUp }) {
+  const { fetchTasks } = useContext(TaskContext);
   const { updateUserInfo, onLogin } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -86,16 +88,16 @@ function AuthForm({ isSignUp }) {
 
         if (data && data.token) {
           localStorage.setItem("authToken", data.token);
-
           updateUserInfo(data);
           onLogin();
+          fetchTasks();
           navigate("/");
         } else {
           setError("Ошибка при входе/регистрации: не получен токен.");
         }
       }
     },
-    [isSignUp, formData, navigate, updateUserInfo, onLogin]
+    [isSignUp, formData, navigate, updateUserInfo, onLogin, fetchTasks]
   );
   return (
     <Wrapper>

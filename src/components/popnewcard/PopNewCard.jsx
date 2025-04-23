@@ -56,8 +56,8 @@ function PopNewCard({ onClose, cardtheme }) {
 
     try {
       createTask(newTask);
-      onClose();
       fetchTasks();
+      onClose();
     } catch (error) {
       console.error("Ошибка при создании задачи:", error);
       alert("Произошла ошибка при создании задачи.");
